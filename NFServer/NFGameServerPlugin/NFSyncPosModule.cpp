@@ -56,7 +56,8 @@ bool NFSyncPosModule::Execute()
 	//15 times per second
 	static int64_t timePassed = NFGetTimeMS();
 	int64_t nowTime = NFGetTimeMS();
-	if (nowTime - timePassed >= 50)
+	//if (nowTime - timePassed >= 50)
+	if (nowTime - timePassed >= 200)
 	{
 		timePassed = nowTime;
 

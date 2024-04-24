@@ -768,7 +768,7 @@ void NFWorldNet_ServerModule::LogGameServer()
 {
     mnLastCheckTime = GetPluginManager()->GetNowTime();
 
-    m_pLogModule->LogInfo(NFGUID(), "--------------------Begin Log GameServer Info", "");
+    //m_pLogModule->LogInfo(NFGUID(), "--------------------Begin Log GameServer Info", "");
 
     NF_SHARE_PTR<ServerData> pGameData = mGameMap.First();
     while (pGameData)
@@ -781,9 +781,9 @@ void NFWorldNet_ServerModule::LogGameServer()
         pGameData = mGameMap.Next();
     }
 
-    m_pLogModule->LogInfo(NFGUID(), "--------------------End Log GameServer Info", "");
+    //m_pLogModule->LogInfo(NFGUID(), "--------------------End Log GameServer Info", "");
 
-    m_pLogModule->LogInfo(NFGUID(), "--------------------Begin Log ProxyServer Info", "");
+    //m_pLogModule->LogInfo(NFGUID(), "--------------------Begin Log ProxyServer Info", "");
 
     pGameData = mProxyMap.First();
     while (pGameData)
@@ -796,10 +796,10 @@ void NFWorldNet_ServerModule::LogGameServer()
         pGameData = mProxyMap.Next();
     }
 
-    m_pLogModule->LogInfo(NFGUID(), "--------------------End Log ProxyServer Info", "");
+    //m_pLogModule->LogInfo(NFGUID(), "--------------------End Log ProxyServer Info", "");
 
 
-	m_pLogModule->LogInfo(NFGUID(), "--------------------Begin Log DBServer Info", "");
+	//m_pLogModule->LogInfo(NFGUID(), "--------------------Begin Log DBServer Info", "");
 
 	pGameData = mDBMap.First();
 	while (pGameData)
@@ -812,7 +812,7 @@ void NFWorldNet_ServerModule::LogGameServer()
 		pGameData = mDBMap.Next();
 	}
 
-	m_pLogModule->LogInfo(NFGUID(), "--------------------End Log DBServer Info", "");
+	//m_pLogModule->LogInfo(NFGUID(), "--------------------End Log DBServer Info", "");
 }
 
 
