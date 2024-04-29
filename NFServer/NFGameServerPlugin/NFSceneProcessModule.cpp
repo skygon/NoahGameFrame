@@ -107,7 +107,8 @@ bool NFSceneProcessModule::RequestEnterScene(const NFGUID & self, const int scen
 	}
 	else if (eSceneType == NFMsg::ESceneType::NORMAL_SCENE)
 	{
-		return m_pSceneModule->RequestEnterScene(self, sceneID, 1, type, pos, argList);
+		//return m_pSceneModule->RequestEnterScene(self, sceneID, 1, type, pos, argList);
+		return m_pSceneModule->RequestEnterScene(self, sceneID, groupID, type, pos, argList);
 	}
 	else
 	{
@@ -316,8 +317,8 @@ bool NFSceneProcessModule::CreateSceneBaseGroup(const std::string & strSceneIDNa
 	const int nMaxGroup = m_pElementModule->GetPropertyInt32(std::to_string(sceneID), NFrame::Scene::MaxGroup());
 	if (eSceneType == NFMsg::ESceneType::NORMAL_SCENE)
 	{
-		//line 10
-		for (int i = 0; i < 1; ++i)
+		// skygon: 初始化时创建3个group
+		for (int i = 0; i < 3; ++i)
 		{
 			int groupID = m_pKernelModule->RequestGroupScene(sceneID);
 			if (groupID > 0)

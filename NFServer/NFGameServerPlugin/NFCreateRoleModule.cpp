@@ -26,6 +26,7 @@
 #include "NFCreateRoleModule.h"
 #include "NFComm/NFMessageDefine/NFProtocolDefine.hpp"
 #include "NFServer/NFDBLogicPlugin/NFCommonRedisModule.h"
+#include "NFComm/NFKernelPlugin/NFSceneModule.h"
 
 bool NFCreateRoleModule::Init()
 {
@@ -243,7 +244,24 @@ void NFCreateRoleModule::OnDBLoadRoleDataProcess(const NFSOCK sockIndex, const i
 			}
 			else if (sceneType == NFMsg::NORMAL_SCENE)
 			{
-				m_pSceneProcessModule->RequestEnterScene(pObject->Self(), defaultSceneID, 1, 0, pos, NFDataList::Empty());
+				//skygon: 找一个还有空余位置的group
+				int group_max_users = 2; //测试用
+				int available_groupID = 0;
+				auto pSceneInfo = m_pSceneModule->GetElement(defaultSceneID);
+				auto groupInfo = pSceneInfo->First();
+				groupInfo = pSceneInfo->Next();// start from index 1
+				while (groupInfo) {
+					if (groupInfo->mxPlayerList.Count() < group_max_users) {
+						available_groupID = groupInfo->groupID;
+						break;
+					}
+					groupInfo = pSceneInfo->Next();
+				}
+
+				//TODO: 如果没有空闲的group，则创建一个新的
+				
+				//m_pSceneProcessModule->RequestEnterScene(pObject->Self(), defaultSceneID, 1, 0, pos, NFDataList::Empty());
+				m_pSceneProcessModule->RequestEnterScene(pObject->Self(), defaultSceneID, available_groupID, 0, pos, NFDataList::Empty());
 			}
 		}
 	}
