@@ -429,9 +429,9 @@ protected:
 	int SceneGroupCreatedEvent(const NFGUID& self, const int sceneID, const int groupID, const int type, const NFDataList& argList);
 	int SceneGroupDestroyedEvent(const NFGUID& self, const int sceneID, const int groupID, const int type, const NFDataList& argList);
 	//同步新进用户和其他的group
-	int NFSceneModule::SyncDataWithOtherGroups(const int sceneID, const int groupID, const NFVector3& pos, const NFGUID& ident);
+	int SyncDataWithOtherGroups(const int sceneID, const int groupID, const NFVector3& pos, const NFGUID& ident);
 	//用户离开group时通知其他group的用户
-	int NFSceneModule::SyncLeaveToOtherGroups(const int sceneID, const int groupID, const NFVector3& pos, const NFGUID& ident);
+	int SyncLeaveToOtherGroups(const int sceneID, const int groupID, const NFVector3& pos, const NFGUID& ident);
 
 
 protected:
