@@ -245,7 +245,7 @@ void NFCreateRoleModule::OnDBLoadRoleDataProcess(const NFSOCK sockIndex, const i
 			else if (sceneType == NFMsg::NORMAL_SCENE)
 			{
 				//skygon: 找一个还有空余位置的group
-				int group_max_users = 2; //测试用
+				int group_max_users = 20; //测试用
 				int available_groupID = 0;
 				auto pSceneInfo = m_pSceneModule->GetElement(defaultSceneID);
 				auto groupInfo = pSceneInfo->First();
