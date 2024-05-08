@@ -53,24 +53,30 @@ bool NFSyncPosModule::Shut()
 bool NFSyncPosModule::Execute()
 {
 	//should be processed by actor's component
-	//15 times per second
 	static int64_t timePassed = NFGetTimeMS();
+	static int64_t count = 1;
 	int64_t nowTime = NFGetTimeMS();
-	//if (nowTime - timePassed >= 50)
-	if (nowTime - timePassed >= 200)
+	//同一个group的用户 每秒同步5帧
+	int syncFreq = 5; //每秒5帧
+	int timeInterval = 1000 / syncFreq;
+	int fullSyncFreq = 10; // 每2秒全局同步
+	if (nowTime - timePassed >= timeInterval)
 	{
 		timePassed = nowTime;
+		count += 1;
 
 		auto sceneInfo = m_pSceneModule->First();
 		while (sceneInfo)
 		{
+			//NFMsg::ReqAckPlayerPosSync AllPlayerPosSync;
+			std::map<int, NFMsg::ReqAckPlayerPosSync> lm_allPlayerPosSync;
 			auto groupInfo = sceneInfo->First();
 			while (groupInfo)
 			{
 				if (groupInfo->mPlayerPosition.size() > 0)
 				{
 					NFMsg::ReqAckPlayerPosSync playerPosSync;
-					for (auto var : groupInfo->mPlayerPosition)
+					for (const auto& var : groupInfo->mPlayerPosition)
 					{
 						NFMsg::PosSyncUnit* posSyncUnit = playerPosSync.add_sync_unit();
 						if (posSyncUnit)
@@ -87,9 +93,50 @@ bool NFSyncPosModule::Execute()
 					playerPosSync.set_sequence(groupInfo->sequence++);
 
 					m_pGameServerNet_ServerModule->SendGroupMsgPBToGate(NFMsg::ACK_MOVE, playerPosSync, sceneInfo->sceneID, groupInfo->groupID);
+
+				}
+
+				//全场景跨组同步数据收集（获取当前group的每个用户的实时位置）
+				if (count % fullSyncFreq == 0)
+				{
+					NFMsg::ReqAckPlayerPosSync playerPosRec;
+					NFGUID ident = NFGUID();
+					NF_SHARE_PTR<int> pRet = groupInfo->mxPlayerList.First(ident);
+					while (!ident.IsNull())
+					{
+						const NFVector3 position = m_pKernelModule->GetPropertyVector3(ident, NFrame::IObject::Position());
+						NFMsg::PosSyncUnit* posSyncUnit = playerPosRec.add_sync_unit();
+						if (posSyncUnit)
+						{
+							*posSyncUnit->mutable_mover() = NFINetModule::NFToPB(ident);
+							*posSyncUnit->mutable_pos() = NFINetModule::NFToPB(position);
+							*posSyncUnit->mutable_orientation() = NFINetModule::NFToPB(NFVector3(0, 180, 0));
+							posSyncUnit->set_status(0);
+							posSyncUnit->set_type((NFMsg::PosSyncUnit_EMoveType)0);
+						}
+						playerPosRec.set_sequence(groupInfo->sequence++);
+
+						ident = NFGUID();
+						pRet = groupInfo->mxPlayerList.Next(ident);
+					}
+
+					lm_allPlayerPosSync[groupInfo->groupID] = playerPosRec;
 				}
 
 				groupInfo = sceneInfo->Next();
+			}
+
+			if (count % fullSyncFreq == 0)
+			{
+				for (auto &var_i : lm_allPlayerPosSync)
+				{
+					for (const auto& var_j : lm_allPlayerPosSync)
+					{
+						if (var_i.first != var_j.first) {
+							m_pGameServerNet_ServerModule->SendGroupMsgPBToGate(NFMsg::ACK_MOVE, var_i.second, sceneInfo->sceneID, var_j.first);
+						}
+					}
+				}
 			}
 
 			sceneInfo = m_pSceneModule->Next();

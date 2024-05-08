@@ -317,8 +317,9 @@ bool NFSceneProcessModule::CreateSceneBaseGroup(const std::string & strSceneIDNa
 	const int nMaxGroup = m_pElementModule->GetPropertyInt32(std::to_string(sceneID), NFrame::Scene::MaxGroup());
 	if (eSceneType == NFMsg::ESceneType::NORMAL_SCENE)
 	{
-		// skygon: 初始化时创建3个group
-		for (int i = 0; i < 3; ++i)
+		// skygon: 初始化时创建10个group
+		// TODO: 通过配置修改
+		for (int i = 0; i < 10; ++i)
 		{
 			int groupID = m_pKernelModule->RequestGroupScene(sceneID);
 			if (groupID > 0)

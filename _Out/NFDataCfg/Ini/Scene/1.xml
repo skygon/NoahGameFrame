@@ -2,10 +2,10 @@
 <XML>
 	<!-- <Object ID="NPC-001" ConfigID="NPC001" X="0" Y="0.5" Z="0" Weight="99" />
     <Object ID="NPC-002" ConfigID="NPC002" X="2" Y="0.5" Z="-3" Weight="99" /> -->
-    <Object ID="NPC-003" ConfigID="NPC003" X="3" Y="0.5" Z="-10" Weight="99" />
+    <!-- <Object ID="NPC-003" ConfigID="NPC003" X="3" Y="0.5" Z="-10" Weight="99" />
     <Object ID="NPC-004" ConfigID="DefaultPlayer" X="0" Y="0.5" Z="-9" Weight="99" />
     <Object ID="NPC-011" ConfigID="NPC011" X="-1.5" Y="0.5" Z="-10" Weight="99" />
     <Object ID="NPC-012" ConfigID="NPC012" X="1.5" Y="0.5" Z="-13" Weight="99" />
     <Object ID="NPC-013" ConfigID="NPC013" X="-0.3" Y="0.5" Z="-14" Weight="99" />
-    <Object ID="NPC-014" ConfigID="NPC014" X="3.9" Y="0.5" Z="-15" Weight="99" />
+    <Object ID="NPC-014" ConfigID="NPC014" X="3.9" Y="0.5" Z="-15" Weight="99" /> -->
 </XML>

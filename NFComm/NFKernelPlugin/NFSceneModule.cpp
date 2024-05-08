@@ -1386,6 +1386,10 @@ int NFSceneModule::OnPlayerGroupEvent(const NFGUID & self, const std::string & p
 			OnObjectListLeave(valueAllOldPlayerListNoSelf, selfVar);
 			OnObjectListLeave(selfVar, valueAllOldPlayerListNoSelf);
 			OnObjectListLeave(selfVar, valueAllOldNPCListNoSelf);
+
+			//[skygon] TODO: inform players in other groups
+			//通知其他group的用户
+			this->SyncLeaveToOtherGroups(sceneID, nOldGroupID, position, self);
 		}
 		else
 		{
@@ -1436,6 +1440,24 @@ int NFSceneModule::OnPlayerGroupEvent(const NFGUID & self, const std::string & p
 		OnRecordEnter(valueAllNewPlayerListNoSelf, self);
 
 		OnObjectListEnterFinished(valueAllNewPlayerListNoSelf, selfVar);
+
+		//skygon: bc other groups to u
+		auto sceneInfo = this->GetElement(sceneID);
+		auto groupInfo = sceneInfo->First();
+		// TODO:每个gameserver进程负责N个group进行同步； N的值根据单个gameserver进程的承载能力推断
+		int group_num = 10;
+		int count = 0;
+		while (groupInfo) {
+			if (groupInfo->groupID != 0 && groupInfo->groupID != nNewGroupID && count < group_num) {
+				this->SyncDataWithOtherGroups(sceneID, groupInfo->groupID, position, self);
+				count++;
+			}
+			groupInfo = sceneInfo->Next();
+		}
+
+
+		//bc u to other groups
+		//TODO
 	}
 	else
 	{
@@ -1451,9 +1473,73 @@ int NFSceneModule::OnPlayerGroupEvent(const NFGUID & self, const std::string & p
 			OnObjectListLeave(valueAllOldPlayerListNoSelf, selfVar);
 			OnObjectListLeave(selfVar, valueAllOldPlayerListNoSelf);
 			OnObjectListLeave(selfVar, valueAllOldNPCListNoSelf);
+
+			//通知其他group的用户
+			this->SyncLeaveToOtherGroups(sceneID, nOldGroupID, position, self);
 		}
 	}
 
+	return 0;
+}
+
+int NFSceneModule::SyncLeaveToOtherGroups(const int sceneID, const int groupID, const NFVector3& pos, const NFGUID& ident)
+{
+	NFDataList valueAllOldPlayerListNoSelf;
+	NFDataList selfVar;
+	selfVar << ident;
+
+	auto sceneInfo = this->GetElement(sceneID);
+	auto groupInfo = sceneInfo->First();
+	// TODO:每个gameserver进程负责N个group进行同步； N的值根据单个gameserver进程的承载能力推断
+	int group_num = 10;
+	int count = 0;
+	while (groupInfo) {
+		if (groupInfo->groupID != 0 && groupInfo->groupID != groupID && count < group_num) {
+			m_pCellModule->GetCellObjectList(sceneID, groupInfo->groupID, pos, valueAllOldPlayerListNoSelf, true, ident);
+			OnObjectListLeave(valueAllOldPlayerListNoSelf, selfVar);
+			count++;
+		}
+		groupInfo = sceneInfo->Next();
+	}
+
+	//离开用户在客户端的资源清理由客户端处理
+
+	return 0;
+}
+
+int NFSceneModule::SyncDataWithOtherGroups(const int sceneID, const int groupID, const NFVector3& pos, const NFGUID& ident) 
+{
+	NFDataList valueAllNewPlayerListNoSelf;
+	NFDataList selfVar;
+	selfVar << ident;
+
+	m_pCellModule->GetCellObjectList(sceneID, groupID, pos, valueAllNewPlayerListNoSelf, true, ident);
+
+	OnObjectListEnter(valueAllNewPlayerListNoSelf, selfVar);
+	OnObjectListEnter(selfVar, valueAllNewPlayerListNoSelf);
+
+	//bc others data to u
+	NFDataList identOldVar;
+	identOldVar.Add(NFGUID());
+
+
+	//bc others data to u
+	for (int i = 0; i < valueAllNewPlayerListNoSelf.GetCount(); i++)
+	{
+		NFGUID identOld = valueAllNewPlayerListNoSelf.Object(i);
+		identOldVar.SetObject(0, identOld);
+
+		OnPropertyEnter(selfVar, identOld);
+		OnRecordEnter(selfVar, identOld);
+
+		OnObjectListEnterFinished(selfVar, identOldVar);
+	}
+
+	//bc u data to others
+	OnPropertyEnter(valueAllNewPlayerListNoSelf, ident);
+	OnRecordEnter(valueAllNewPlayerListNoSelf, ident);
+
+	OnObjectListEnterFinished(valueAllNewPlayerListNoSelf, selfVar);
 	return 0;
 }
 
@@ -1648,6 +1734,7 @@ int NFSceneModule::BeforeEnterSceneGroup(const NFGUID & self, const int sceneID,
 
 int NFSceneModule::OnObjectListEnter(const NFDataList & self, const NFDataList & argVar)
 {
+	//NFAutoBroadcastModule::OnObjectListEnter
 	std::vector<OBJECT_ENTER_EVENT_FUNCTOR_PTR>::iterator it = mvObjectEnterCallback.begin();
 	for (; it != mvObjectEnterCallback.end(); it++)
 	{
@@ -1661,6 +1748,7 @@ int NFSceneModule::OnObjectListEnter(const NFDataList & self, const NFDataList &
 
 int NFSceneModule::OnObjectListEnterFinished(const NFDataList & self, const NFDataList & argVar)
 {
+	//NFAutoBroadcastModule::OnObjectDataFinished
 	std::vector<OBJECT_ENTER_EVENT_FUNCTOR_PTR>::iterator it = mvObjectDataFinishedCallBack.begin();
 	for (; it != mvObjectDataFinishedCallBack.end(); it++)
 	{
@@ -1687,6 +1775,7 @@ int NFSceneModule::OnObjectListLeave(const NFDataList & self, const NFDataList &
 
 int NFSceneModule::OnPropertyEnter(const NFDataList & argVar, const NFGUID & self)
 {
+	//NFAutoBroadcastModule::OnPropertyEnter
 	std::vector<PROPERTY_ENTER_EVENT_FUNCTOR_PTR>::iterator it = mvPropertyEnterCallback.begin();
 	for (; it != mvPropertyEnterCallback.end(); it++)
 	{

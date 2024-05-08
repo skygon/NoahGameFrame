@@ -251,6 +251,7 @@ void NFCreateRoleModule::OnDBLoadRoleDataProcess(const NFSOCK sockIndex, const i
 				auto groupInfo = pSceneInfo->First();
 				groupInfo = pSceneInfo->Next();// start from index 1
 				while (groupInfo) {
+					//NF的工作模式是单线程actor，因此这里不需要加锁
 					if (groupInfo->mxPlayerList.Count() < group_max_users) {
 						available_groupID = groupInfo->groupID;
 						break;
