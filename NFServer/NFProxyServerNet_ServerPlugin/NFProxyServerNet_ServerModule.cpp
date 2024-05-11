@@ -41,6 +41,7 @@ bool NFProxyServerNet_ServerModule::Init()
 	m_pSecurityModule = pPluginManager->FindModule<NFISecurityModule>();
 	m_pWsModule = pPluginManager->FindModule<NFIWSModule>();
     m_pThreadPoolModule = pPluginManager->FindModule<NFIThreadPoolModule>();
+    m_pUDPModule = pPluginManager->FindModule<NFIUDPModule>();
 
     return true;
 }
@@ -75,6 +76,8 @@ bool NFProxyServerNet_ServerModule::AfterInit()
                 const int nPort = m_pElementModule->GetPropertyInt32(strId, NFrame::Server::Port());
                 const int maxConnect = m_pElementModule->GetPropertyInt32(strId, NFrame::Server::MaxOnline());
                 const int nCpus = m_pElementModule->GetPropertyInt32(strId, NFrame::Server::CpuCount());
+                // add udp port config
+                const int nUDPPort = m_pElementModule->GetPropertyInt32(strId, NFrame::Server::UDPPort());
                 //const std::string& name = m_pElementModule->GetPropertyString(strId, NFrame::Server::ID());
                 //const std::string& ip = m_pElementModule->GetPropertyString(strId, NFrame::Server::IP());
 
@@ -85,6 +88,16 @@ bool NFProxyServerNet_ServerModule::AfterInit()
                     strLog << "Cannot init server net, Port = " << nPort;
                     m_pLogModule->LogError(NULL_OBJECT, strLog, __FUNCTION__, __LINE__);
                     NFASSERT(nRet, "Cannot init server net", __FILE__, __FUNCTION__);
+                    exit(0);
+                }
+
+                nRet = m_pUDPModule->Initialization(maxConnect, nUDPPort, nCpus);
+                if (nRet < 0)
+                {
+                    std::ostringstream strLog;
+                    strLog << "Cannot init UDP server net, Port = " << nUDPPort;
+                    m_pLogModule->LogError(NULL_OBJECT, strLog, __FUNCTION__, __LINE__);
+                    NFASSERT(nRet, "Cannot init UDP server net", __FILE__, __FUNCTION__);
                     exit(0);
                 }
             }

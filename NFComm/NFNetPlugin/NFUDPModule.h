@@ -35,12 +35,14 @@
 #include <event2/thread.h>
 #include <event2/event_compat.h>
 #include "NFNetModule.h"
+#include "NFComm/NFPluginModule/NFIPluginManager.h"
+#include "NFComm/NFPluginModule/NFIUDPModule.h"
 
-class NFIUDPModule
-		: public NFINetModule
-{
-public:
-};
+//class NFIUDPModule
+//		: public NFINetModule
+//{
+//public:
+//};
 
 class NFUDPModule: public NFIUDPModule
 {
@@ -94,7 +96,7 @@ protected:
 
 private:
 	struct event_base* mxBase = nullptr;
-	struct event udp_event;
+	struct event* udp_event;
 	unsigned int mnBufferSize;
 	std::map<int, std::list<NET_RECEIVE_FUNCTOR_PTR>> mxReceiveCallBack;
 	std::list<NET_EVENT_FUNCTOR_PTR> mxEventCallBackList;

@@ -39,6 +39,7 @@
 #include "NFComm/NFPluginModule/NFISecurityModule.h"
 #include "NFComm/NFPluginModule/NFIWSModule.h"
 #include "NFComm/NFPluginModule/NFIThreadPoolModule.h"
+#include "NFComm/NFPluginModule/NFIUDPModule.h"
 
 class NFProxyServerNet_ServerModule : public NFIProxyServerNet_ServerModule
 {
@@ -89,6 +90,7 @@ protected:
     NFIClassModule* m_pClassModule;
 	NFINetModule* m_pNetModule;
     NFIWSModule* m_pWsModule;
+    NFIUDPModule* m_pUDPModule;
 	NFISecurityModule* m_pSecurityModule;
 	NFIProxyServerToWorldModule* m_pProxyToWorldModule;
     NFIThreadPoolModule* m_pThreadPoolModule;

@@ -29,36 +29,41 @@
 #define BUF_SIZE                        14500
 //500
 
-static void udp_cb(const int sock, short int which, void *arg)
+//static void udp_cb(const int sock, short int which, void *arg)
+static void udp_cb(intptr_t sock, short int which, void* arg)
 {
 	NFUDPModule* udpModule = (NFUDPModule*)arg;
 
 
 	struct sockaddr_in client_addr;
-	socklen_t size = sizeof(client_addr);
+	//socklen_t size = sizeof(client_addr);
+	int size = sizeof(client_addr);
 	char buf[BUF_SIZE];
 	std::string  data(buf);
-	std::cout << std::this_thread::get_id() << " received:" << data.length() << std::endl;
+	//std::cout << std::this_thread::get_id() << " received:" << data.length() << std::endl;
 
 	/* Recv the data, store the address of the sender in server_sin */
-	if (recvfrom(sock, &buf, sizeof(buf) - 1, 0, (struct sockaddr *) &client_addr, &size) == -1)
+	if (recvfrom(sock, buf, sizeof(buf) - 1, 0, (struct sockaddr *) &client_addr, &size) == -1)
 	{
 		perror("recvfrom()");
 		//event_loopbreak();
 	}
 
+	std::cout << std::this_thread::get_id() << " received:" << data.c_str() << std::endl;
+
 	/* Send the data back to the client */
-	if (sendto(sock, data.c_str(), data.length(), 0, (struct sockaddr *) &client_addr, size) == -1 )
+	std:string reply = "Hello there.";
+	if (sendto(sock, reply.c_str(), reply.length(), 0, (struct sockaddr *) &client_addr, size) == -1 )
 	{
 		perror("sendto()");
 		//event_loopbreak();
 	}
 }
 
-int bind_socket(struct event *ev, int port, void* p)
+int bind_socket(struct event_base* base, struct event* ev, int port, void* p)
 {
 	int                 sock_fd;
-	int                 flag = 1;
+	char                 flag = 1;
 	struct sockaddr_in  sin;
 	sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
 	if (sock_fd < 0)
@@ -88,7 +93,8 @@ int bind_socket(struct event *ev, int port, void* p)
 		printf("bind() success - [%u]\n", port);
 	}
 
-	event_set(ev, sock_fd, EV_READ | EV_PERSIST, &udp_cb, p);
+	//event_set(ev, sock_fd, EV_READ | EV_PERSIST, &udp_cb, p);
+	ev = event_new(base, sock_fd, EV_READ | EV_PERSIST, &udp_cb, p);
 	if (event_add(ev, NULL) == -1)
 	{
 		printf("event_add() failed\n");
@@ -99,6 +105,7 @@ int bind_socket(struct event *ev, int port, void* p)
 
 NFUDPModule::NFUDPModule(NFIPluginManager* p)
 {
+	m_bIsExecute = true;
 	pPluginManager = p;
 
 	mnBufferSize = 0;
@@ -131,11 +138,51 @@ int NFUDPModule::Initialization(const unsigned int nMaxClient, const unsigned sh
 	}
 
 	/* Bind socket */
-	if (bind_socket(&udp_event, nPort, this) != 0)
+	/*if (bind_socket(mxBase, &udp_event, nPort, this) != 0)
 	{
 		printf("bind_socket() failed\n");
 		return -1;
+	}*/
+	int                 sock_fd;
+	char                flag = 1;
+	struct sockaddr_in  sin;
+	sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
+	if (sock_fd < 0)
+	{
+		perror("socket()");
+		return -1;
 	}
+
+	if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int)) < 0)
+	{
+		perror("setsockopt()");
+		return 1;
+	}
+
+	memset(&sin, 0, sizeof(sin));
+	sin.sin_family = AF_INET;
+	sin.sin_addr.s_addr = INADDR_ANY;
+	sin.sin_port = htons(nPort);
+
+	if (::bind(sock_fd, (struct sockaddr*)&sin, sizeof(sin)) < 0)
+	{
+		perror("bind()");
+		return -1;
+	}
+	else
+	{
+		printf("bind() success - [%u]\n", nPort);
+	}
+
+	//event_set(ev, sock_fd, EV_READ | EV_PERSIST, &udp_cb, p);
+	udp_event = event_new(mxBase, sock_fd, EV_READ | EV_PERSIST, &udp_cb, this);
+	if (event_add(udp_event, NULL) == -1)
+	{
+		printf("event_add() failed\n");
+	}
+
+	//event_base_dispatch(mxBase);
+	//event_base_loop(mxBase, EVLOOP_NONBLOCK);
 
 	return 0;
 }
