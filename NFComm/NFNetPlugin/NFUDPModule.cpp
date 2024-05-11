@@ -60,55 +60,13 @@ static void udp_cb(intptr_t sock, short int which, void* arg)
 	}
 }
 
-int bind_socket(struct event_base* base, struct event* ev, int port, void* p)
-{
-	int                 sock_fd;
-	char                 flag = 1;
-	struct sockaddr_in  sin;
-	sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
-	if (sock_fd < 0)
-	{
-		perror("socket()");
-		return -1;
-	}
-
-	if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int)) < 0)
-	{
-		perror("setsockopt()");
-		return 1;
-	}
-
-	memset(&sin, 0, sizeof(sin));
-	sin.sin_family = AF_INET;
-	sin.sin_addr.s_addr = INADDR_ANY;
-	sin.sin_port = htons(port);
-
-	if (::bind(sock_fd, (struct sockaddr *)&sin, sizeof(sin)) < 0)
-	{
-		perror("bind()");
-		return -1;
-	}
-	else
-	{
-		printf("bind() success - [%u]\n", port);
-	}
-
-	//event_set(ev, sock_fd, EV_READ | EV_PERSIST, &udp_cb, p);
-	ev = event_new(base, sock_fd, EV_READ | EV_PERSIST, &udp_cb, p);
-	if (event_add(ev, NULL) == -1)
-	{
-		printf("event_add() failed\n");
-	}
-
-	return 0;
-}
-
 NFUDPModule::NFUDPModule(NFIPluginManager* p)
 {
 	m_bIsExecute = true;
 	pPluginManager = p;
 
 	mnBufferSize = 0;
+	m_pNet = NULL;
 }
 
 NFUDPModule::~NFUDPModule()
@@ -129,67 +87,83 @@ bool NFUDPModule::AfterInit()
 
 int NFUDPModule::Initialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount)
 {
-	/* Init. event */
-	mxBase = event_init();
-	if (mxBase == NULL)
-	{
-		printf("event_init() failed\n");
-		return -1;
-	}
-
-	/* Bind socket */
-	/*if (bind_socket(mxBase, &udp_event, nPort, this) != 0)
-	{
-		printf("bind_socket() failed\n");
-		return -1;
-	}*/
-	int                 sock_fd;
-	char                flag = 1;
-	struct sockaddr_in  sin;
-	sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
-	if (sock_fd < 0)
-	{
-		perror("socket()");
-		return -1;
-	}
-
-	if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int)) < 0)
-	{
-		perror("setsockopt()");
-		return 1;
-	}
-
-	memset(&sin, 0, sizeof(sin));
-	sin.sin_family = AF_INET;
-	sin.sin_addr.s_addr = INADDR_ANY;
-	sin.sin_port = htons(nPort);
-
-	if (::bind(sock_fd, (struct sockaddr*)&sin, sizeof(sin)) < 0)
-	{
-		perror("bind()");
-		return -1;
-	}
-	else
-	{
-		printf("bind() success - [%u]\n", nPort);
-	}
-
-	//event_set(ev, sock_fd, EV_READ | EV_PERSIST, &udp_cb, p);
-	udp_event = event_new(mxBase, sock_fd, EV_READ | EV_PERSIST, &udp_cb, this);
-	if (event_add(udp_event, NULL) == -1)
-	{
-		printf("event_add() failed\n");
-	}
-
-	//event_base_dispatch(mxBase);
-	//event_base_loop(mxBase, EVLOOP_NONBLOCK);
-
+	m_pNet = NF_NEW NFNet(this, &NFUDPModule::OnReceiveNetPack, &NFUDPModule::OnSocketNetEvent);
+	m_pNet->ExpandBufferSize(mnBufferSize);
+	m_pNet->UDPInitialization(nMaxClient, nPort, nCpuCount);
 	return 0;
+
+	// need to delete later.
+
+	///* Init. event */
+	//mxBase = event_init();
+	//if (mxBase == NULL)
+	//{
+	//	printf("event_init() failed\n");
+	//	return -1;
+	//}
+
+	///* Bind socket */
+	///*if (bind_socket(mxBase, &udp_event, nPort, this) != 0)
+	//{
+	//	printf("bind_socket() failed\n");
+	//	return -1;
+	//}*/
+	//int                 sock_fd;
+	//char                flag = 1;
+	//struct sockaddr_in  sin;
+	//sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
+	//if (sock_fd < 0)
+	//{
+	//	perror("socket()");
+	//	return -1;
+	//}
+
+	//if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int)) < 0)
+	//{
+	//	perror("setsockopt()");
+	//	return 1;
+	//}
+
+	//memset(&sin, 0, sizeof(sin));
+	//sin.sin_family = AF_INET;
+	//sin.sin_addr.s_addr = INADDR_ANY;
+	//sin.sin_port = htons(nPort);
+
+	//if (::bind(sock_fd, (struct sockaddr*)&sin, sizeof(sin)) < 0)
+	//{
+	//	perror("bind()");
+	//	return -1;
+	//}
+	//else
+	//{
+	//	printf("bind() success - [%u]\n", nPort);
+	//}
+
+	////event_set(ev, sock_fd, EV_READ | EV_PERSIST, &udp_cb, p);
+	//udp_event = event_new(mxBase, sock_fd, EV_READ | EV_PERSIST, &udp_cb, this);
+	//if (event_add(udp_event, NULL) == -1)
+	//{
+	//	printf("event_add() failed\n");
+	//}
+
+	////event_base_dispatch(mxBase);
+	////event_base_loop(mxBase, EVLOOP_NONBLOCK);
+
+	//return 0;
 }
 
 unsigned int NFUDPModule::ExpandBufferSize(const unsigned int size)
 {
-	return 0;
+	if (size > 0)
+	{
+		mnBufferSize = size;
+		if (m_pNet)
+		{
+			m_pNet->ExpandBufferSize(mnBufferSize);
+		}
+	}
+
+	return mnBufferSize;
 }
 
 void NFUDPModule::RemoveReceiveCallBack(const int msgID)
@@ -204,6 +178,8 @@ bool NFUDPModule::AddReceiveCallBack(const int msgID, const NET_RECEIVE_FUNCTOR_
 
 bool NFUDPModule::AddReceiveCallBack(const NET_RECEIVE_FUNCTOR_PTR &cb)
 {
+	mxCallBackList.push_back(cb);
+
 	return true;
 }
 
@@ -214,12 +190,21 @@ bool NFUDPModule::AddEventCallBack(const NET_EVENT_FUNCTOR_PTR &cb)
 
 bool NFUDPModule::Execute()
 {
-	if (mxBase)
+	if (!m_pNet)
+	{
+		return false;
+	}
+
+	m_pNet->Execute();
+
+	return true;
+
+	/*if (mxBase)
 	{
 		event_base_loop(mxBase, EVLOOP_ONCE | EVLOOP_NONBLOCK);
 	}
 
-	return true;
+	return true;*/
 }
 
 bool NFUDPModule::SendMsgWithOutHead(const int msgID, const std::string &msg, const NFSOCK sockIndex)
@@ -275,7 +260,28 @@ NFINet *NFUDPModule::GetNet()
 
 void NFUDPModule::OnReceiveNetPack(const NFSOCK sockIndex, const int msgID, const char *msg, const uint32_t len)
 {
+	std::map<int, std::list<NET_RECEIVE_FUNCTOR_PTR>>::iterator it = mxReceiveCallBack.find(msgID);
+	if (mxReceiveCallBack.end() != it)
+	{
+		std::list<NET_RECEIVE_FUNCTOR_PTR>& xFunList = it->second;
+		for (std::list<NET_RECEIVE_FUNCTOR_PTR>::iterator itList = xFunList.begin(); itList != xFunList.end(); ++itList)
+		{
+			NET_RECEIVE_FUNCTOR_PTR& pFunPtr = *itList;
+			NET_RECEIVE_FUNCTOR* pFunc = pFunPtr.get();
 
+			pFunc->operator()(sockIndex, msgID, msg, len);
+		}
+	}
+	else
+	{
+		for (std::list<NET_RECEIVE_FUNCTOR_PTR>::iterator itList = mxCallBackList.begin(); itList != mxCallBackList.end(); ++itList)
+		{
+			NET_RECEIVE_FUNCTOR_PTR& pFunPtr = *itList;
+			NET_RECEIVE_FUNCTOR* pFunc = pFunPtr.get();
+
+			pFunc->operator()(sockIndex, msgID, msg, len);
+		}
+	}
 }
 
 void NFUDPModule::OnSocketNetEvent(const NFSOCK sockIndex, const NF_NET_EVENT eEvent, NFINet *pNet)

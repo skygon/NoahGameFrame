@@ -101,6 +101,7 @@ private:
 	std::map<int, std::list<NET_RECEIVE_FUNCTOR_PTR>> mxReceiveCallBack;
 	std::list<NET_EVENT_FUNCTOR_PTR> mxEventCallBackList;
 	std::list<NET_RECEIVE_FUNCTOR_PTR> mxCallBackList;
+	NFINet* m_pNet;
 
 	NFILogModule* m_pLogModule;
 };

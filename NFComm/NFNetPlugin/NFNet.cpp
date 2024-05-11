@@ -252,6 +252,171 @@ int NFNet::Initialization(const unsigned int nMaxClient, const unsigned short nP
     return InitServerNet();
 }
 
+void NFNet::udp_readcb(struct bufferevent* bev, void* user_data)
+{
+    NetObject* pObject = (NetObject*)user_data;
+    if (!pObject)
+    {
+        return;
+    }
+
+    NFNet* pNet = (NFNet*)pObject->GetNet();
+    if (!pNet)
+    {
+        return;
+    }
+
+    if (pObject->NeedRemove())
+    {
+        return;
+    }
+
+    struct evbuffer* input = bufferevent_get_input(bev);
+    if (!input)
+    {
+        return;
+    }
+
+    size_t len = evbuffer_get_length(input);
+    unsigned char* pData = evbuffer_pullup(input, len);
+    pObject->AddBuff((const char*)pData, len);
+    evbuffer_drain(input, len);
+
+    if (pNet->mbTCPStream)
+    {
+        int len = pObject->GetBuffLen();
+        if (len > 0)
+        {
+            if (pNet->mRecvCB)
+            {
+                pNet->mRecvCB(pObject->GetRealFD(), -1, pObject->GetBuff(), len);
+
+                pNet->mnReceiveMsgTotal++;
+            }
+
+            pObject->RemoveBuff(0, len);
+        }
+    }
+    else
+    {
+        while (1)
+        {
+            if (!pNet->Dismantle(pObject))
+            {
+                break;
+            }
+        }
+    }
+}
+
+void NFNet::udp_cb(NFSOCK fd, short int which, void* arg)
+{
+    NFNet* pNet = (NFNet*)arg;
+    if (pNet->mmObject.size() >= pNet->mnMaxConnect)
+    {
+
+        return;
+    }
+
+    struct event_base* mxBase = pNet->mxBase;
+
+    struct bufferevent* bev = bufferevent_socket_new(mxBase, fd, BEV_OPT_CLOSE_ON_FREE);
+    if (!bev)
+    {
+        fprintf(stderr, "Error constructing bufferevent!");
+        return;
+    }
+
+
+    struct sockaddr_in empty_addr;
+    NetObject* pObject = new NetObject(pNet, fd, empty_addr, bev);
+    pObject->GetNet()->AddNetObject(fd, pObject);
+
+//#if NF_PLATFORM != NF_PLATFORM_WIN
+//    int optval = 1;
+//    int result = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(optval));
+//    //setsockopt(fd, IPPROTO_TCP, TCP_CORK, &optval, sizeof(optval));
+//    if (result < 0)
+//    {
+//        std::cout << "setsockopt TCP_NODELAY ERROR !!!" << std::endl;
+//    }
+//
+//    int nRecvBufLen = NF_BUFFER_MAX_READ;
+//    setsockopt(fd, SOL_SOCKET, SO_RCVBUF, (const char*)&nRecvBufLen, sizeof(int));
+//#endif
+
+    bufferevent_setcb(bev, udp_readcb, conn_writecb, conn_eventcb, (void*)pObject);
+
+    bufferevent_enable(bev, EV_READ | EV_WRITE | EV_CLOSED | EV_TIMEOUT | EV_PERSIST);
+
+    event_set_fatal_callback(event_fatal_cb);
+
+    conn_eventcb(bev, BEV_EVENT_CONNECTED, (void*)pObject);
+
+    bufferevent_set_max_single_read(bev, NF_BUFFER_MAX_READ);
+    bufferevent_set_max_single_write(bev, NF_BUFFER_MAX_READ);
+
+}
+
+int NFNet::UDPInitialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount)
+{
+    mnMaxConnect = nMaxClient;
+    mnPort = nPort;
+    mnCpuCount = nCpuCount;
+
+    /* Init. event */
+    mxBase = event_init();
+    if (mxBase == NULL)
+    {
+        printf("event_init() failed\n");
+        return -1;
+    }
+
+
+    int                 sock_fd;
+    char                flag = 1;
+    struct sockaddr_in  sin;
+    sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sock_fd < 0)
+    {
+        perror("socket()");
+        return -1;
+    }
+
+    if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int)) < 0)
+    {
+        perror("setsockopt()");
+        return 1;
+    }
+
+    memset(&sin, 0, sizeof(sin));
+    sin.sin_family = AF_INET;
+    sin.sin_addr.s_addr = INADDR_ANY;
+    sin.sin_port = htons(nPort);
+
+    if (::bind(sock_fd, (struct sockaddr*)&sin, sizeof(sin)) < 0)
+    {
+        perror("bind()");
+        return -1;
+    }
+    else
+    {
+        printf("bind() success - [%u]\n", nPort);
+    }
+
+    //event_set(ev, sock_fd, EV_READ | EV_PERSIST, &udp_cb, p);
+    udp_event = event_new(mxBase, sock_fd, EV_READ | EV_PERSIST, &udp_cb, this);
+    if (event_add(udp_event, NULL) == -1)
+    {
+        printf("event_add() failed\n");
+    }
+
+    //event_base_dispatch(mxBase);
+    //event_base_loop(mxBase, EVLOOP_NONBLOCK);
+
+    return 0;
+}
+
 unsigned int NFNet::ExpandBufferSize(const unsigned int size)
 {
 	if (size > 0)

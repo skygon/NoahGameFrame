@@ -61,6 +61,10 @@ bool NFProxyServerNet_ServerModule::AfterInit()
 	m_pNetModule->AddEventCallBack(this, &NFProxyServerNet_ServerModule::OnSocketClientEvent);
 	m_pNetModule->ExpandBufferSize(1024*1024*2);
 
+    // register callback fn for udp test. Will delete later.
+    m_pUDPModule->AddReceiveCallBack(this, &NFProxyServerNet_ServerModule::OnOtherMessage);
+    m_pUDPModule->ExpandBufferSize(1024 * 1024 * 2);
+
     NF_SHARE_PTR<NFIClass> xLogicClass = m_pClassModule->GetElement(NFrame::Server::ThisName());
     if (xLogicClass)
     {

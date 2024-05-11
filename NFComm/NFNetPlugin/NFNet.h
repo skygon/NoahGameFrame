@@ -89,6 +89,7 @@ public:
 
     virtual void Initialization(const char* ip, const unsigned short nPort) override ;
     virtual int Initialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount = 4) override ;
+    virtual int UDPInitialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount);
 	virtual unsigned int ExpandBufferSize(const unsigned int size) override;
 
     virtual bool Final() override ;
@@ -132,6 +133,8 @@ private:
     static void conn_eventcb(struct bufferevent* bev, short events, void* user_data);
     static void log_cb(int severity, const char* msg);
     static void event_fatal_cb(int err);
+    static void udp_readcb(struct bufferevent* bev, void* user_data);
+    static void udp_cb(intptr_t sock, short int which, void* arg);
 
 protected:
     int DeCode(const char* strData, const uint32_t ulen, NFMsgHead& xHead);
@@ -162,6 +165,7 @@ private:
 
     struct event_base* mxBase;
     struct evconnlistener* listener;
+    struct event* udp_event;
     //////////////////////////////////////////////////////////////////////////
 
     NET_RECEIVE_FUNCTOR mRecvCB;
