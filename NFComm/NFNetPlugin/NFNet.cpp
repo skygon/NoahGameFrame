@@ -252,6 +252,8 @@ int NFNet::Initialization(const unsigned int nMaxClient, const unsigned short nP
     return InitServerNet();
 }
 
+
+//使用单独的读回调，方便调试
 void NFNet::udp_readcb(struct bufferevent* bev, void* user_data)
 {
     NetObject* pObject = (NetObject*)user_data;
@@ -284,18 +286,7 @@ void NFNet::udp_readcb(struct bufferevent* bev, void* user_data)
 
     if (pNet->mbTCPStream)
     {
-        int len = pObject->GetBuffLen();
-        if (len > 0)
-        {
-            if (pNet->mRecvCB)
-            {
-                pNet->mRecvCB(pObject->GetRealFD(), -1, pObject->GetBuff(), len);
-
-                pNet->mnReceiveMsgTotal++;
-            }
-
-            pObject->RemoveBuff(0, len);
-        }
+        //should not enter here.
     }
     else
     {
