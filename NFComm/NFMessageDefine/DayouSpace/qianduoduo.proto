@@ -1,0 +1,65 @@
+syntax = "proto3";
+package pb;
+import "vector.proto";
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Qianduoduo";
+option go_package = "./;pb";
+
+message BMoneyOrderList{
+	int32 orderId=1;//订单id
+	string name=2;//物品名称
+	int32 uid=3;//可下单uid
+}
+//钱多多可选订单列表
+message CMoneyOrderList{
+}
+message SMoneyOrderList {
+	repeated BMoneyOrderList list=1;
+	int32 uid=2;
+}
+//扔订单
+message CThrowOrder {
+	int32 orderId  = 1;//扔订单id
+	vector.PVector3 position = 2;
+}
+message SThrowOrder {
+	int32 orderId=1;//订单id
+	int32 uid  = 2;//可买用户id
+	int32 code = 3;//200正常
+	string msg  = 4;
+	vector.PVector3 position = 5;
+	int32 expireTime=6;//消失时间戳
+        	int32 throwUid=7;//扔订单用户uid
+         int32 goodsId=8;//goodsId
+        	int32 price=9;//元晶或者元力
+	int32 coinType=10;//1元晶2元力
+}
+
+//扔在地面上的订单列表
+message BEarthOrderList{
+	int32 orderId=1;//订单id
+	string name=2;//物品名称
+	int32 uid=3;//可下单uid
+	int32 price=4;//元晶或者元力
+	int32 coinType=5;//1元晶2元力
+	vector.PVector3 position = 6;
+	int32 goodsId=7;//商品id
+         int32 expireTime=8;//消失时间戳
+}
+//扔在地面上的订单列表
+message CEarthOrderList{
+}
+message SEarthOrderList{
+	repeated BEarthOrderList list=1;
+}
+
+//钱多多订单购买
+message CBuyMoneyOrder{
+	int32 orderId=1;
+}
+message SBuyMoneyOrder{
+	int32 orderId=1;
+	int32 code = 2;//200正常,403失败
+	string msg  = 3;//失败消息
+        	int32  uid = 4;//购买者uid
+}

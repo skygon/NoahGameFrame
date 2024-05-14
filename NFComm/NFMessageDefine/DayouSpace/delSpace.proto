@@ -1,0 +1,15 @@
+syntax = "proto3";
+package delSpace;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "DelSpace";
+option go_package = "./;pb";
+
+message CDelSpace{
+	int32 spaceId=1;
+}
+
+message SDelSpace{
+	int32 code=1;
+	string msg=2;
+	int32 spaceId=3;
+}

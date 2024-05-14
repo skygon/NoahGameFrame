@@ -1,0 +1,24 @@
+syntax = "proto3";
+package shoppingWallet;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "ShoppingWallet";
+
+//代币钱包详情
+message CShoppingWalletInfo {
+}
+message SShoppingWalletInfo {
+  int32 id = 1; // 钱包id
+  int32 yuanjingBalance = 2; // 元晶余额
+  int32 yuanliBalance = 3; // 元力余额
+  int32 liuxiaBalance = 4; // 留下余额
+}
+
+message CYuanLiChange {
+  int32 YuanJingNum = 1;// 支付的元晶数量
+}
+
+message SYuanLiChange {
+  int32 status = 1;   //是否成功 1成功 0失败
+  int32 YuanLiNum = 2; //兑换的元力数量
+  string msg = 3; //兑换消息
+}

@@ -1,0 +1,37 @@
+syntax = "proto3";
+package chat;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Chat";
+option go_package = "./pb;pb";
+
+message CChatList {
+	int32 type = 1;//1最近 2关注 3粉丝
+}
+message SChatList {
+	int32 type = 1;
+	repeated BChatListInfo infoList = 2;
+}
+message BChatListInfo {
+	int32  uid          = 1;
+	string nick         = 2;
+	string headPic      = 3;
+	string imAccount    = 4;
+	int32  followStatus = 5;//1未关注 2已关注未互关 3互关
+}
+
+message CChatDetail {
+	int32 uid = 1;
+}
+message SChatDetail {
+	BChatListInfo info = 1;
+	int32 houseId      = 2;
+	string spaceName   = 3;
+	int32 seq          = 4;
+}
+
+message CChatSend {
+	int32 toUid = 1;
+}
+message SChatSend {
+	int32 followStatus = 1;
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+package switchRoom;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "LinedNum";
+message CLinedNum{
+	int32 houseID=1;//屋子id
+}
+message SLinedNum{
+	int32 number=2;
+	int32 uid=3;
+	int32 houseID=4;
+	int32 vipFlag=5;//1是非vip,2是vip
+}

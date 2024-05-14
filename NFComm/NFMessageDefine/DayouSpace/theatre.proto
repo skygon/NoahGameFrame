@@ -1,0 +1,16 @@
+syntax = "proto3";
+package businessCard;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Theatre";
+option go_package = "./pb;pb";
+
+message CTheatreInfo { //戏剧空间信息
+}
+message STheatreInfo {
+	int32 startTimestamp = 1; //开幕的时间戳
+}
+
+message CTheatreBegin { //戏剧开幕
+}
+message STheatreBegin {
+}

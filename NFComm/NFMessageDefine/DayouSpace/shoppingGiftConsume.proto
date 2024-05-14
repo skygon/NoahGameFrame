@@ -1,0 +1,52 @@
+syntax = "proto3";                //Proto协议
+package pb;                     //当前包名
+
+option csharp_namespace = "Pb";   //给C#提供的选项
+option go_package = "./";
+
+//商城列表
+message CUserGiftList {
+  int32 uid = 1;
+}
+message SUserGiftList {
+  repeated BUserGift list = 1;
+}
+message BUserGift {
+  int32 shoppingId = 1; //礼物商品id
+  string shoppingName = 2; //礼物商品名称
+  string cover = 3; //礼物商品封面
+  int32 count = 4; //收到的数量
+}
+
+message CUserConsumeGiftList {
+  int32 curPage = 1; // 当前页
+  int32 pageLimit = 2; // 每页条数
+}
+
+message SUserConsumeGiftList {
+  repeated GiftInfo list = 1;
+  int32 curPage = 2; // 当前页
+  int32 total = 3; // 总数量
+  string msg = 4;
+}
+
+message GiftInfo {
+  int32 uid = 1;
+  string nick = 2;
+  string userIcon = 3;//用户头像
+  string giftName = 4;//礼物名称
+  string cover = 5; //礼物商品封面
+  string ConsumeTime = 6;//礼物使用时间
+}
+
+message CUserObtainGiftList {
+  int32 curPage = 1; // 当前页
+  int32 pageLimit = 2; // 每页条数
+}
+
+message SUserObtainGiftList {
+  repeated GiftInfo list = 1;
+  int32 curPage = 2; // 当前页
+  int32 total = 3; // 总数量
+  string msg = 4;
+}

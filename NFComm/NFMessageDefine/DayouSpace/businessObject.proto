@@ -1,0 +1,131 @@
+syntax = "proto3";
+package space;
+
+import "position.proto";
+
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "BusinessObject";
+
+message CBusinessObjectList { //空间内业务对象
+  int32 sceneId = 1; //场景id
+}
+message SBusinessObjectList {
+  repeated BObject boList = 1;
+}
+
+message BObject { //业务对象
+  int32 boId                  = 1; //业务对象id
+  int32 location              = 2; //位置序号
+  position.BPosition position = 3;
+}
+
+message CTriggerBo {
+  int32 boId     = 1;
+  int32 eventId  = 2; //触发事件id
+  int32 location = 3;
+  int32 goodsId = 4;
+}
+message STriggerBo {
+  int32 isSuccess = 1; //1成功，2失败
+  int32 location = 2;
+}
+message STriggerBoBroad {
+  int32 boId     = 1;
+  int32 eventId  = 2;
+  int32 location = 3;
+}
+
+//往场景中扔道具
+message CPutGoods {
+  position.BPosition position = 1; //位置信息
+  int32 goodsId = 2;
+}
+message SPutGoods {
+  int32 location = 1; // 位置序号
+  position.BPosition position = 2;
+  int32 goodsId = 3;
+  int32 second = 4; // 消失所剩秒数
+  int32 uid = 5;
+}
+
+// 场景中道具初始化
+message SPutGoodsList {
+  repeated SPutGoods list = 1;
+}
+
+//拾取道具
+message CPickGoods {
+  int32 location = 1; // 位置序号
+}
+message SPickGoods {
+  int32 state = 1; // 1成功 2失败
+  string msg = 2; // 提示语
+  int32 location = 3;
+  int32 pickUid = 4; // 拾取人uid
+}
+
+// 房间内道具位置 20230713定制化需求
+message BSpaceGoods {
+  int32 location = 1; // 位置序号
+  position.BPosition position = 2; // 位置坐标
+  int32 goodsId = 3; // 物品id，如果该位置是元力则该值为0
+  int32 yuanliNum = 4; // 元力数量，如果该位置是物品则该值为0
+}
+
+// 房间内道具位置列表 20230713定制化需求
+message SSpaceGoodsList {
+  repeated BSpaceGoods list = 1;
+}
+
+// 拾取道具 20230713定制化需求
+message CPickSpaceGoods {
+  int32 location = 1; // 位置序号
+}
+message SPickSpaceGoods {
+  int32 state = 1; // 1成功 2已经被其他人领取 3服务器错误
+  string msg = 2; // 提示语
+  int32 location = 3;
+  int32 pickUid = 4; // 拾取人uid
+}
+
+// 房间内飞行器状态
+message BSpaceAirVehicle {
+  int32 id = 1; //飞行器id
+  int32 owner = 2; //飞行器拥有者uid
+  int32 driver = 3; //当前驾驶员uid，无驾驶员该值为0
+  int32 passenger = 4; //当前乘客uid，无乘客该值为0
+}
+
+// 房间内飞行器列表
+message SSpaceAirVehicleList {
+  repeated BSpaceAirVehicle list = 1;
+}
+
+// 房间内上 or 下飞行器
+message CSpaceAirVehicleTake {
+  int32 id = 1; //飞行器id
+  int32 takeAction = 2; //动作： 1 上 2 下
+  int32 takePosition = 3; //上飞行器位置：1 驾驶 2 乘坐
+}
+message SSpaceAirVehicleTake {
+  int32 state = 1; // 1成功 2失败
+  string msg = 2; // 提示语
+  int32 id = 3; // 飞行器id
+  int32 takeUid = 4; // 操作人uid
+  int32 takePosition = 5; //上飞行器位置：1 驾驶 2 乘坐
+  int32 takeAction = 6; //动作： 1 上 2 下
+}
+
+// 飞行器消失倒计时
+message SSpaceAirVehicleDisappear {
+  int32 id = 1; // 飞行器id
+  int32 second = 2; // 消失所剩秒数
+}
+
+//新增飞行器信息
+message SSpaceAirVehicle {
+  int32 id = 1; //飞行器id
+  int32 owner = 2; //飞行器拥有者uid
+  int32 driver = 3; //当前驾驶员uid，无驾驶员该值为0
+  int32 passenger = 4; //当前乘客uid，无乘客该值为0
+}

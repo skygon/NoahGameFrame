@@ -1,0 +1,190 @@
+syntax = "proto3";
+import  "vector.proto";
+package hiphop;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "HiphopCeremony";
+option go_package = "./pb;pb";
+
+//嘻哈盛典奖项竞猜
+message CHiphopAwardPrediction {
+  int32 awardId = 1; //奖项
+  int32 index   = 2; //竞猜选项
+}
+message SHiphopAwardPrediction {
+  string goodsName       = 1; //奖品名称
+  string goodsPic        = 2; //奖品图片
+  string goodsDesc       = 3; //奖品描述
+}
+
+//嘻哈盛典音符列表
+message CHiphopNoteList {
+}
+message BHiphopNote {
+  int32 index              = 1; //序号
+  vector.PVector3 position = 2; //位置
+  vector.PVector3 rotation = 3; //朝向
+}
+message SHiphopNoteList {
+  repeated BHiphopNote notes = 1;
+}
+
+//嘻哈盛典拾取音符
+message CHiphopNotePickup {
+  int32 index = 1; //序号
+}
+message SHiphopNotePickup {
+  int32 res   = 1; //0失败 1成功
+  int32 index = 2; //序号
+  int32 uid   = 3;
+}
+
+//状态开关
+enum HiphopSwitch {
+  Unknown        = 0; //未知
+  WarmupVideo    = 1; //开场视频播放
+  PortalOpen     = 2; //盛典传送门开启
+  PhotoUI        = 3; //看照片UI开启
+  GiftUI         = 4; //发礼物UI开启
+  RedCarpet      = 5; //红毯
+}
+message BHiphopSwitch {
+  HiphopSwitch curr = 1; //状态开关
+  bool on           = 2; //是否开启
+}
+//嘻哈状态开关
+message SHiphopSwitch {
+  BHiphopSwitch bSwitch = 1;
+}
+//嘻哈预热空间当前状态
+message CHiphopWarmupState {
+}
+message SHiphopWarmupState {
+  repeated BHiphopSwitch switchList = 1; //开关状态列表
+}
+
+//主流程
+enum HiphopProcess {
+  Reset                                 = 0; //重置
+  BeginVideo                            = 4; //盛典空间-开场视频开启
+  OpeningRemarks                        = 5; //串词人开场串场语音开启
+  SongRefireStart                       = 6; //开场曲《REFIRE·再炬》开启
+  BestRapMVVCR                          = 7; //最佳华语说唱MV-入围VCR
+  BestRapMVRes                          = 8; //最佳华语说唱MV-竞猜结果+获奖VCR
+  BestLyricsVCR                         = 9; //最佳音乐作词作品-入围VCR
+  BestLyricsRes                         = 10; //最佳音乐作词作品-竞猜结果+获奖VCR
+  BestComposeVCR                        = 11; //最佳音乐编曲作品-入围VCR
+  BestComposeRes                        = 12; //最佳音乐编曲作品-竞猜结果+获奖VCR
+  BestRapVCR                            = 13; //最佳华语说唱作品-入围VCR
+  BestRapRes                            = 14; //最佳华语说唱作品-竞猜结果+获奖VCR
+  BestRapAlbumVCR                       = 15; //最佳华语说唱专辑-入围VCR
+  BestRapAlbumRes                       = 16; //最佳华语说唱专辑-竞猜结果+获奖VCR
+  BestArtistAgencyVCR                   = 17; //最佳艺人经纪公司-入围VCR
+  BestArtistAgencyRes                   = 18; //最佳艺人经纪公司-竞猜结果+获奖VCR
+  BestMusicProducerVCR                  = 19; //最佳音乐制作人-入围VCR
+  BestMusicProducerRes                  = 20; //最佳音乐制作人-竞猜结果+获奖VCR
+  BestLyricistVCR                       = 21; //最佳作词人-入围VCR
+  BestLyricistRes                       = 22; //最佳作词人-竞猜结果+获奖VCR
+  SongMontageStart                      = 23; //《插叙人生》开启
+  SongMontageEnd                        = 24; //《插叙人生》关闭
+  MostPopularRapRecordLabelVCR          = 25; //最受欢迎说唱厂牌-入围VCR
+  MostPopularRapRecordLabelRes          = 26; //最受欢迎说唱厂牌-竞猜结果+获奖VCR
+  MostPopularCollaborativeSingleVCR     = 27; //最受欢迎合作单曲-入围VCR
+  MostPopularCollaborativeSingleRes     = 28; //最受欢迎合作单曲-竞猜结果+获奖VCR
+  MostPopularNewcomerVCR                = 29; //最受欢迎说唱新人-入围VCR
+  MostPopularNewcomerRes                = 30; //最受欢迎说唱新人-竞猜结果+获奖VCR
+  MostPopularSingleVCR                  = 31; //最受欢迎个人单曲-入围VCR
+  MostPopularSingleRes                  = 32; //最受欢迎个人单曲-竞猜结果+获奖VCR
+  MostPopularMaleSingerVCR              = 33; //最受欢迎男歌手-入围VCR
+  MostPopularMaleSingerRes              = 34; //最受欢迎男歌手-竞猜结果+获奖VCR
+  MostPopularFemaleSingerVCR            = 35; //最受欢迎女歌手-入围VCR
+  MostPopularFemaleSingerRes            = 36; //最受欢迎女歌手-竞猜结果+获奖VCR
+  SongBurnMeDownStart                   = 37; //《Burn Me Down》开启
+  SongBurnMeDownEnd                     = 38; //《Burn Me Down》关闭
+  AnnualPioneerArtistVCR                = 39; //年度先锋艺人-入围VCR
+  AnnualCommendArtistVCR                = 40; //年度推荐艺人-入围VCR
+  AnnualNewArtistVCR                    = 41; //年度新晋艺人-入围VCR
+  AnnualBreakArtistVCR                  = 42; //年度突破艺人-入围VCR
+  AnnualVarietyRapStageVCR              = 43; //年度综艺说唱舞台-入围VCR
+  AnnualMediaFavoriteArtistVCR          = 44; //年度微博影响力艺人-入围VCR
+  AnnualCharismaArtistVCR               = 45; //年度号召力艺人-入围VCR
+  AnnualModelArtistVCR                  = 46; //年度模范艺人-入围VCR
+  SongTenToesDownStart                  = 47; //《Ten Toes Down(脚踏十地)》开启
+  SongTenToesDownEnd                    = 48; //《Ten Toes Down(脚踏十地)》关闭
+  AnnualAlmightyArtistVCR               = 49; //年度全能艺人-入围VCR
+  AnnualInfluentialArtistVCR            = 50; //年度风云艺人-入围VCR
+  AnnualValuableArtistVCR               = 51; //年度价值艺人-入围VCR
+  AnnualTopArtistVCR                    = 52; //年度巅峰艺人-入围VCR
+  AnnualRapSingleVCR                    = 53; //年度说唱金曲-入围VCR
+  AnnualRapAlbumVCR                     = 54; //年度说唱专辑-入围VCR
+  AnnualRapArtistVCR                    = 55; //年度说唱艺人-入围VCR
+  Firework                              = 58; //烟花
+  CeremonyEnd                           = 56; //宣布活动结束（彩片雨开启）
+  MJConcertTrailer                      = 57; //MJ演唱会预告开启
+}
+//嘻哈盛典当前流程
+message SHiphopCeremonyProcess {
+  HiphopProcess curr = 1; //当前流程
+  int32 startTime    = 2; //开启时间
+}
+
+enum HiphopStar {
+  HiphopStar_None         = 0; //无
+  HiphopStar_Pharaoh      = 1; //法老
+  HiphopStar_XuZhenZhen   = 2; //徐真真
+  HiphopStar_DoughBoy     = 3; //Dough-Boy
+  HiphopStar_YangBuLaDe   = 4; //杨布拉德
+  HiphopStar_Hanji        = 5; //Hanji
+  HiphopStar_YuZheHao     = 6; //于哲浩
+  HiphopStar_LiChenXi     = 7; //李晨曦
+  HiphopStar_Doggie       = 8; //Doggie
+  HiphopStar_DengDianGuo  = 9; //邓典果
+  HiphopStar_ZhangZiHao   = 10; //张子豪
+  HiphopStar_LilHowcy     = 11; //Lil Howcy
+  HiphopStar_XiaoJingLing = 12; //小精灵
+  HiphopStar_LuoYan       = 13; //罗言
+  HiphopStar_KASS         = 14; //卡斯
+  HiphopStar_CDE          = 15; //CDE
+  HiphopStar_PACT         = 16; //派克特
+  HiphopStar_Vinida       = 17; //万妮达
+  HiphopStar_GoodMorning  = 18; //早安
+  HiphopStar_VaVa         = 19; //VaVa
+  HiphopStar_AIR          = 20; //艾热
+  HiphopStar_GAI          = 21; //GAI
+  HiphopStar_ShengYu      = 22; //盛宇
+  HiphopStar_LiuCong      = 23; //刘聪
+  HiphopStar_YangHeSu     = 24; //杨和苏
+}
+//嘻哈盛典艺人开关
+message SHiphopStarSwitch {
+  HiphopStar star = 1; //艺人
+  int32 type      = 2; //类型 1语音开关 2上下台开关 3备用音频
+  bool on         = 3; //type=1,2时有效 true开启/上台 false关闭/下台
+  int32 index     = 4; //type=3时有效
+}
+
+//嘻哈盛典当前状态
+message CHiphopCeremonyState {
+}
+//艺人备用音频
+message BHiphopStarBakAudio {
+  HiphopStar star = 1; //艺人
+  int32 index     = 2;
+  int32 startTime  = 3; //音频开始播放的时间
+}
+message SHiphopCeremonyState {
+  repeated BHiphopSwitch switchList = 1; //开关状态列表
+  HiphopProcess curr                = 2; //当前主流程
+  int32 startTime                   = 3; //主流程开启时间
+  repeated HiphopStar voiceOnStars  = 4; //声音开的艺人
+  repeated HiphopStar stageOnStars  = 5; //在舞台上的艺人
+  repeated HiphopStar hasAwardStars = 6; //有奖杯的艺人
+  BHiphopStarBakAudio starAudio     = 7; //正在播放的艺人备用音频
+}
+
+//嘻哈盛典签名照雨
+message SHiphopPhotoRain {
+  int32 goodsId    = 1;
+  int32 goodsType  = 2;
+  string goodsName = 3;
+  string goodsPic  = 4;
+}

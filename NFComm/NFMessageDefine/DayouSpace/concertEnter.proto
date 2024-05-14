@@ -1,0 +1,27 @@
+syntax = "proto3";
+package concert;
+
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "ConcertEnter";
+
+message CEnterConcert { //进入演唱会空间
+
+}
+message SEnterConcert {
+  int32 scene             = 1; //应该进入的场景，1前置场景，2主场景
+  int32 serverTime        = 2; //服务器时间
+  int32 concertStartTime  = 3; //演唱会开始时间
+  int32 beforeSceneTime   = 4; //前置场景可进入时间
+  int32 mainSceneTime     = 5; //主场景可进入时间
+  int32 canEnterMain      = 6; //是否可以进入主场景，1能进入，2不能
+  int32 isReserve         = 7; //是否预约，1已预约，2未预约
+  int32 goodsId           = 8; //物品Id
+  int32 disconnectConcert = 9; //演唱会断开状态：1 已断开 0 未断开
+}
+
+message CEnterConcertMain { //进入演唱会主场景
+
+}
+message SEnterConcertMain {
+
+}

@@ -1,0 +1,17 @@
+syntax = "proto3";
+package transfiguration;
+option csharp_namespace = "Pb";
+option go_package = "./";
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Transfiguration";
+
+//指定区域变身
+message CTransfiguration{
+   string assetKeys=1;
+}
+
+message STransfiguration{
+    int32 duration=1;//变身时间单位秒
+    repeated int32 uidList=2;//变身uid列表
+    string assetKeys=3;//类型ChangeFish变鱼
+}

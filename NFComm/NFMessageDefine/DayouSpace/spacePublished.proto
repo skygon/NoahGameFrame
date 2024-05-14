@@ -1,0 +1,30 @@
+syntax = "proto3";
+package spacePublished;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "SpacePublishedClass";
+option go_package = "./";
+
+message CSpacePublishedList{
+  int32 curPage = 1; // 当前页
+  int32 pageLimit = 2; // 每页条数
+}
+
+message SSpacePublishedList{
+  repeated SpacePublished list = 1;
+  string msg = 2;
+  int32 curPage = 3; // 当前页
+  int32 spaceNum = 4; //空间数量(草稿包含已发布空间)
+  int32 publishedSpaceNum = 5; //已发布空间数量
+}
+
+message SpacePublished{
+  int32 houseId = 1;
+  int32 houseType = 2; //空间类型：1公共空间，2个人空间，3副本空间
+  string name = 3;//个人空间名称
+  string cover = 4;//空间封面
+  string desc = 5;//空间介绍
+  int32  spaceType = 6; //个人空间类型：1系统发的，2原创
+  int32  currentOnline = 7; //当前在线人数（20230420 更改为历史访问pv）
+  string createdAt = 8; // 创建时间
+  string updateAt = 9;//更新时间
+}

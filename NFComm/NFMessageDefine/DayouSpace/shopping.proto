@@ -1,0 +1,66 @@
+syntax = "proto3";
+package shopping;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Shopping";
+
+//商城列表
+message CShoppingList {
+  string shopType = 1; // 商品类型(多个用逗号隔开) 3 道具 4 avatar 5 物件 6 场景
+  int32 shopId = 2; // 商店
+  int32 curPage = 3; // 当前页
+  int32 pageLimit = 4; // 每页条数
+}
+message SShoppingList {
+  repeated BShopping shopping = 1;
+  int32 total = 2; // 总条数
+  int32 curPage = 3; // 当前页
+  int32 pageLimit = 4; // 每页条数
+  int32 shopId = 5; // 商店
+}
+message BShopping {
+  int32 id = 1; // 商品id
+  int32 goodsId = 2; // 物品id
+  int32 coinType = 3; // 代币类型
+  int32 price = 4; // 现价
+  int32 originalPrice = 5; // 原价
+  string name = 6; // 商品名称
+  string cover = 7; // 封面
+  string introduce = 8; // 商品简介
+  string createrNick = 9; // 创作者昵称
+  int32 shopId = 10; // 商店
+  int32 tag = 11; // 标签
+  int32 reserve = 12; // 库存
+  int32 limit = 13; // 限购
+  int32 status = 14; // 1 上架 0 下架
+  string resource = 15;
+  int32 avatarId = 16;
+}
+//购买
+message CBuy {
+  int32 shoppingId = 1; // 商品id
+  int32 quantity = 2; // 购买数量
+  int32 beneficiaryUid = 3; // 受益人uid（礼物赠送时使用）
+}
+message SBuy {
+  int32 status = 1; // 购买状态：1 购买成功 2 失败
+  string msg = 2; // 状态描述
+  int32 shopId = 3; // 购买的商品商店id
+  int32 buyUid = 4; // 购买人uid
+  int32 beneficiaryUid = 5; // 受益人uid（礼物赠送时使用）
+  int32 goodsId = 6; // 购买的物品id
+}
+//根据商店id和物品id获取商品详情
+message CShoppingInfoByShopIdGoodsId {
+  int32 shopId = 1; // 商店
+  int32 goodsId = 2; // 物品id
+}
+message SShoppingInfoByShopIdGoodsId {
+  BShopping shopping = 1;
+}
+//用户可购买商品数量
+message CShoppingUsersLimit {
+  int32 shoppingId = 1; // 商品id
+}
+message SShoppingUsersLimit {
+  int32 limit = 1; // 还可以买的数量（-1没限制）
+}

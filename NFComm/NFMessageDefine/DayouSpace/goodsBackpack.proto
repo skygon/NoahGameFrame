@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+import "position.proto";
+
+package goodsBackpack;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "GoodsBackpack";
+//背包道具家具列表
+message CGoodsBackpackList{
+	int32 curPage = 1; // 当前页
+	int32 pageLimit = 2; // 每页条数 -1 显示全部
+	int32 cat=3;//1 道具。2家具。3avatar。 4装扮
+}
+message SGoodsBackpackList{
+	repeated BTroveGoodsInfo list = 1;
+	int32 total = 2; // 总条数
+	int32 curPage = 3; // 当前页
+	int32 pageLimit = 4; // 每页条数
+	int32 cat = 5; //1 道具。2家具。 3avatar。 4装扮
+}
+message BTroveGoodsInfo{
+	int32  id              = 1;//goods_id 物品id
+	string name            = 2;//物品名称
+	string icon            = 3;//物品封面
+	int32  bakCount        = 4;//物品数量
+	int32  goodsBackpackId = 5;//物品背包id
+	string detail          = 6;//物品详情
+	int32  avatarId        = 7;//avatarId
+}
+
+//物品兑换
+message CGoodsExchange{
+	int32 goodsBackpackId = 1; // 物品背包id
+	string userName = 2; // 用户姓名
+	string userPhone = 3;// 用户手机号
+}
+message SGoodsExchange{
+	int32 status = 1; // 1 兑换成功 2 兑换失败
+	string msg = 2; // 提示信息
+}
+
+//往场景中扔红包
+message CPutRedPacket {
+	position.BPosition position = 1; //位置信息
+	int32 goodsId = 2;
+}
+message SPutRedPacket {
+	int32 location = 1; // 位置序号
+	position.BPosition position = 2;
+	int32 goodsId = 3;
+	int32 second = 4; // 消失所剩秒数
+	string msg = 5;
+	int32 surplus = 6; // 剩余红包数
+	int32 uid = 7; // 使用者
+}
+
+// 场景中红包初始化
+message SPutRedPacketList {
+	repeated SPutRedPacket list = 1;
+}
+
+//领取红包
+message CPickRedPacket {
+	int32 location = 1; // 位置序号
+}
+message SPickRedPacket {
+	int32 state = 1; // 1成功 2失败
+	string msg = 2; // 提示语
+	int32 location = 3;
+	int32 surplus = 4; // 剩余红包数
+	int32 pickUid = 5; // 领取人uid
+}

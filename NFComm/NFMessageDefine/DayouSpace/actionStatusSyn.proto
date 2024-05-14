@@ -1,0 +1,31 @@
+syntax = "proto3";
+import "vector.proto";
+package actionStatusSyn;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "ActionStatusSyn";
+message CActionStatusSyn {//技能同步(子弹)
+  int32 actionId = 1;
+  repeated vector.PVector3 posList = 2;
+  vector.PVector3 orientate = 3;//朝向
+  int32  sendToId = 4; //接收人id
+}
+
+message LevelUpSkill{  
+  int32 changeSkillId = 1;//变动技能ID
+  int32 changeSkillNum = 2;//变动技能计数
+}
+
+message SActionStatusSyn {//状态回执
+  int32 code = 1;//返回技能释放状态
+  int32 actionId = 2;//技能id
+  repeated LevelUpSkill lvUpSkill = 3;
+}
+
+message CCheckActionStatusSyn { //查询爱心进度
+}
+
+message SCheckActionStatusSyn {//状态回执
+  int32 code = 1;//返回技能释放状态
+  int32 actionId = 2;//技能id
+  repeated LevelUpSkill lvUpSkill = 3;
+}

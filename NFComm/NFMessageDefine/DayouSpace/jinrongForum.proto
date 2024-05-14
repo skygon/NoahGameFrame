@@ -1,0 +1,24 @@
+syntax = "proto3";
+package jinrongForum;
+
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "JinrongForum";
+option go_package = "./";
+
+// 访问记录
+message CJinrongForumVisitLog{
+  int32 actionId = 1;//埋点类型  tcp 11.签到 12.入场动画曝光13.坐下14.鼓掌15.放烟花16.议程点击17.分享点击18.主会场-会议屏幕点击19.宣传大屏点击20.A会议屏幕点击21.B会议屏幕点击22.C会议屏幕点击23.D会议屏幕点击24.E会议屏幕点击25.名片页曝光
+}
+
+message SJinrongForumVisitLog {
+  int32 uid  = 1; // 访问人
+  int32 isFirst= 2; // 是否第一次进入 1 是 2 否
+  int32 actionId = 3;//埋点类型  tcp 11.签到 12.入场动画曝光13.坐下14.鼓掌15.放烟花16.议程点击17.分享点击18.主会场-会议屏幕点击19.宣传大屏点击20.A会议屏幕点击21.B会议屏幕点击22.C会议屏幕点击23.D会议屏幕点击24.E会议屏幕点击25.名片页曝光
+}
+
+message CGetJinrongForumFreeGift{}
+
+message SGetJinrongForumFreeGift{
+  int32 state = 1; //1.赠送成功(用户背包已有也会返回1),2.赠送失败(服务器出错)
+  string msg = 2;
+}

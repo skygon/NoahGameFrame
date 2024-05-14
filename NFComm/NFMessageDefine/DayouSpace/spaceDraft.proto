@@ -1,0 +1,88 @@
+syntax = "proto3";
+package spaceDraft;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "SpaceDraftClass";
+option go_package = "./";
+
+message CGetSpaceDraftList{
+  int32 curPage = 1; // 当前页
+  int32 pageLimit = 2; // 每页条数
+}
+
+message SpaceDraft{//个人空间
+  int32  id = 1; //空间草稿id
+  int32  createUid = 2;//空间草稿创建者uid
+  string name = 3;//空间草稿名称
+  int32 spaceId = 4;//关联的空间id
+  int32  spaceBackpackId = 5; //关联的背包空间id
+  string  cover = 6;//空间封面
+  string squareCover = 7;//空间方形封面
+  string configUrl = 8;//空间配置url
+  string desc = 9;//空间介绍
+  string  rule = 10;//空间规则
+  int32 isCollect = 11; //是否收费：0 免费 1 收费
+  int32 isRecreation = 12; //  是否支持二创：0 不允许 1 允许
+  int32 isCopy = 13;      //是否允许创建副本：0 不允许 1 允许
+  int32 isOpen = 14;    // 是否公开：0 公开 1 不公开（需密码）
+  string ServerLuaUrl = 15; //服务端lua脚本地址
+  string ClientLuaUrl = 16; //客户端lua脚本
+  string createdAt = 17; // 创建时间
+  string updateAt = 18;//更新时间
+}
+
+message SGetSpaceDraftList{
+  repeated SpaceDraft list = 1;
+  string msg = 2;
+  int32 curPage = 3; // 当前页
+  int32 spaceNum = 4; //空间数量(草稿包含已发布空间)
+}
+
+message CSpaceDraftDetail{
+  int32  spaceDraftId = 1; //草稿id
+}
+
+message SSpaceDraftDetail{
+  int32  id = 1; //空间草稿id
+  int32  createUid = 2;//空间草稿创建者uid
+  string name = 3;//空间草稿名称
+  int32 spaceId = 4;//关联的空间id
+  int32  spaceBackpackId = 5; //关联的背包空间id
+  string  cover = 6;//空间封面
+  string squareCover = 7;//空间方形封面
+  string configUrl = 8;//空间配置url
+  string desc = 9;//空间介绍
+  string  rule = 10;//空间规则
+  string resource = 11;
+  string ServerLuaUrl = 12; //服务端lua脚本地址
+  string ClientLuaUrl = 13; //客户端lua脚本
+}
+
+// 发起邀请测试
+message CSendInviteTrial{
+  int32 inviteeUid = 1; // 被邀请人uid
+}
+//返回通知邀请人 与 被邀请人
+message SSendInviteTrial{
+  int32 state = 1; // 状态 1 邀请成功 2 邀请失败
+  string msg = 2; // 提示信息
+  string inviteAvatar = 3; // 邀请人头像
+  int32 inviteUid = 4; // 邀请人uid
+  string inviteNick = 5; // 邀请人昵称
+  int32 spaceDraftId = 6; //草稿id
+  int32 inviteeUid = 7; // 被邀请人uid
+}
+
+// 校验邀请是否有效
+message CCheckInviteTrial{
+  int32 spaceDraftId = 1; // 草稿id
+  int32 inviteUid = 2; // 邀请人uid
+}
+message SCheckInviteTrial{
+  int32 state = 1; // 状态 1 有效 2 失效
+  string msg = 2; // 提示信息
+}
+
+// 通知房间内用户联合测试结束
+message SInviteTrialEnd{
+  int32 state = 1; // 状态 1 结束
+}

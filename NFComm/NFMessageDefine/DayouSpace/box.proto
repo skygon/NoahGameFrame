@@ -1,0 +1,12 @@
+syntax = "proto3";
+package box;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Box";//背包
+message boxMsg{//
+	int32 boxId=1;
+}
+message SNftBox{
+	int32 status=1;
+	string tips=2;
+}
+

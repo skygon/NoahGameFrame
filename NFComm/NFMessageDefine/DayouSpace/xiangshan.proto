@@ -1,0 +1,55 @@
+syntax="proto3";                //Proto协议
+package xiangshan;                     //当前包名
+option csharp_namespace="Pb";   //给C#提供的选项
+option go_package = "./;pb";
+
+// 访问记录
+message CXiangshanVisitLog{
+	int32 actionId = 1;//埋点类型  tcp 11.进入空间 12.退出空间(服务端捕捉) 13.入场动画曝光 14.坐下 15.鼓掌 16.议程点击 17.分享点击 18.开幕式-会议屏幕 点击 19.发布会-会议屏幕点击 20.主舞台-会议屏幕点击 21.名片页曝光
+}
+
+message SXiangshanVisitLog {
+	int32 uid  = 1; // 访问人
+	int32 isFirst= 2; // 是否第一次进入 1 是 2 否
+	int32 actionId = 3;//埋点类型  tcp 11.进入空间 12.退出空间(服务端捕捉) 13.入场动画曝光 14.坐下 15.鼓掌 16.议程点击 17.分享点击 18.开幕式-会议屏幕 点击 19.发布会-会议屏幕点击 20.主舞台-会议屏幕点击 21.名片页曝光
+}
+
+// 屏幕播放源
+message CXiangshanScreenSource {}
+message SXiangshanScreenSource {
+	int32 source  = 1; // 1 直播流 2 视频
+    int32 source2  = 2; // 1 直播流 2 视频
+    int32 source3  = 3; // 1 直播流 2 视频
+    int32 daynight  = 4; // 昼夜 1 黑夜 2 白天
+    int32 beijingFinanceDaynight  = 5; // 北京金融街会议 昼夜 1 黑夜 2 白天
+    int32 beijingFinanceSource1  = 6; // 北京金融街会议 1 直播流 2 视频
+    int32 beijingFinanceSource2  = 7; // 北京金融街会议 1 直播流 2 视频
+    int32 beijingFinanceSource3  = 8; // 北京金融街会议 1 直播流 2 视频
+    int32 beijingFinanceSource4  = 9; // 北京金融街会议 1 直播流 2 视频
+    int32 beijingFinanceSource5  = 10; // 北京金融街会议 1 直播流 2 视频
+    int32 beijingFinanceSource6  = 11; // 北京金融街会议 1 直播流 2 视频
+    int32 beijingFinanceSource7  = 12; // 北京金融街会议 1 直播流 2 视频
+}
+
+// 椅子动作
+message CXiangshanChairAction {
+	int32 action = 1; // 1 坐下 2 离开
+	int32 number = 2; // 椅子编号
+}
+message SXiangshanChairAction { // 失败通知自己，成功广播房间
+	int32 uid  = 1;
+	int32 state = 2; // 动作执行结果，1 成功 2 失败
+	string msg = 3; // 结果说明，例：该椅子已经被占用
+	int32 action = 4; // 1 坐下 2 离开
+	int32 number = 5; // 椅子编号
+}
+
+// 椅子状态列表
+message CXiangshanChairStateList {}
+message SXiangshanChairStateList {
+	repeated BXiangshanChairStateInfo list = 1;
+}
+message BXiangshanChairStateInfo {
+	int32 number = 1; // 椅子编号
+	int32 uid  = 2;
+}

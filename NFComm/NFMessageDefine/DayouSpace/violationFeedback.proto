@@ -1,0 +1,24 @@
+syntax = "proto3";
+package violationFeedback;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "ViolationFeedback";
+
+//举报枚举
+enum ViolationFeedbackType {
+  FeedbackDefault = 0;
+  FeedbackPlayer = 1; //举报玩家
+  FeedbackScene = 2; //举报场景
+  FeedbackAvatar = 3; //举报avatar
+  FeedbackMjLeaveMsg = 4; //举报mj留言
+}
+
+//提交举报
+message CViolationFeedback {
+  ViolationFeedbackType Type = 1; // 举报类型
+  int32 SourceId = 2; // 举报ID
+  string Tag = 3; // 举报标签（多个逗号隔开）1 诈骗广告 2 辱骂黄暴 3 内容侵权 4 反动涉政
+  string Desc = 4; // 举报内容
+}
+message SViolationFeedback {
+  int32 code = 1; //1 成功 2 失败
+}

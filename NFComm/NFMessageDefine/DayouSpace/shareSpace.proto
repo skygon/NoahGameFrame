@@ -1,0 +1,41 @@
+syntax = "proto3";
+package shareSpace;
+import "vector.proto";
+
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "ShareSpace";
+option go_package = "./pb;pb";
+
+
+message CShareSpaceCreate {
+  int32 houseId   = 1;
+  int32 Type      = 2;
+}
+
+message SShareSpaceCreate {
+  string title         = 1; //空间名称
+  string url           = 2; //分享链接
+  string content       = 3; 
+  string cover         = 4; //空间封面
+  string wechatContent = 5; //微信分享配置话术
+  string shareTime     = 6; //分享时间
+  int32  visitCount    = 7; //累计在线人数
+}
+
+
+//分享链接code解析
+message CShareCodeParse {
+  string code = 1; //分享链接中的code
+}
+message SShareCodeParse {
+  int32 uid         = 1; //分享人uid
+  string nick       = 2; //分享人昵称
+  string headPic    = 3; //分享人头像
+  int32 houseType   = 4; //分享空间type
+  int32 houseId     = 5; //分享空间id
+  string houseName  = 6; //分享空间名称
+  string houseCover = 7; //分享空间封面
+  string housePwd   = 8; //分享空间密码
+  string content    = 9; //固定话术
+  vector.PVector3 housePosition = 10; //分享空间进入位置
+}

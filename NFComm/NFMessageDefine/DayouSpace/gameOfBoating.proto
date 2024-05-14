@@ -1,0 +1,68 @@
+syntax = "proto3";
+package gameOfBoating;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "GameOfBoating";
+
+message CGameOfBoatingUpBoat {
+  int32 boatId = 1;
+}
+
+message SGameOfBoatingUpBoat {
+  int32 boatId = 1;    //船编号
+  int32 leftUid = 2;   //船左边用户uid
+  int32 rightUid = 3;  //船右边用户uid
+  int32 upBoatUid = 4; //正在上船的uid
+  int32 status = 5;    //上船是否成功 1成功,0失败
+  string msg = 6; //失败消息
+}
+
+message CGameOfBoatingDownBoat {
+  int32 boatId = 1;
+}
+
+message SGameOfBoatingDownBoat {
+  int32 boatId = 1;    //船编号
+  int32 leftUid = 2;   //船左边用户uid
+  int32 rightUid = 3;  //船右边用户uid
+  int32 DownBoatUid = 4; //正在下船的uid
+  int32 status = 5;    //下船是否成功 1成功,0失败
+  string msg = 6; //失败消息
+}
+
+message CGameOfBoatingSuccess {
+  int32 boatId = 1;
+  int32 teammateUid = 2; //队友uid
+}
+
+message SGameOfBoatingSuccess {
+  int32 boatId = 1;    //船编号
+  int32  uid = 2;
+  int32  teammateUid = 3;
+  string nick = 4;
+  string teammateNick = 5;
+  string userIcon = 6;//队友头像
+  string teammateUserIcon = 7;//队友头像
+  string msg = 8;
+  int32 gameScore = 9; //用户分数
+}
+
+message CGameOfBoatingSynchronizeBoat {
+  int32 numberOfOperations = 1;
+  float x = 2;
+  float z =3;
+  float y = 4;
+  float rotationY =5;
+  float rotationX =6;
+  float rotationZ =7;
+}
+
+message SGameOfBoatingSynchronizeBoat {
+  int32 uid = 1;
+  int32 numberOfOperations = 2;
+  float x = 3;
+  float z =4;
+  float y = 5;
+  float rotationY =6;
+  float rotationX =7;
+  float rotationZ =8;
+}

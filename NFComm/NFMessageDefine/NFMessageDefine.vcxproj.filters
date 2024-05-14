@@ -6,6 +6,7 @@
     <ClCompile Include="NFMsgBase.pb.cc" />
     <ClCompile Include="NFMsgPreGame.pb.cc" />
     <ClCompile Include="NFMsgShare.pb.cc" />
+	<ClCompile Include="DayouSpace/*.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NFDefine.pb.h" />
@@ -14,6 +15,7 @@
     <ClInclude Include="NFMsgDefine.h" />
     <ClInclude Include="NFMsgPreGame.pb.h" />
     <ClInclude Include="NFMsgShare.pb.h" />
+	 <ClInclude Include="DayouSpace/*.h" />
     <ClInclude Include="NFProtocolDefine.hpp" />
   </ItemGroup>
 </Project>

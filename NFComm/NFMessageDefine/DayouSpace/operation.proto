@@ -1,0 +1,15 @@
+syntax = "proto3";
+package space;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Operation";
+message COperationSyn { //操作场内物体同步  场景静态物体
+	int32 operationId   = 1;//操作ID 1同步传送
+	int32 operationType = 2;
+}
+message SOperationSyn { //操作场内物体同步  场景静态物体
+	int32 errorId = 1; //成功为0
+}
+message SOperationSynBroad { //广播
+	int32 operationId   = 1;
+	int32 operationType = 2;
+}

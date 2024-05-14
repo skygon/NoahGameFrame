@@ -1,0 +1,87 @@
+syntax = "proto3";                //Proto协议
+package pb;                     //当前包名
+
+option csharp_namespace = "Pb";   //给C#提供的选项
+option go_package = "./";
+
+//发起组队邀请
+message CInviteTeam {
+  int32 inviteeUid = 1; // 被邀请人uid
+}
+//返回通知邀请人 与 被邀请人
+message SInviteTeam {
+  int32 state = 1; // 状态 1 邀请成功 2 邀请失败
+  string msg = 2; // 提示信息
+  string channelId = 3; // 声网频道名
+  string inviteAvatar = 4; // 邀请人头像
+  int32 inviteUid = 5; // 邀请人uid
+  string inviteNick = 6; // 邀请人昵称
+  string inviteRelation = 7; // 与邀请人关系
+  string ip = 8; // 邀请人ip
+  int32 inviteRelationId = 9; // 与邀请人关系枚举,1.陌生人;2.好朋友;3.可能认识的人
+}
+
+//响应邀请
+message CReplyInviteTeam {
+  string channelId = 1; // 队伍声网频道名
+  int32 state = 2; // 状态 1 同意邀请 2 拒绝邀请
+}
+message SReplyInviteTeam {
+  int32 state = 1; // 状态 1 同意邀请 2 拒绝邀请
+  string msg = 2; // 提示信息
+  string appid = 3; // 声网appid
+  string channelId = 4; // 声网频道名
+  string token = 5; // 声网返回的token
+  int32 inviteeUid = 6; // 被邀请人uid
+  repeated BTeamUser userList = 7; // 队伍内用户信息
+}
+
+message BTeamUser {
+  int32 uid = 1; // 用户id
+  string avatar = 2; // 用户头像
+  string nick = 3; // 用户昵称
+  int32 identity = 4; // 用户身份 1 队长 2 队员
+  int32 mikeStatus = 5;//麦克风状态 1 开启 2 关闭
+}
+// 获取 / 刷新所在队伍用户列表
+message STeamUserList {
+  int32 state = 1; // 用户队伍状态 1 在队伍中 2 不在队伍中
+  string appid = 2; // 声网appid
+  string channelId = 3; // 声网频道名
+  string token = 4; // 声网返回的token
+  repeated BTeamUser userList = 5; // 队伍内用户信息
+}
+
+
+// 离开队伍（队员主动离开，队长移除队员，队长离开或解散）
+message CLeaveTeam {
+  string channelId = 1; // 队伍声网频道名
+  int32 uid = 2; // 离开队伍用户uid（主动离开传自己uid，队长移除队员传队员uid）
+}
+message SLeaveTeam {
+  int32 state = 1; // 状态 1 离开成功 2 离开失败 3 解散队伍
+  string msg = 2; // 提示信息
+  int32 uid = 3; // 离开人uid
+}
+
+
+// 获取用户组队状态
+message CUsersTeamState {
+  repeated int32 uids = 1; //用户id列表
+}
+message SUsersTeamState {
+  repeated BUsersTeamState list = 1;
+}
+message BUsersTeamState {
+  int32 uid = 1;
+  int32 state = 2; // 用户队伍状态 1 在队伍中 2 不在队伍中
+}
+
+// 更改组队中麦克风状态
+message CUpdateMikeStatus {
+  int32 status = 1; //麦克风状态 1 开启 2 关闭
+}
+message SUpdateMikeStatus {
+  int32 status = 1; //麦克风状态 1 开启 2 关闭
+  int32 uid = 2; // 用户uid
+}

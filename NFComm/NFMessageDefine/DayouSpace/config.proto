@@ -1,0 +1,15 @@
+syntax = "proto3";
+package config;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Config";
+message BConfig{
+  string value = 1;
+}
+
+message CConfigList{
+  string tag = 1;
+}
+
+message SConfigList{
+  repeated BConfig config = 1;//配置列表，貊园空间id：moyuan_house_id
+}

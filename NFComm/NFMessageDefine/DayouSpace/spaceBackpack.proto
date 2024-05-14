@@ -1,0 +1,85 @@
+syntax = "proto3";
+package spaceBackpack;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "SpaceBackpack";
+option go_package = "./";
+message CspaceBackpackList{
+  int32 uid=1;
+}
+message BSpaceBackpack{
+  int32 spaceBaId=1;//个人空间背包id(u名片页复制网址用)
+  int32 uid=2; //拥有者uid
+  spaceBackpack.Space space=3;
+  int32  default=4;//是否默认空间1默认，0非默认
+}
+message Space{  //个人空间
+  int32  id=1; //个人空间id
+  string name=2;//个人空间名称
+  string cover=3;//个人空间封面
+  int32  type=4; //1系统发的，2个人上传
+  int32  createUid=5;//个人空间创建者uid
+  int32  checkStatus=6;//审核状态 0审核中，1审核通过,2审核拒绝
+  string resource=7;//个人空间资源文件
+  string spaceCover=8;//空间封面
+  string androidUrl=9;//安卓下载地址
+  string iosUrl=10;//ios下载地址
+  string windowsUrl=11;//windows下载地址
+  int32  onlineTime=12;//发布空间时间戳
+  int32  delStatus=13;//删除状态1：正常，2删除 3禁用
+  string remark=14;//拒绝理由
+  int32 houseType=15;//空间类型：1公共空间，2个人空间，3副本空间
+  int32 SerialNumber=16;//序号
+  int32 spaceVisitCount = 17; // 个人空间总访问量
+  int32 spaceTodayVisitCount = 18; // 个人空间今日访问量
+  string configUrl = 19; //配置url
+  string ServerLuaUrl = 20; //服务端lua脚本地址
+  string ClientLuaUrl = 21; //客户端lua脚本
+}
+message SspaceBackpackList { //个人空间背包列表
+  repeated spaceBackpack.BSpaceBackpack spaceBackpackList = 1;
+}
+
+// 获取我的默认个人空间
+message CMyDefaultSpace{
+  int32  uid = 1;
+}
+
+// 获取我的默认个人空间
+message SMyDefaultSpace{
+  int32  spaceBackpackId = 1; //个人空间id
+  string spaceName = 2; //个人空间名称
+  string spaceCover = 3;//个人空间封面
+  int32 spaceHouseType = 4;//个人空间空间类型，固定为2
+  int32 spaceVisitCount = 5; // 个人空间总访问量
+  int32 spaceTodayVisitCount = 6; // 个人空间今日访问量
+  int32  spaceCopyBackpackId = 7; //我的副本空间id
+  string  spaceCopyName = 8; //我的副本空间名称
+  string  spaceCopyCover = 9; //我的副本空间封面
+  int32 spaceCopyHouseType = 10;//我的副本空间空间类型，固定为3
+  int32 spaceCopyVisitCount = 11; // 我的副本空间总访问量
+  int32 spaceCopyTodayVisitCount = 12; // 我的副本空间今日访问量
+}
+
+// 获取空间介绍页数据
+message CSpaceIntroduce{
+  int32  houseId = 1;
+  int32  houseType = 2;
+}
+
+// 获取空间介绍页数据
+message SSpaceIntroduce{
+  string userPic = 1; //用户头像
+  string userNick = 2; //用户昵称
+  string spaceName = 3;//空间名称
+  string spaceDesc = 4;//空间介绍
+  string spaceRule = 5; //空间规则
+  string createUserNick = 6; // 初始创作者昵称
+  int32  isCollect = 7; //是否收费：0 免费 1 收费
+  int32  isRecreation = 8; //是非支持二创：0 不允许 1 允许
+  int32  isCopy = 9; //是否允许创建副本：0 不允许 1 允许
+  int32 isOpen = 10;//是否公开：0 公开 1 不公开（需密码）
+  string createdAt = 11; // 创建时间
+  string updateAt = 12;//更新时间
+  int32  houseId = 13;
+  int32  houseType = 14;
+}

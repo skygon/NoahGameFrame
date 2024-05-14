@@ -1,0 +1,19 @@
+syntax = "proto3";
+package horoscope;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Constel";
+message CConstel{
+	int32 constelID=1;//星座id
+}
+message SConstel{//
+	repeated int32 uidList = 1;//房间里有一样星座的uid
+}
+message CSaveConstel{
+	int32 constel=1;
+}
+message SSaveConstel{
+	int32 data=1;
+}
+message SUserConstelInfo{
+	int32 constelId=1;
+}

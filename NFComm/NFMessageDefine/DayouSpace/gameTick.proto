@@ -1,0 +1,33 @@
+syntax = "proto3";
+package gameTick;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "GameTick";
+
+
+message SStartLineUp {
+  int32 gameId = 1;          //游戏枚举
+  int32 gameStartStamp = 2; //游戏开局时间
+}
+
+message STickStartGame {
+  int32 gameId = 1;      //游戏枚举
+  int32 gameStartStamp = 2; //游戏开局时间
+  int32 OfficialStartTime = 3; //游戏正式开始时间
+  repeated BoatInfo boatInfo = 4; //船信息
+  int32  status = 5;  //1成功开局;0失败
+}
+
+message BoatInfo {
+  int32 boatId = 1;         //船编号
+  int32 leftUid = 2;
+  int32 rightUid = 3;
+}
+
+message STickOfficialStartGame {
+  int32 gameId = 1;
+  int32 gameOverStamp = 2; //游戏结束时间
+}
+
+message STickGameOver {
+  int32 gameId = 1;
+}

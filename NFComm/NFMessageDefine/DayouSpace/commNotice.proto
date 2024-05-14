@@ -1,0 +1,11 @@
+syntax = "proto3";
+package commNotice;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "CommNotice";
+option go_package = "./pb;pb";
+
+
+message SCreatorBanNotice{
+  int32 uid=1;
+  int32 IsBanStatus=2;//封禁状态 1表示封禁;0表示未封禁
+}

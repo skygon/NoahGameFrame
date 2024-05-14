@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package mj;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "MJWarmup";
+option go_package = "./pb;pb";
+
+// 请求舞蹈位置
+message CMjDancePosition {
+
+}
+// 返回舞蹈位置信息
+message SMjDancePosition {
+  repeated BMjDancePosition list = 1;
+}
+// 单个位置状态
+message BMjDancePosition {
+  int32 number = 1; // 舞蹈位置id
+  int32 uid  = 2;
+}
+
+
+// 请求舞蹈行为
+message CMjUserDanceAction {
+  int32 number = 1; // 舞蹈位置id
+  int32 action = 2; // 行为 1:进入 2:离开
+  int32 uid = 3;
+}
+
+// 返回舞蹈行为 失败通知自己， 成功广播
+message SMjUserDanceAction {
+  int32 uid  = 1;
+  int32 state = 2; // 动作执行结果，1 成功 2 失败
+  string msg = 3; // 结果说明，例：该位置已经被占用
+  int32 action = 4; // 1 坐下 2 离开
+  int32 number = 5; // 舞蹈位置id
+}
+
+// 当前舞曲情况
+message CMjDanceStatus {
+}
+
+// 返回舞曲情况
+message SMjDanceStatus {
+  int32 danceId = 1; // 舞曲id
+  string title = 2; // 舞曲名称
+  string music = 3; // 舞曲文件名
+  int32 duration = 4; // 舞曲时长 单位 ms
+  int32 current = 5; // 当前播放时间 单位 ms
+  int32 countdown = 6; // 准备倒计时 单位 ms
+  int64 startTime = 7; // 本期排行榜统计开始时间
+  int64 endTime = 8; // 本期排行榜统计结束时间
+  int64 songStartTime = 9; // 当前歌曲开始时间
+}
+
+// 舞蹈分数结算
+message CMjDanceScore {
+  int32 danceId = 1; // 舞曲id
+  int32 score = 2; // 分数
+  int32 uid = 3;
+  int32 number = 4; // 舞蹈位置id
+  string ipCity = 5; // ip对应的城市
+}
+
+// 返回舞蹈分数结算
+message SMjDanceScore {
+  string msg = 1; // 异常结果说明，例：歌曲刷新，结算失败
+  int32 state = 2; // 动作执行结果，1 成功 2 失败
+  int32 defeatPercent = 3; // 击败百分比
+}
+
+// 舞蹈排行榜展示
+message CMjDanceRank {
+}
+
+// 返回舞蹈排行榜展示
+message SMjDanceRank {
+  string title = 1; // 舞曲名称
+  int64 startTime = 2; // 本期排行榜统计开始时间
+  int64 endTime = 3; // 本期排行榜统计结束时间
+  int32 myRank = 4; // 我的排名, 0 未上榜
+  int32 defeatPercent = 5; // 我的击败百分比
+  int32 myScore = 6; // 我的分数
+  repeated BMjDanceRank list = 7; // 排行榜主体
+
+}
+
+message BMjDanceRank {
+  int32 uid = 1;
+  string nick = 2; // 用户昵称
+  int32 score = 3; // 分数
+  int32 rank = 4; // 排名
+  int32 avatarId = 5;//avatarID ,服务端的
+  int32 avatarKey = 6; // 客户avatar 前三维护
+  string userIcon = 7; // 用户头像 前三维护
+  string ipCity = 8; // 用户ip对应的城市 前三维护
+  string userTitle = 9; // 用户称号 前三维护
+}

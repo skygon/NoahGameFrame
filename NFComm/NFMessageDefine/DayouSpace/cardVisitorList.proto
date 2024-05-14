@@ -1,0 +1,30 @@
+syntax = "proto3";
+package cardVisitorList;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "CardVisitorList";
+option go_package = "./;pb";
+
+message BCardVisitorList{
+    int32  uid  = 1;      //uid
+    string headPic = 2;      //头像
+    string nick = 3;		  //昵称
+    int32  followStatus = 4;		//关注状态
+}
+message CCardVisitorList {
+	int32 uid  = 1;
+	int32 count= 2; //数据条数 
+}
+
+//用户卡片访客列表
+message SCardVisitorList {
+	repeated BCardVisitorList list=1;
+}
+
+
+message CCardVisitNumber {
+	int32 uid = 1;
+}
+//卡片访问数
+message SCardVisitNumber{
+	int32 number =1;
+}

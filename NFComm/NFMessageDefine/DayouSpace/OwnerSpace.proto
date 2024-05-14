@@ -1,0 +1,15 @@
+syntax = "proto3";
+package OwnerSpace;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "OwnerSpace";
+message COwnerSpace{//进入房间获取主持人（拥有者）
+	
+}
+message SOwnerSpace{//房间主持人变更（仅公共）
+	int32 	common 			= 1;//1公共 0个人
+	bool	isHasPerformer	= 2;//false没人表演&true有人表演
+	bool    isFollowStatus  = 3;//false未关注&true关注
+	int32   uid          	= 4;
+	string  headPic     	= 5;
+	string  nickName   		= 6;
+}

@@ -1,0 +1,66 @@
+syntax = "proto3";
+package treasureBox;
+import "vector.proto";
+
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "TreasureBox";
+option go_package = "./";
+
+
+
+message CDailyTreasureBoxStatus {
+}
+
+message SDailyTreasureBoxStatus{
+    int32  treasureBoxType = 1;      //宝箱类型 1 新手宝箱; 2每日宝箱
+    int32  isOpened = 2;             //宝箱状态 1 未开启;2 已开启
+    vector.PVector3 position = 3;    //初始位置
+}
+
+
+message COpenDailyTreasureBox{
+    int32  treasureBoxType = 1;  //宝箱类型 1 新手宝箱; 2每日宝箱
+}
+
+message SOpenDailyTreasureBox{
+    repeated TreasureBoxRewardContent list = 1; //获取的奖励列表
+    int32    state = 2;                            //1开箱成功,2开箱失败
+    string   msg = 3;                             //失败原因
+}
+
+message CSpaceTreasureBoxList{
+}
+
+message SSpaceTreasureBoxList{
+    repeated SpaceTreasureBoxInfo list = 1;
+}
+
+message COpenSpaceTreasureBox{
+    int32  treasureBoxType = 1;  //宝箱类型 3空间宝箱（小）;4空间宝箱（中;5空间宝箱（大）
+    vector.PVector3 position = 2;    //宝箱位置
+}
+
+message SOpenSpaceTreasureBox{  //全房间通知
+    int32 OpenerUid = 1;                        //开启人uid
+    repeated TreasureBoxRewardContent list = 2; //获取的奖励列表
+    int32 state = 3;                            //1开箱成功,2开箱失败
+    string msg = 4;                             //失败原因
+    vector.PVector3 position = 5;               //宝箱位置
+}
+
+message TreasureBoxRewardContent{
+    int32 goodId = 1;      //物品id 元力id为0
+    string goodName = 2;   //物品名称
+    int32  num = 3;        //数量
+    string icon = 4;       //奖品图标
+}
+
+message SpaceTreasureBoxInfo{
+    int32  treasureBoxType = 1;      //宝箱类型 3空间宝箱（小）;4空间宝箱（中;5空间宝箱（大）
+    vector.PVector3 position = 3;    //初始位置
+}
+
+message SSpaceTreasureBoxRefreshNotice{
+    int32  treasureBoxType = 1;      //宝箱类型 3空间宝箱（小）;4空间宝箱（中;5空间宝箱（大）
+    vector.PVector3 position = 3;    //初始位置
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+package vector;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Vector";
+message PVector3{
+  float x = 1;
+  float y = 2;
+  float z = 3;
+}

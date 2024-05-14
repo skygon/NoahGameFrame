@@ -1,0 +1,17 @@
+syntax = "proto3";
+import "vector.proto";
+package actionFollow;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "ActionFollow";
+
+//荧光棒挥舞跟随
+message CActionFollow{
+    int32 actionId =1;//技能id
+    int32 sUid =2;//SActionFollow.uid
+}
+
+message SActionFollow{
+    int32 status =1;//0跟随成功、1跟随失败、2收到跟随请求
+    int32 actionId =2;//技能id
+    int32 sUid =3;//施放者
+}

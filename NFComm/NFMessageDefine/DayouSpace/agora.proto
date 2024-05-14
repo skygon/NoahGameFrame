@@ -1,0 +1,14 @@
+syntax = "proto3";                //Proto协议
+package pb;                     //当前包名
+
+option csharp_namespace = "Pb";   //给C#提供的选项
+option go_package = "./";
+
+//获取声网相关信息
+message CAgoraToken {
+}
+message SAgoraToken {
+  string  appid = 1; // 声网appid
+  string  channelId = 2; // 声网频道名,可以用room_id拼
+  string token=3; //声网返回的token
+}

@@ -1,0 +1,17 @@
+syntax = "proto3";
+package pairs;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Pairs";//组队
+message CRequestPairs {
+	repeated int32 uidList = 1;
+	int32 type = 2;//1邀请组队 2同意组队 3拒绝组队（可拒绝多个）
+}
+message SRequestPairs {
+	int32 uid = 1;
+	int32 type = 2;//1组队邀请 2组队失败 3邀请被拒绝
+	string nick = 3;
+}
+message SResultPairs {//组队结果
+	repeated int32 uidList = 1;
+	int32 type = 2;//1组队成功 2组队取消 3进入房间
+}

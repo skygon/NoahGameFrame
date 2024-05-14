@@ -1,0 +1,54 @@
+syntax = "proto3";
+package syncAllObj;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "SyncAllObj";
+
+message SSyncAllObj {//技能同步下发
+  repeated ActionEvent eventList = 1;
+  int64 currentTime = 2;//当前时间戳
+  repeated Buff Buff=3;
+}
+
+message ActionEvent {
+  int32 id = 1;
+  int32 uid = 2;
+  int32 objectId = 3;//技能id
+  OBJPosition pos = 4;//当前坐标
+  float progress = 5;//进度,0~1
+  int64 currentTime = 6;//当前时间戳
+  int64 type = 7;//类型,1:特效,2:子弹类物品移动,3:timeline,4:avatar移动,5:avatar动画
+  int64 startTime = 8;//开始时间
+  int64 endTime = 9;//结束时间
+  OBJOrientate orientate = 10;//朝向
+  int32 combo= 11;//连击
+  int32 belongToId = 12;// 发送人id
+  int32 sendToId = 13; //  接收人id
+}
+
+message Buff{
+  int32 ID=1;
+  int32 BuffID=2;
+  int32 UID=3;
+  float progress = 4;//进度,0~1
+}
+
+message OBJPosition{
+  float x = 1;
+  float y = 2;
+  float z = 3;
+}
+
+message OBJOrientate{
+  float x = 1;
+  float y = 2;
+  float z = 3;
+}
+
+message SCrashNotice {
+  repeated CrashInfo list =1;
+}
+
+message CrashInfo {
+  int32 BuffID=1;
+  int32 UID=2;
+}

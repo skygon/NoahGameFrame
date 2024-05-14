@@ -1,0 +1,22 @@
+syntax = "proto3";
+package dimSearch;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "DimSearch";
+//查询列表返回数据
+message DimSearchRolesInfoList {
+	string headUrl = 1;
+	string name = 2;
+	int32 uid = 3;
+	int32 fans = 4;	//粉丝数量 如果没有粉丝就是0
+	bool follow = 5;//是否关注了  关注了为true 反之为false
+}
+
+//搜索玩家，模糊搜索
+message CDimSearch {
+	string search = 1;
+}
+//搜索玩家回应
+message SDimSearch{
+	int32 code = 1;	//0为搜索成功 1搜索失败，查无此人等
+	repeated DimSearchRolesInfoList Players = 2;
+}

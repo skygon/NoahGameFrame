@@ -1,0 +1,16 @@
+syntax = "proto3";
+package radiusTransformation;
+option go_package = "./";
+
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "RadiusTransformation";
+
+//以舞台为中心半径变身不能移动 type:1 变身糖果
+message CRadiusTransformation{
+  int32 type=1;
+}
+message SRadiusTransformation{
+  repeated int32 uid=1;//变身的uid列表
+  int32 duration =2;//时长
+  int32 type=3;//type:1 变身糖果
+}

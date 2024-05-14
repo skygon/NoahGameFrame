@@ -1,0 +1,24 @@
+syntax = "proto3";
+import "userInfo.proto";
+package userInfoList;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "UserInfoList";
+message CGetUserInfoList{
+  repeated int32 uids = 1;//用户id列表
+}
+message SGetUserInfoList{
+  repeated userInfo.SUserInfo infoList = 1;
+}
+
+// 用户列表排序
+message CUsersSort{
+  repeated int32 uids = 1;//待排序的用户id列表
+}
+message SUsersSort{
+  repeated int32 uids = 1;//排序后的用户id列表
+}
+
+// 获取房间内用户列表
+message SGetRoomUserList{
+  repeated userInfo.SUserInfo infoList = 1;
+}

@@ -1,0 +1,65 @@
+syntax = "proto3";
+import  "position.proto";
+package userPosition;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "UserPosition";
+message CUserPosition{
+	position.BPosition2 position=1;
+	int32 uid=2;
+}
+message SUserPosition{
+	repeated UPosition positions = 1;
+}
+message UPosition{
+	position.BPosition2 position=1;
+	int32 uid=2;
+}
+message CNeuronConnect{
+	int32 state = 1;//连接状态 0关闭1开启
+}
+message SNeuronConnect{
+	int32 uid = 1;
+	int32 state = 2;
+}
+//骨骼数据
+message BBonePos{
+	int32 boneId = 1;//骨骼Id
+	position.BPosition2 position=2;//骨骼位置和旋转
+}
+//面部数据
+message BFacePos{
+	int32 faceId = 1;//面部Id
+	int32 faceValue = 2;//数值(范围0-1)
+}
+message CNeuronPosition{
+	int32 uid = 1;
+	repeated BBonePos bonePos = 2;
+	repeated BFacePos facePos = 3;
+}
+message NeuronPosition{
+	int32 uid = 1;
+	repeated BBonePos bonePos = 2;
+	repeated BFacePos facePos = 3;
+}
+message SNeuronPosition{
+	repeated NeuronPosition neuronPosList = 1;
+}
+
+//Vr骨骼数据
+message BVrBonePos{
+	int32 boneId                = 1; //骨骼Id
+	position.BPosition position = 2; //骨骼位置和旋转
+}
+message CVrPosition{
+	int32 uid                   = 1;
+	repeated BVrBonePos bonePos = 2;
+	repeated BFacePos facePos   = 3;
+}
+message VrPosition{
+	int32 uid                   = 1;
+	repeated BVrBonePos bonePos = 2;
+	repeated BFacePos facePos   = 3;
+}
+message SVrPosition{
+	repeated VrPosition vrPostList = 1;
+}

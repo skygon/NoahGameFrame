@@ -1,0 +1,13 @@
+syntax = "proto3";
+package space;
+
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "UsersDesire";
+
+message CUsersDesireAdd{
+	string content = 1; // 许愿内容
+}
+message SUsersDesireAdd{
+	int32 status = 1; // 1 成功 2 失败
+	string msg = 2; // 提示信息
+}

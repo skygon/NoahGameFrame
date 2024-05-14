@@ -1,0 +1,53 @@
+syntax = "proto3";
+import "userInfo.proto";
+package cloudRender;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "CloudRender";
+option go_package = "./pb;pb";
+
+import "userPosition.proto";
+import "syncAllObj.proto";
+
+enum ResultCode {	
+	NoError = 0; 
+	AgentNotFound = 101; 
+	AgentAddressError = 102; 
+	GameNotFound = 103; 
+}
+
+message CVerify {	
+	int32 Uid = 1; 
+	int32 HouseIndex = 2; 
+}
+
+message SVerify {	
+	ResultCode Result = 1;
+	repeated userInfo.SUserInfo UserList = 2;
+}
+
+message CRenderScale {	
+	int32 Uid = 1; 
+	int32 Num = 2; 
+	int32 Opt = 3;// 0=reset, 1=增加, -1=减少 
+	bool IsGeneral = 4;// 通用调整 
+}
+
+message SRenderScale {	
+	ResultCode Result = 1; 
+}
+
+message SRenderSwitchRoom {	
+	int32 Uid = 1; 
+}
+
+message SRenderExitRoom {	
+	int32 Uid = 1; 
+}
+
+message SRenderFrame {
+	repeated userPosition.UPosition PositionList = 1;// 位置信息
+	repeated syncAllObj.ActionEvent EventList = 2;// 同步信息
+}
+
+message PingACK {	
+}

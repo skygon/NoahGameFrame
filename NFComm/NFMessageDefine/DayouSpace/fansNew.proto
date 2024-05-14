@@ -1,0 +1,17 @@
+syntax = "proto3";
+package fansNew;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "FansNew";
+option go_package = "./;pb";
+
+message CNewFansRead{
+}
+message SNewFansRead{
+}
+message CNewFansNum{
+	int32 uid = 1;//该用户新增粉丝数
+}
+message SNewFansNum{
+	int32 num = 1;//新增粉丝数
+	int32 uid = 2;//该用户id
+}

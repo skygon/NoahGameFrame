@@ -1,0 +1,14 @@
+syntax = "proto3";
+package notive;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Notice";//背包
+message noticeMsg{//
+  int32 noticeId=1;
+  string title=2;
+  string content=3;
+}
+message SActiveNotice{
+	noticeMsg notice=1;
+	int32  nextRaceTime=2;
+}
+

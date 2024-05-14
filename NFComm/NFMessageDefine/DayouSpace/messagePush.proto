@@ -1,0 +1,40 @@
+syntax = "proto3";
+package push;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "MessagePush";
+option go_package = "./pb;pb";
+
+//推送用户状态查询
+message CPushUserStatus {
+  int32 uid = 1;
+}
+message SPushUserStatus {
+  int32 userStatus = 1; //1还在当前空间,2已离开
+  int32 houseId    = 2;
+  int32 houseType  = 3;
+  int32 seq        = 4;
+}
+
+message SPushUserOnlineMessage {
+  int32 msgType  = 1; //1明星上线，3好友上线
+  int32 uid      = 2;
+  string nick    = 3; //昵称
+  string headPic = 4; //头像
+}
+
+message SPushSpaceMessage {
+  int32 msgType     = 1; //2空间活动
+  int32 houseType   = 2;
+  int32 houseId     = 3;
+  string innerTitle = 4;
+  string innerImg   = 5;
+}
+
+message SPushMjLeaveMsg {
+  int32 msgType     = 1; //4mj留言
+  int32 houseType   = 2;
+  int32 houseId     = 3;
+  string innerTitle = 4;
+  string innerImg   = 5;
+  int32 leaveMsgId  = 6; //mj留言id
+}

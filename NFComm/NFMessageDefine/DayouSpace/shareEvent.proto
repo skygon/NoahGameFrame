@@ -1,0 +1,22 @@
+syntax = "proto3";
+package shareEvent;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "ShareEvent";
+
+message CShareEventRecord {
+  int32 shareUid = 1; //链接分享人uid
+}
+
+message SShareEventRecord {
+  int32 status = 1; // 1 成功 2 失败
+}
+
+message SShareEventNotification {
+  string  msg = 1; //通知消息
+}
+
+message SShareFinalSpaceMessage {
+  int32 houseId = 1;
+  int32 houseType = 2; //空间类型：1公共空间，2个人空间，3副本空间
+  string spaceName = 3; // 空间名称
+}

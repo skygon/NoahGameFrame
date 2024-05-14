@@ -1,0 +1,75 @@
+syntax = "proto3";
+package rewardForLottery;
+import "treasureBox.proto";
+
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "RewardForLottery";
+option go_package = "./";
+
+//奖品列表
+message CObtainRewardList{
+
+}
+
+message SObtainRewardList{
+  repeated treasureBox.TreasureBoxRewardContent list = 1; //奖品列表
+  int32 state = 2;                            //1.成功,2.失败
+  string msg = 3;                             //失败原因
+}
+
+//盲盒抽奖
+message CBlindBoxLottery{
+
+}
+
+message SBlindBoxLottery{
+  repeated treasureBox.TreasureBoxRewardContent list = 1; //获取的奖励列表
+  int32 state = 2;                            //1.抽奖成功,2.抽奖失败
+  string msg = 3;                             //失败原因
+  int32 lotteryUid = 4;                      //抽奖人
+}
+
+//获取获奖记录(获取获奖飘屏列表)
+message CObtainAwardRecords{
+  int32 curPage = 1; // 当前页
+  int32 pageLimit = 2; // 每页条数
+}
+
+message SObtainAwardRecords{
+  repeated AwardRecordInfo list = 1;
+  string msg = 2;     //失败消息
+  int32 curPage = 3; // 当前页
+  int32 TotalNum = 4; //消息总数
+}
+
+//实体礼物兑换
+message CPhysicalRewardExchange{
+  int32 goodsId  = 1;   //物品id
+  int32 backpackId = 2; //背包id
+  string name = 3;      //姓名
+  string idCard = 4;    //身份证
+  string phone = 5;     //手机号
+}
+
+message SPhysicalRewardExchange{
+  int32 state = 1;                            //1.成功,2.失败
+  string msg = 2;                             //失败原因
+}
+
+//获奖消息
+message AwardRecordInfo{
+  treasureBox.TreasureBoxRewardContent recordInfo = 1; //获取的奖励
+  string userIcon = 2;  //用户头像
+  string userName = 3;  //用户名称
+  int32  userId   = 4;  //用户id
+}
+
+
+// 查看必中极品进度
+message CLotteryBestProgress{
+
+}
+
+message SLotteryBestProgress{
+  int32 progress = 1; // 1-100
+}

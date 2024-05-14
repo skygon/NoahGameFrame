@@ -1,0 +1,13 @@
+syntax = "proto3";
+package chipReport;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "ChipReport";
+message CChipReport{
+	int32 chipID=1;//碎片
+	int32 chipPlatform=2;//碎片站台
+	int32 enterOrExit=3;//1进入,2退出站台,3完成
+	int32 goodsId=5;//把传碎片id改成goodsId
+}
+message SChipReport{
+	int32 isSelect=1; //被选中了1,2是能退出，-2不能退出
+}

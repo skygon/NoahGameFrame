@@ -1,0 +1,12 @@
+syntax = "proto3";
+package chipConfig;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "ChipConfig";//碎片配置
+message GoodsMsg{
+	int32 position=1;
+	int32 goodsId=2;
+}
+message SChipConfig{
+	repeated GoodsMsg goodsList=1;
+}
+

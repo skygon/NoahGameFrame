@@ -1,0 +1,13 @@
+syntax = "proto3";
+import "vector.proto";
+package actionInterrupt;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "ActionInterrupt";
+
+//停止飞天
+message CActionInterrupt{
+    int32 actionId=1;
+}
+message SActionInterrupt{
+    int32 actionId=1;
+}

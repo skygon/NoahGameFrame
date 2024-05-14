@@ -1,0 +1,19 @@
+syntax = "proto3";
+package PrepaidEnum;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "PrepaidEnum";
+
+
+message PrepaidItem{
+    int32   num=1;   //档位代币数量
+    int32   price=2;    //购买金额（分）
+    string  productKey=3;   //充值档位标识
+}
+
+message SPrepaidEnum{
+    repeated PrepaidItem list=1;
+}
+
+message CPrepaidEnum{
+    int32   cate =1;//0是Applepay、1非Applepay
+}

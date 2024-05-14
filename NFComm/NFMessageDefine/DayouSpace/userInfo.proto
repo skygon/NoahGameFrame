@@ -1,0 +1,60 @@
+syntax = "proto3";
+package userInfo;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "UserInfo";
+message CUserInfo {
+  int32 os = 1;
+  string clientIp = 2;
+}
+message SUserInfo {
+  int32  uid              = 1;
+  int32  avatar           = 2;
+  string avatarColor      = 3;
+  string identifierId     = 4;//腾讯云id
+  int32 nameplate         = 5;//腾讯令牌
+  int32 authorityID       = 6;
+  string imToken          = 7;
+  string phone            = 8;
+  string nick             = 9;
+  int32 avatarKey         = 10;//客户端
+  string userIcon         = 11;//用户头像
+  string unionid          = 12;//用户微信标识
+  string sign             = 13;//用户个人签名
+  int32 os                = 14;//用户平台(Android=1,iOS=2,Web=3,PC=4,VR=5)
+  string inUid            = 15;//in账号uid
+  int32 yuanshenAvatarKey = 16;//元神空间avatar
+  string ipCity           = 17;//用户ip对应的城市
+  int32 isCreator         = 18;//是否是创造者 1是;0否
+  int32 gender            = 19;// 性别 0未知1男2女
+  int32 hiphopStarToken   = 20; //佩戴的嘻哈明星信物
+  string title            = 21; //佩戴称号
+  string certification    = 22; //用户身份认证
+}
+message SUserAttrFromNft{
+  int32 attr=1;
+}
+
+// 修改个人签名
+message CChangeUserSign {
+  string  sign = 1;
+
+}
+message SChangeUserSign{
+  int32 status = 1; // 1 成功 2 失败
+}
+
+// 修改头像
+message CChangeUserIcon {
+  string  userIcon = 1;
+
+}
+message SChangeUserIcon{
+  int32 status = 1; // 1 成功 2 失败
+  string  userIcon = 2;
+  int32 uid = 3; //修改人uid
+}
+
+// in账号解绑
+message SInAccountUnbind{
+  int32 status = 1; // 1 成功 2 失败
+}

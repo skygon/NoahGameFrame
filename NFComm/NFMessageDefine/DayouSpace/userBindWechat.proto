@@ -1,0 +1,17 @@
+syntax = "proto3";
+package userBindWechat;
+option go_package = "./";
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "UserBindWechat";
+message CUserBindWechat {
+  string code  = 1;
+  string channel = 2;// ios / android / pc
+
+}
+message SUserBindWechat{
+  int32 status = 1; // 1 成功 2 失败
+  string msg = 2; // 提示信息
+  string unionid = 3;
+}
+
+

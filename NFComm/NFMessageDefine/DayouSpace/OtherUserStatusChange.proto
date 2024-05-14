@@ -1,0 +1,12 @@
+syntax = "proto3";
+import "userInfo.proto";
+package OtherUserStatusChange;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "OtherUserStatusChange";
+message SOtherUserEnterRoom {//其他用户进入房间
+	repeated userInfo.SUserInfo infoList = 1;
+}
+
+message SOtherUserExitRoom {//其他用户退出房间
+	repeated userInfo.SUserInfo infoList = 1;
+}

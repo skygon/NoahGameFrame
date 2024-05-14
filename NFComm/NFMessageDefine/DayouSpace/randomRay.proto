@@ -1,0 +1,15 @@
+syntax = "proto3";
+package randomRay;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "RandomRay";
+option csharp_namespace = "Pb";
+option go_package = "./";
+
+message CRandomRay{
+}
+
+message SRandomRay{
+  int32 status=1;
+  int32 uid=2; //照射uid
+  int32 duration=3;//时长
+}

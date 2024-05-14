@@ -1,0 +1,35 @@
+syntax = "proto3";
+option go_package = "./";
+package search;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Search";
+
+// 搜索页用户搜索
+message CSearchUsers{
+  string keyword = 1;// 搜索关键词
+  int32 curPage = 2; // 当前页
+  int32 pageLimit = 3; // 每页条数
+}
+message SSearchUsers{
+  repeated BSearchUsers list = 1;
+  int32 curPage = 2; // 当前页
+  int32 pageLimit = 3; // 每页条数
+}
+message BSearchUsers{
+  string headUrl = 1;
+  string nick = 2;
+  int32 uid = 3;
+  int32 fansNum = 4; //粉丝数量 如果没有粉丝就是0
+  int32 followNum = 5; //粉丝数量 如果没有粉丝就是0
+  int32 isFollow = 6; //是否关注了  1 未关注 2 已关注未互关 3 互关
+  string houseName = 7; //当前所在空间名
+  int32 houseId = 8; //当前所在空间id，不在任何空间为0
+  int32 houseType = 9; //当前所在空间类型
+  int32 houseIsOpen = 10; // 空间是否公开 0 公开 1 不公开
+  string identifierId = 11; // 腾讯im id
+}
+
+// 推荐用户列表
+message SRecommendUsers{
+  repeated BSearchUsers list = 1;
+}

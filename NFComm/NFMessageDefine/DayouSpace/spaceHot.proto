@@ -1,0 +1,28 @@
+syntax = "proto3";
+package spaceRandom;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "SpaceHotClass";
+option go_package = "./";
+
+message CSpaceHot{
+	int32 curPage = 1; // 当前页
+	int32 pageLimit = 2; // 每页条数
+	int32 tag = 3; // 内容分类：1 有人的空间 2 原创个人空间 3 其他个人空间 4 副本空间
+}
+message SSpaceHot{
+	repeated SpaceHot list = 1;
+}
+
+message SpaceHot{
+	int32 houseId = 1;
+	int32 houseType = 2; //空间类型：1公共空间，2个人空间，3副本空间
+	string cover = 3;//空间封面
+	int32  spaceType = 4; //个人空间类型：1系统发的，2原创
+	int32  isOpen = 5; // 0 公开 1 不公开
+	int32  currentOnline = 6; //当前在线人数（20230420 更改为历史访问pv）
+	int32 uid = 7; //用户id
+	string userIcon = 8; // 用户头像
+	string userNick	 = 9; // 用户昵称
+	string userSign	 = 10; // 用户简介
+	string spaceName = 11; // 空间名称
+}

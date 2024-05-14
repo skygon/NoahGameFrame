@@ -1,0 +1,36 @@
+syntax = "proto3";
+package userTitle;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "UserTitle";
+option go_package = "./pb;pb";
+//查看用户称号列表
+message CUserTitleList {
+    int32 userId = 1;//要查看的用户id
+    int32 page = 2;//当前页
+    int32 pageSize = 3;//每页大小
+}
+message SUserTitleList {
+    repeated UserTitle userTitleList = 1;
+    int32 total = 2;//总数
+    string currentTitle = 3;//当前头衔
+    int32 userId = 4;//被查看的用户id
+}
+message UserTitle {
+    int32 id = 1;
+    string title = 2;//称号名称
+    string desc = 3;//称号描述
+    string titlePic = 4;//称号图片
+    int32 title_status = 5;//称号状态  1已获取  2已装备 0未获取
+   
+}
+
+//装备和卸下称号
+message CEquipUserTitle {
+    int32 titleId = 1;//称号id
+    int32 action = 2;//1装备  2卸下
+}
+message SEquipUserTitle {
+    int32 code = 1;//1成功  2失败
+    string title = 2;//称号
+    int32 uid = 3;//用户id
+}

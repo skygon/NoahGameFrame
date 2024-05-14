@@ -1,0 +1,40 @@
+syntax = "proto3";
+package spaceThing;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "SpaceThing";
+
+//个人空间物件
+message CSpaceThingList {
+  int32 curPage = 1; // 当前页
+  int32 pageLimit = 2; // 每页条数
+}
+message SSpaceThingList {
+  repeated Thing thing = 1;
+  int32 total = 2; // 总条数
+  int32 curPage = 3; // 当前页
+  int32 pageLimit = 4; // 每页条数
+}
+message Thing {
+  int32 id = 1;
+  int32 thingId = 2;
+  int32 num = 3;
+  string name = 4;
+  string cover = 5;
+  int32 price = 6;
+  string resource = 7;
+  int32 shoppingId = 8;
+  int32 troveGoodsId = 9;
+  repeated int32 backpackIds=10;//背包id切片数组
+}
+message CSpaceThingInfo {
+  int32 thingId = 1;
+}
+message SSpaceThingInfo {
+  int32 id = 1;
+  string name = 2;
+  string cover = 3;
+  int32 isSale = 4;
+  int32 price = 5;
+  string resource = 6;
+  int32 troveGoodsId = 7;
+}

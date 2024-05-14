@@ -1,0 +1,183 @@
+syntax = "proto3";
+package moyuan;
+import  "vector.proto";
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Moyuan";
+
+//用户avatar
+message CMoyuanUsersAvatarInfo {}
+message SMoyuanUsersAvatarInfo {
+  int32 avatarKey = 1; // 用户当前穿戴的avatar
+}
+
+//用户更改avatar
+message CMoyuanUsersAvatarUpdate {
+  int32 avatarKey = 1; // 用户穿戴的avatar
+}
+message SMoyuanUsersAvatarUpdate {
+  int32 status = 1; // 1 成功
+  int32 uid = 2;
+  int32 avatarKey = 3;
+}
+
+//用户当前进度
+message CMoyuanUsersProgressInfo {}
+message SMoyuanUsersProgressInfo {
+  int32 layer = 1; // 周目
+  int32 scene = 2; // 场景
+  repeated int32 npc = 3; // npc
+  int32 topic = 4; // 对话
+  int32 serveTimestamp = 5; // 服务端时间戳
+  int32 topicType = 6; // 对话类型
+  vector.PVector3 position=7;
+  string tips = 8; // 进入场景提示
+}
+
+//用户更改进度
+message CMoyuanUsersProgressUpdate {
+  int32 layer = 1; // 周目
+  int32 scene = 2; // 场景
+  repeated int32 npc = 3; // npc
+  int32 topic = 4; // 对话
+  int32 topicType = 5; // 对话类型
+  vector.PVector3 position=6;
+}
+message SMoyuanUsersProgressUpdate {
+  int32 status = 1; // 1 成功
+}
+
+//多个用户avatar
+message CMoyuanUsersAvatarList {
+  repeated int32 uids = 1; //用户id列表
+}
+message SMoyuanUsersAvatarList {
+  repeated BMoyuanUsersAvatarList avatarList = 1;
+}
+message BMoyuanUsersAvatarList {
+  int32 uid = 1;
+  int32 avatarKey = 2; // 用户当前穿戴的avatar
+}
+
+//提交梦境
+message CMoyuanDreamAdd {
+  string desc = 1; // 梦境内容
+}
+message SMoyuanDreamAdd {
+  int32 status = 1; // 1 成功
+}
+
+//随机获取一个梦
+message CMoyuanDreamRand {}
+message SMoyuanDreamRand {
+  int32 uid = 1; // 用户id
+  string desc = 2; // 梦境内容
+  int32 dreamId = 3; // 梦境id
+}
+
+//获取貊园道具背包列表
+message CMoyuanTroveGoodsBackpackList {}
+message SMoyuanTroveGoodsBackpackList {
+  repeated BMoyuanTroveGoodsBackpackList list = 1;
+}
+message BMoyuanTroveGoodsBackpackList {
+  int32 id = 1; // 道具背包id
+  int32 type = 2; // 1 default 2 碎片 3 道具 4 avatar 5 物件 6 场景
+  int32 goodsId = 3; // 物品id
+  int32 bakCount = 4; //背包数量
+}
+
+//获取貊园道具
+message CMoyuanTroveGoodsAdd {
+  int32 goodsId = 1;
+  int32 num = 2;
+}
+message SMoyuanTroveGoodsAdd {
+  int32 status = 1; // 1 成功
+}
+
+
+//获取梦境评论列表
+message CMoyuanDreamCommentList {
+  int32 dreamId = 1;
+  int32 curPage = 2; // 当前页
+  int32 pageLimit = 3; // 每页条数
+}
+message SMoyuanDreamCommentList {
+  repeated BMoyuanDreamComment list = 1;
+  int32 total = 2; // 总条数
+  int32 curPage = 3; // 当前页
+  int32 pageLimit = 4; // 每页条数
+}
+message BMoyuanDreamComment {
+  int32 id = 1; // 评论id
+  int32 dreamId = 2; // 梦境id
+  int32 isAnonymous = 3; // 0 非匿名， 1 匿名
+  int32 uid = 4; //评论人uid
+  string nick = 5; //评论人昵称
+  string head = 6; //评论人头像
+  int32 toCommentId = 7; //被评论id
+  int32 toCommentUid = 8; //被评论人uid
+  string toCommentNick = 9; //被评论人昵称
+  string comment = 10; //评论内容
+  string createdAt = 11; //评论时间
+}
+
+//梦境评论
+message CMoyuanDreamComment {
+  int32 dreamId = 1; // 梦境id
+  int32 isAnonymous = 2; // 0 非匿名， 1 匿名
+  string nick = 5; //评论人昵称
+  string head = 6; //评论人头像
+  int32 toCommentId = 7; //被评论id
+  int32 toCommentUid = 8; //被评论人uid
+  string toCommentNick = 9; //被评论人昵称
+  string comment = 10; //评论内容
+}
+message SMoyuanDreamComment {
+  int32 status = 1; // 1 成功
+}
+
+//获取匿名id
+message CMoyuanAnonymousId {}
+message SMoyuanAnonymousId {
+  string anonymousId = 1; // 匿名id（昵称）
+  string anonymousHead = 2; // 匿名头像
+}
+
+//获取梦境评论通知列表
+message CMoyuanDreamCommentNoticeList {}
+message SMoyuanDreamCommentNoticeList {
+  repeated BMoyuanDreamCommentNotice list = 1;
+}
+message BMoyuanDreamCommentNotice {
+  int32 dreamId = 1; // 梦境id
+  string comment = 2; //评论内容
+  string tips = 3; //提示内容
+  string Head = 4; //头像
+}
+
+//获取我的梦境列表
+message CMoyuanMineDreamList {
+  int32 curPage = 1; // 当前页
+  int32 pageLimit = 2; // 每页条数
+}
+message SMoyuanMineDreamList {
+  repeated BMoyuanDreamInfo list = 1;
+  int32 total = 2; // 总条数
+  int32 curPage = 3; // 当前页
+  int32 pageLimit = 4; // 每页条数
+}
+message BMoyuanDreamInfo {
+  int32 uid = 1;
+  string desc = 2; // 梦境内容
+  int32 dreamId = 3; // 梦境id
+  int32 commentNum = 4; // 评论数
+}
+
+//获取梦境详情
+message CMoyuanDreamInfo {
+  int32 dreamId = 1;
+}
+message SMoyuanDreamInfo {
+  BMoyuanDreamInfo info = 1;
+}

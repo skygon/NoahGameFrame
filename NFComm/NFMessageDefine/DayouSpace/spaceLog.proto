@@ -1,0 +1,27 @@
+syntax = "proto3";
+package spaceLog;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "SpaceLog";
+option go_package = "./pb;pb";
+
+message CSpaceLogList {
+	int32 houseId = 1;
+	int32 type    = 2; //1访问日志 2打赏日志 3所有日志
+	int32 page    = 3;
+	int32 size    = 4;
+}
+
+message SSpaceLogList {
+	int32 type = 1;
+	repeated BSpaceLogInfo logList = 2;
+	int32 total = 3;
+}
+message BSpaceLogInfo {
+	int32 uid   = 1;
+	string nick = 2;
+	string headPic = 3;
+	int64 time  = 4;
+	int32 type = 5;
+	string log = 6;
+	int32 followStatus = 7; //1未关注 2已关注
+}

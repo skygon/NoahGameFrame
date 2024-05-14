@@ -1,0 +1,13 @@
+syntax = "proto3";                //Proto协议
+package pb;                     //当前包名
+
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "SightseeingStand";
+option csharp_namespace = "Pb";   //给C#提供的选项
+option go_package = "./";
+
+
+message SBroadSightSeeing{
+  float angle=1;
+  int32 interval=2;
+}

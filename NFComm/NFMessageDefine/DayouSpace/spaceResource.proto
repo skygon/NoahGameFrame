@@ -1,0 +1,28 @@
+syntax = "proto3";
+package spaceResource;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "SpaceResource";
+option go_package = "./";
+
+message CSpaceResourceList {
+  repeated int32 spaceResourceIds = 1; //素材id列表
+}
+
+message SSpaceResourceList {
+  repeated SpaceResourceInfo list = 1;
+  string msg = 2;
+}
+
+message SpaceResourceInfo{
+  int32 id = 1;
+  string name = 2; //素材名称
+  int32 creatorUid = 3; //创作者uid
+  int32 type = 4;  //素材类型
+  string thum = 5; //缩略图
+  string cdnUrl = 6; //素材cdn地址
+  string md5 = 7;  //素材md5
+  int32 abStatus = 8; //ab包打包状态：1 待打包 2 正在打包 3 打包结束 4 打包失败
+  int32 status = 9; //状态：0 可用 1 禁用
+  int32 checkStatus = 10; //审批状态：1 待审 2 通过 3 驳回
+  string remarks = 11; //审核备注
+}

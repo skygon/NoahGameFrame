@@ -1,0 +1,33 @@
+syntax = "proto3";
+package bulletScreen;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "BulletScreen";
+option go_package = "./pb;pb";
+
+// 弹幕用户列表
+message CBulletScreenUserList {
+}
+message BBulletScreenUser {
+	int32 temp_id = 1;
+	string nick = 2;
+}
+message SBulletScreenUserList {
+	repeated BBulletScreenUser users = 1;
+}
+
+
+// 新创建的弹幕用户
+message SBulletScreenUserCreate {
+	BBulletScreenUser user = 1;
+}
+
+// 删除弹幕用户
+message SBulletScreenUserDelete {
+	repeated int32 temp_id = 1;
+}
+
+// 弹幕用户发言
+message SBulletScreenUserTalk {
+	int32 temp_id = 1;
+	string message = 2;
+}

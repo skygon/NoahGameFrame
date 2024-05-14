@@ -1,0 +1,19 @@
+syntax = "proto3";
+package error;
+option java_package = "com.dayou.space.protobuf";
+//错误码规范
+//分为6位，前2位为服务，中间2位为服务模块，后2位为具体错误
+//10为通用服务
+enum Err
+{
+  ERR_SUCCESS                 = 0;
+
+  ERR_GENERAL                 = 100000; //通用
+  ERR_UNDEFINED_PROTOCOL      = 100001; //通用 协议未定义
+  ERR_PROTOCOL_PARSE_FAIL     = 100002; //通用 协议解析错误
+
+  ERR_TOKEN_ERROR             = 100101; //通用 鉴权 token错误
+  ERR_TOKEN_EXPIRED           = 100102; //通用 鉴权 token过期
+
+  ERR_DB_ERROR                = 100201; //通用 数据库 数据库错误
+}

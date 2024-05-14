@@ -1,0 +1,9 @@
+syntax = "proto3";
+package activity;
+
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "ActivityEvent";
+
+message SActivityEvent { //活动事件
+  int32 event = 1;
+}

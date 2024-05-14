@@ -1,0 +1,16 @@
+syntax = "proto3";
+package userCertification;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "userCertification";
+option go_package = "./pb;pb";
+
+message CUserCertificationDetail{
+    int32 userId = 1;//要查看的用户id
+}
+message SUserCertificationDetail{
+    int32 Id = 1;//
+    string name = 2;//名称
+    string describe = 3;//描述
+    int32 userId = 4;//用户id
+    int32 status = 5;//状态 1是已认证
+}

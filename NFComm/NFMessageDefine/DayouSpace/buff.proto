@@ -1,0 +1,23 @@
+syntax = "proto3";
+import "vector.proto";
+package buff;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "buff";
+
+
+message CBuffOn{
+	int32 buffId =1;
+}
+message SBuffOn{
+	int32 buffId =1;
+}
+
+
+message CBuffInterrupt{
+	int32 buffId =1;
+}
+
+message SBuffInterrupt{
+	int32 buffId =1;
+	int32 buffUid = 2;
+}

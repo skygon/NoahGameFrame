@@ -1,0 +1,32 @@
+syntax = "proto3";
+package backPack;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "BackPack";//背包
+message pieceMsg{//
+	int32 piece_id=1;
+	string name=2;
+	string image=3;
+	int32 num=4;
+	int32 goodsId=5;
+}
+message propMsg{
+	int32 count=1;
+	int32 prop_type=2;
+	string prop_name=3;
+	int32 goods_id=4;
+}
+message SNftChipList{
+	repeated pieceMsg nftChipList=1;
+}
+message SPropList{
+	repeated propMsg propList=1;
+}
+
+message CSingleProp{
+	int32 goodsId=1;
+}
+message SSingleProp{
+	propMsg prop=1;
+}
+
+

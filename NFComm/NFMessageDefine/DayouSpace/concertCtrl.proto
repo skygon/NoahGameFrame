@@ -1,0 +1,142 @@
+syntax="proto3";
+package concert;
+option go_package = "./";
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "ConcertCtrl";
+
+//演唱会开关枚举
+enum CtrlType {
+	Default 				= 0;	//前置空间
+	ChannelGame 			= 1;	//进入通道游戏
+	EnterConcert 			= 2;	//进入主会场
+	LeaveStage 				= 3;	//默默酱离场
+	DisconnectConcert 		= 4;	//音乐会断开
+	SongCut_1 				= 10;	//第1首歌转场
+	OnStage 				= 11;	//默默酱登场手动
+	Song_1 					= 12; 	//第1首歌
+	Cheers 					= 13; 	//打call(第1首歌互动)
+	Interact_1           	= 14;	//第一次互动说话
+	SongCut_2 				= 20;	//第2首歌转场
+	Song_2                 	= 21;	//第2首歌
+	Interact_2             	= 22;	//第2次互动说话
+	GiftFallScattered_2    	= 23;	//礼物散落(第2首歌)
+	SongCut_3 				= 30;	//第3首歌转场
+	Song_3                	= 31;	//第3首歌
+	Fish 					= 32;	//大鱼(第3首歌互动)
+	Lift					= 33;	//跟随默默酱放孔明灯(第3首歌互动)
+	Interact_3            	= 34;	//第3次互动说话
+	SongCut_4 				= 40;	//第4首歌转场
+	Song_4                	= 41;	//第4首歌
+	GlowStick 				= 42;	//挥舞荧光棒(第4首歌互动)
+	Interact_4            	= 43;	//第4次互动说话
+  	GiftFallScattered_4    	= 44;	//礼物散落(第4首歌)
+  	Interact_4_2           	= 45;	//第4次第2次互动说话
+  	StartRankCountdownTips 	= 46;	//榜单倒计时提示(第4首歌互动)
+  	FallGround 				= 47;	//天上降落到地上(第4首歌互动)
+  	Screen_4 				= 48;	//屏幕,读信件(第4首歌)
+	SongCut_5 				= 50;	//第5首歌转场
+	Song_5             		= 51;	//第5首歌
+	Dance 					= 52;	//伴舞(第5首歌互动)
+	Interact_5     			= 53;	//第5次互动说话
+	Encore					= 54;	//默默酱返场
+	Screen_5_1 				= 55; 	//屏幕,默默酱海报(第5首歌)
+	Screen_5_2 				= 56; 	//读大屏幕全网观看人数和成都现场互动(第5首歌)
+	Screen_5_3 				= 57; 	//屏幕,默默酱感谢大有(第5首歌)
+	SongCut_6 				= 60;	//第6首歌转场
+	Song_6            		= 61;	//第6首歌
+	Interact_6 				= 62; 	//第6首歌互动说话
+	AllPhoto 				= 63;	//合照(第6首歌互动)
+	TurnFish_1 				= 100; 	//变鱼(第4首歌互动)
+  	TurnFish_2 				= 101; 	//变鱼(第4首歌互动)
+  	TurnFish_3 				= 102; 	//变鱼(第4首歌互动)
+  	TurnFish_4 				= 103; 	//变鱼(第4首歌互动)
+	Fly 					= 104;	//跟随默默酱绕场飞
+	Jump 					= 105;	//跳跃区域1默默酱手指指向，区域内人员跳起来开关
+	Jump2					= 106;	//跳跃区域2
+	Jump3					= 107;	//跳跃区域3
+	Jump4					= 108; 	//跳跃区域4
+	Bomb 					= 109;	//光柱爆炸，碎片掉落随机区域开关
+	BubbleFly             	= 110;	//气泡包裹用户飞起
+}
+
+message CCtrlToggle {
+	CtrlType Type = 1;
+	int32 Status = 2;		//0-关，1-开
+}
+
+//开关广播
+message SCtrlBroadcast {
+	CtrlType Type = 1;
+	int32 Status = 2;		//0-关，1-开
+	int32 ExtFirst = 3;		//扩展字段1
+	int32 ExtSecond = 4;	//扩展字段2
+	string ExtThird = 5;	//扩展字段3
+}
+
+//绕场飞玩家数据
+message CtrlFlyPlayer {
+	int32 Uid = 1;
+	int32 Mesh = 2;
+	string Nick = 3;
+}
+//区域玩家跳跃
+message SAreaJump{
+	repeated int32 Uid =1;
+}
+
+//绕场飞开关广播
+message SCtrlFlyBroadcast {
+	int32 Status = 1;		//0-关，1-开
+	int32 TimelineId = 2;	//timeline名字
+	int32 EffectId = 3; 	//特效id
+	repeated CtrlFlyPlayer Player = 4;
+}
+
+//绕场飞timeline
+message SFlyTimelineBroadcast {
+	int32 Timeline = 1;
+}
+
+//绕场飞初始化
+message CConcertFlyInit {
+
+}
+
+message SCtrlLiftBroadcast{
+
+}
+
+message SCtrlEncoreBroadcast{
+
+}
+
+//开关状态
+message CCtrlInfo {
+}
+
+//开关状态
+message SCtrlInfo {
+	CtrlType Stage = 1;  	//当前阶段
+	int32 KeepTime = 2; 	//持续时间
+}
+
+//当前开关状态心跳包
+message CCtrlHeartBeat {
+}
+
+//当前开关状态心跳包
+message SCtrlHeartBeat {
+	CtrlType Stage = 1;  	//当前阶段
+	int32 KeepTime = 2; 	//持续时间
+}
+
+//手动控制开关
+message CtrlManual {
+	CtrlType Stage = 1;  	//当前阶段
+}
+
+//手动控制开关广播
+message SBroadCtrlManual {
+	CtrlType Stage = 1;  	//当前阶段
+	int64 Stamp = 2; 		//持续时间
+}

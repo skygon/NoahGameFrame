@@ -1,0 +1,10 @@
+syntax = "proto3";
+package heartBeat;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "HeartBeat";
+message CHeartBeat{
+	uint64 clientTime=1;
+}
+message SHeartBeat{
+	uint64 serverTime=1;
+}

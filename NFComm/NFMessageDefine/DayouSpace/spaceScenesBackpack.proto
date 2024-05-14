@@ -1,0 +1,28 @@
+syntax = "proto3";
+package spaceScenesBackpack;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "SpaceScenesBackpack";
+message CspaceScenesBackpackList{
+  int32 curPage = 1; // 当前页
+  int32 pageLimit = 2; // 每页条数
+}
+message SpaceScenes{
+  int32 id=1; //个人空间场景id
+  string name=2;//个人空间场景名称
+  string cover=3;//个人空间场景封面
+  int32  createUid=4;//个人空间场景创建uid
+  int32  checkStatus=5;//审核状态 0审核中，1审核通过,2审核拒绝
+  string resource=6;//个人空间场景资源文件
+  int32  isSale=7;//个人空间场景是否可售卖1:可售卖，0:不能售卖
+  int32  price=8;//售卖价格单位分
+  int32  troveGoodsId=9;//物品id
+  int32  shoppingId=10;//shopping_id
+  repeated int32 spaceScenBaIds=11;//场景背包id切片数组
+  int32  num=12;//数量
+}
+message SspaceScenesBackpackList {  //个人空间场景背包列表
+  repeated spaceScenesBackpack.SpaceScenes list = 1;
+  int32 total = 2; // 总条数
+  int32 curPage = 3; // 当前页
+  int32 pageLimit = 4; // 每页条数
+}

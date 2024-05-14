@@ -1,0 +1,18 @@
+syntax = "proto3";
+import "countdown.proto";
+package active;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Active";//比赛
+message activeMsg{//比赛开始和结束通知,结束时清场
+	int32 activeID=1;
+	countdown.SCountdown countdown=2;
+}
+
+message CActive{
+	int32 uid=1;
+}
+message SActive{
+	repeated activeMsg activeMsgList=1;
+	int64 serverTime=2;
+}
+

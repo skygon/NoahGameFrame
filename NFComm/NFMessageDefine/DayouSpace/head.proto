@@ -1,0 +1,8 @@
+syntax = "proto3";
+package head;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Head";
+message BHead{
+  int32  code=1;
+  string msg=2;
+}

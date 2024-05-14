@@ -1,0 +1,33 @@
+syntax = "proto3";
+package nft;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Nft";//数字藏品
+message nftMsg{//
+  int32 id=1;
+  int32 nftId=2;
+  int32 extraThing=3;
+  int32 issueNum=5;//发行量
+  int32 uid=6;
+  string name=7;
+  string image=8;
+  int32 resourceType=9;
+  string resource=10;
+  string number=11;
+  string createdAt=12;
+  string coverAndroid=13;
+  int32 locationSort=14;
+  int32 houseNftRefId=15;
+  int32 houseId=16;
+  string houseName=17;
+  string resourceFbx=18;
+}
+message SMyNftList{
+	repeated nftMsg myNftList=1;
+}
+message CHouseNftList{
+	int32 houseId=1;
+}
+message SHouseNftList{
+	repeated nftMsg houseNftList=1;
+}
+

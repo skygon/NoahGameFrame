@@ -1,0 +1,31 @@
+syntax="proto3";                //Proto协议
+package pb;                     //当前包名
+option csharp_namespace="Pb";   //给C#提供的选项
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "SpaceWorks";
+option go_package = "./;pb";
+
+message WorksInfo {
+	string Nick = 1;
+	string WechatId = 2;
+	int64 Phone = 3;
+	repeated string Page = 4;
+}
+
+message CSpaceWorksUpload {
+	WorksInfo worksInfo =  1;
+}
+
+message SSpaceWorksUpload {
+}
+
+
+message CSpaceWorksGet {
+	
+}
+
+message SSpaceWorksGet {
+	WorksInfo worksInfo =  1;
+	string ContactDesc = 2;
+	string ContactWechatId = 3;
+}

@@ -1,0 +1,23 @@
+syntax = "proto3";
+package jinyan;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Jinyan";
+option go_package = "./";
+
+message CNpcJinyan {
+	int32 uid  = 1;//禁言用户id
+}
+message SNpcJinyan {
+	int32 uid  = 1;
+	int32 code = 2;
+	string msg = 3;
+}
+//解除禁言
+message CNpcJieJin {
+	int32 uid  = 1;//解除禁言uid
+}
+message SNpcJieJin {
+	int32 uid  = 1;
+	int32 code = 2;
+	string msg  = 3;
+}

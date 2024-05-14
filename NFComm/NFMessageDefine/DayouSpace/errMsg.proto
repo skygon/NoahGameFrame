@@ -1,0 +1,31 @@
+syntax = "proto3";
+package errorMsg;
+option java_package = "com.dayou.space.protobuf";
+//目前只有这几个，其它都是协议返回，不是错误类型返回
+enum ErrorMsg
+{
+  SUCCESS                     = 0;   //操作成功完成
+  TokenError                  = 1;   //token不正确
+  RequestParamError           = 2;   //请求参数错误
+  EmptyChipError              = 3;   //碎片不足
+  ServerTimeOutError          = 4;   //php回调超时
+  GetPropLimtError            = 5;   //获取道具已达上限
+  UserInfoError               = 6;   //用户不存在
+  UpdateAvatarError           = 7;   //更新avatar不成功
+  AvatarBackPackError         = 8;   //avatar背包列表错误
+  NftChipBackPackError        = 9;   //碎片背包列表错误
+  PropBackPackError           = 10;  //道具背包列表错误
+  MyNftListError              = 11;  //我的数字藏品列表错误
+  AddNftPieceFromHouseError   = 12;  //空间内获取碎片错误
+  SaveUsersConstelError       = 13;  //星座不能重复设置
+  NotConstelInfoError         = 14;  //没有星座信息
+  EmptyBoxError               = 15;  //盲盒不足
+  ActiveEndError              = 16;  //活动已结束
+  TooManyOperationError       = 17;  //操作太频繁
+  HouseIDNotExitError         = 18;  //宝藏屋不存在
+  ConcertNotStartError        = 19;  //演唱会未开始
+  ErrorLoginOnAnotherDevice   = 20;  //其他设备抢登
+
+  NeedAllocRoomError          = 998; //需要请求分配房间
+  ProtocolUndefinedError      = 999; //协议未定义
+}

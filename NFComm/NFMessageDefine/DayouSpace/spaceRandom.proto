@@ -1,0 +1,13 @@
+syntax = "proto3";
+package spaceRandom;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "SpaceRandom";
+option go_package = "./pb;pb";
+
+message CSpaceRandom {
+}
+
+message SSpaceRandom {
+	int32 houseId = 1;
+	int32 houseType = 2; //空间类型：1公共空间，2个人空间，3副本空间
+}

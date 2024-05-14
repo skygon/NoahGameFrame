@@ -1,0 +1,10 @@
+syntax = "proto3";
+package horoscope;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Horoscope";
+message CHoroscope{
+	int32 horoscopeID=1;//星座id
+}
+message SHoroscope{//
+	repeated int32 uid = 1;//房间里有一样星座的uid
+}

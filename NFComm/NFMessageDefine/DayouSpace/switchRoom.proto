@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+import "userPosition.proto";
+import "userInfo.proto";
+package switchRoom;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "SwitchRoom";
+
+message CSwitchRoom{
+	int32 preHouseID=1;//切换宝藏屋前的屋子id
+	int32 houseID=2;//要进入屋子的屋子id
+}
+message SSwitchRoom{
+	repeated userInfo.SUserInfo infoList = 1;
+	int32 vipFlag=2;//2是vip,1是非vip
+  string imGroupId  = 3;
+  int32 enterFlag = 4;//1表示能进,2表示离开
+	string roomId = 5;
+	string exitRoomText=6;
+}
+
+message CExitRoom {
+  userPosition.UPosition position = 1;
+}

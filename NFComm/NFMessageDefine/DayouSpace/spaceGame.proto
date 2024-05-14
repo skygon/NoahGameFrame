@@ -1,0 +1,74 @@
+syntax = "proto3";
+package gameTick;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "SpaceGame";
+option go_package = "./";
+
+// 跳跃比赛排队
+message CJumpGameWaitLine {
+}
+message SJumpGameWaitLine {
+  int32 status = 1; // 1 排队成功 2 排队失败
+  string msg = 2; // 排队失败原因
+  int32 teamNumber = 3; // 所在队伍位置
+  int32 uid = 4; // 加入人uid
+}
+
+// 离开跳跃比赛
+message CJumpGameOut {
+  int32 teamNumber = 1; // 离开人所在位置
+}
+message SJumpGameOut {
+  int32 score = 1; // 所得分数（秒）
+  int32 uid = 2; // 离开人uid
+}
+
+// 获取房间某个游戏当前状态
+message CGameStatus {
+  int32 gameId = 1; // 1 划船游戏 2 跳跃游戏
+}
+message SGameStatus {
+  int32 gameStatus = 1; // 游戏是否正在进行 1 是 2 否
+  int32 gameStartTimestamp = 2; // 开局倒计时结束时间戳（秒）（若未开始倒计时为0）
+  int32 serverTimestamp = 3; // 服务器当前时间戳（秒）
+  repeated ShipGameWaitLint shipGameWaitLint = 4; // 划船游戏队伍状态（gameId传1的时候取这个）
+  repeated JumpGameWaitLint jumpGameWaitLint = 5; // 跳跃游戏队伍状态（gameId传2的时候取这个）
+}
+message ShipGameWaitLint {
+  int32 teamNumber = 1; // 船编号
+  int32 left = 2; // 左侧人uid（没人时为0）
+  int32 right = 3; // 右侧人uid（没人时为0）
+}
+message JumpGameWaitLint {
+  int32 teamNumber = 1; // 位置编号
+  int32 uid = 2; // 参赛人uid（没人时为0）
+}
+
+// 获取游戏排行榜
+message CGameRank {
+  int32 gameId = 1; // 1 划船游戏 2 跳跃游戏
+}
+message SGameRank {
+  repeated GameRank gameRank = 1;
+  int32 gameId = 2;
+}
+message GameRank {
+  int32 rank = 1; // 排名
+  string teamName = 2; // 队伍名（个人赛就是用户名）
+  int32 score = 3; // 分数（秒）
+}
+
+// 跳跃游戏发射子弹
+message SJumpGameShootBullets {
+  int32 direction = 1; // 方向：1 左下方 2 左上
+  float height = 2; // 高度
+  int32 num = 3; // 子弹数量
+  float speed = 4; // 子弹速度
+  float interval = 5; // 子弹间间隔时间
+}
+
+// 游戏异常停止
+message SGameAbnormalStop {
+  int32 gameId = 1; // 1 划船游戏 2 跳跃游戏
+  string msg = 2; // 异常原因
+}

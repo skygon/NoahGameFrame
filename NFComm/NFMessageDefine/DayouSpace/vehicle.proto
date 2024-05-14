@@ -1,0 +1,93 @@
+syntax = "proto3";
+package propSync;
+
+import "vector.proto";
+
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Vehicle";
+
+//创建载具
+message CCreateVehicle { //tcp
+	int32           vehicleType = 1; //载具类型
+	vector.PVector3 position    = 2; //初始位置
+	vector.PVector3 orientation = 3; //初始朝向
+}
+message SCreateVehicle { //tcp广播
+	int32           vid         = 1; //载具id
+	int32           vehicleType = 2; //载具类型
+	vector.PVector3 position    = 3; //初始位置
+	vector.PVector3 orientation = 4; //初始朝向
+	int32           owner       = 5; //拥有者
+}
+
+//操作载具
+message COperateVehicle { //udp
+	int32           vid         = 1; //载具id
+	vector.PVector3 position    = 2; //位置
+	vector.PVector3 orientation = 3; //朝向
+	int32           uid         = 4;
+}
+
+//乘坐载具
+enum RideAct { //行为
+	RIDE_ACT_UNKNOWN = 0;
+	RIDE_ACT_RIDE    = 1; //乘坐
+	RIDE_ACT_LEAVE   = 2; //离开
+}
+enum RideRes { //结果
+	RIDE_RES_FAIL    = 0; //失败
+	RIDE_RES_SUCCESS = 1; //成功
+	RIDE_RES_RIDING  = 2; //乘坐中
+}
+message CRideVehicle { //tcp
+	int32   vid   = 1; //载具id
+	RideAct act   = 2;
+	int32   index = 3; //位置编号
+}
+message SRideVehicle { //tcp广播
+	int32   uid   = 1;
+	int32   vid   = 2; //载具id
+	RideAct act   = 3; //行为 1乘坐 2离开
+	int32   index = 4; //位置编号
+	RideRes res   = 5;
+}
+
+//载具复位
+message CResetVehicle { //tcp
+	int32           vid         = 1; //载具id
+	vector.PVector3 position    = 2; //复位位置
+	vector.PVector3 orientation = 3; //复位朝向
+}
+message SResetVehicle {//tcp
+	int32 vid = 1; //载具id
+	int32 res = 2; //1成功 2失败
+}
+
+//销毁载具
+message CDestroyVehicle { //tcp
+	int32 vid = 1; //载具id
+}
+message SDestroyVehicle { //tcp
+	int32 vid = 1; //载具id
+}
+
+//房间内所有载具
+message CAllVehicle { //tcp
+}
+message SAllVehicle { //tcp
+	repeated BVehicleInfo vehicleList = 1;
+}
+
+message BVehicleInfo {
+	int32           vid         = 1; //载具id
+	int32           vehicleType = 2; //载具类型
+	vector.PVector3 position    = 3; //位置
+	vector.PVector3 orientation = 4; //朝向
+	int32           owner       = 5; //拥有者
+	repeated int32	uidList	    = 6; //当前乘坐者列表
+}
+
+//道具同步
+message SVehiclePosSync { //udp
+	repeated BVehicleInfo vehicleList = 1;
+}

@@ -1,0 +1,32 @@
+syntax = "proto3";
+package concert;
+
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "ConcertRank";
+
+message CTopRank {
+
+}
+
+message STopRank {
+    repeated Rank likeList   = 1;
+    repeated Rank moneyList  = 2;
+    SelfRank self            = 3;
+}
+
+message Rank {
+    int32 rank   = 1;
+    string icon  = 2;
+    string name  = 3;
+    int32 amount = 4;
+    string mesh  = 5;
+}
+
+message SelfRank {
+    int32 likeRank    = 1;
+    int32 moneyRank   = 2;
+    string icon       = 3;
+    string name       = 4;
+    int32 likeAmount  = 5;
+    int32 moneyAmount = 6;
+}

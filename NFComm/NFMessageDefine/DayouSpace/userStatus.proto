@@ -1,0 +1,15 @@
+syntax = "proto3";
+package userStatus;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "UserStatus";
+
+message CSpeakStatus {
+  int32 uid = 1;//查询目标的uid
+}
+
+message SSpeakStatus {
+  int32 uid = 1;//用户uid
+  int32 npcBan = 2;//npc禁言的状态,0未知,1未禁言,2禁言
+  int64 npcBanEndTime = 3;//npc禁言的结束时间
+  int32 serverBan = 4;//管理后台的禁言的状态,0未知,1未禁言,2禁言
+}

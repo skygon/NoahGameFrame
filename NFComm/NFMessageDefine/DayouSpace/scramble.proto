@@ -1,0 +1,13 @@
+syntax = "proto3";
+import "vector.proto";
+package Scramble;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Scramble";
+
+//抢麦强座位
+message CScramble{
+    int32 uid=1;
+}
+message SScramble{
+    int32 uid=1;    //0当前可用，>0当前占据
+}

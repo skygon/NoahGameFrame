@@ -1,0 +1,15 @@
+syntax = "proto3";
+import "userPosition.proto";
+package roomUsersPosition;
+
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "RoomUsersPosition";
+
+message CRoomUsersPosition {
+  int32 uid = 1;
+}
+
+message SRoomUsersPosition {
+  repeated userPosition.UPosition positions    = 1;
+  repeated userPosition.VrPosition vrPostLists = 2;
+}

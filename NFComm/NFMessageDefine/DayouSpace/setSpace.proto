@@ -1,0 +1,66 @@
+syntax = "proto3";
+package pb;
+import  "vector.proto";
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "SetSpace";
+option go_package = "./";
+
+message PhotoWall{
+	int32 spaceLayId=1;//保存时没有可以为0
+	int32 thingBackId=2;
+	repeated string url=3;//照片url
+}
+message BaseLayPosition{
+	int32 id=1;
+	int32 thingId=2;//物件id
+	int32 sceneId=3;//场景id
+	int32 goodsId=4;//物品id
+	int32 layPositionType=5;//1表示id场景背包id,2表示id道具背包id,3表示商品id
+	vector.PVector3 position=6;
+	vector.PVector3 orientate=7;
+	string resource=8;
+	string cover=9;
+	string name=10;
+	PhotoWall photoWall=11;
+}
+message PayGoodsInfo{
+	int32 shoppingId=1;
+	int32 shoppingNum=4;
+}
+message CGetSpaceBack{
+	int32 houseId=1;//空间id,个人空间在100000以上
+}
+message SGetSpaceBack{
+	string name=1;
+	string cover=2;
+	string resource=3;
+	int32 uid=4;
+	string nickName=5;
+	string avatar=6;
+	int32 relation=7; //1表示没关注房主,2表示已关注房主,3表示互关,4表示互不关注
+    string androidUrl=8;//安卓下载地址
+	string iosUrl=9;//ios下载地址
+	string windowsUrl=10;//windows下载地址 
+    int32  onlineTime=11;//发布空间时间戳
+    int32  type=12;//1系统的，2个人上传
+    int32  createUid=13;//创作者uid
+	int32  checkStatus=14;//审核状态
+    int32 SerialNumber=15;// 序号
+	string configUrl = 16; //配置地址
+	string ServerLuaUrl = 17; //服务端lua脚本地址
+	string ClientLuaUrl = 18; //客户端lua脚本
+}
+message CGetLayPosition{
+	int32 houseId=1;//houseId
+}
+message SGetLayPosition{
+	repeated BaseLayPosition layPosition=1;
+}
+message CSetLayPosition{
+	int32 houseId=1;
+	repeated BaseLayPosition LayPosition=2;
+}
+message SSetLayPosition{
+	repeated PayGoodsInfo payGoodsInfo=1;
+	bool setResult=2;//false是保存失败,true是保存成功
+}

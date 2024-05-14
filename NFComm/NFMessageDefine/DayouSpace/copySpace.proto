@@ -1,0 +1,70 @@
+syntax = "proto3";
+package copySpace;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "CopySpace";
+option go_package = "./pb;pb";
+
+
+
+
+message CCopyHouseDetail {
+    int32 houseId   =1;
+    int32 Type      =2;
+}
+
+
+message SCopyHouseDetail {
+	string resource         = 1;
+	string name             = 2;
+	string image            = 3;
+	int32 hostUid           = 4;
+	int32 houseId           = 5;
+	string hostAvatar       = 6;
+	string hostNick         = 7;
+	int32 type              = 8;
+    int32 secret            = 9; //0不设密码 1需要密码
+    string androidUrl       =10;
+    string iosUrl           =11;
+    string windowsUrl       =12;
+    int32 spaceId           =13;
+	int32 SerialNumber		=14;//序号
+	int32  onlineTime		=15;//拷贝空间时间戳
+	string  pwd				=16;//本人操作且设过密码则返回明文
+	string  configUrl = 17; //配置url
+	string ServerLuaUrl = 18; //服务端lua脚本地址
+	string ClientLuaUrl = 19; //客户端lua脚本
+}
+
+
+message CCopyHouseCreate {
+	int32 houseId           = 1;    //目标空间
+	int32 type              = 2;    
+}
+message SCopyHouseCreate {
+	int32 houseId           = 1;    //拷贝空间
+	int32 type              = 2;    
+}
+
+
+message CCopyHouseSet {
+	int32 houseId           = 1;
+	int32 type              = 2;
+    string name             = 3;
+    int32 secret            = 4;//0不设密码 1设置密码
+    string psw              = 5;
+}
+message SCopyHouseSet {
+
+}
+
+
+message CCopyHouseAuth {
+	int32 houseId           = 1;
+	int32 type              = 2;
+    string psw              = 3;
+}
+message SCopyHouseAuth {
+	int32 houseId           = 1;
+	int32 type              = 2;
+    int32 authStatus        = 3;//0失败 1成功
+}

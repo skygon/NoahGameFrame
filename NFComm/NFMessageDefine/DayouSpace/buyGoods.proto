@@ -1,0 +1,19 @@
+syntax = "proto3";
+package pb;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "BuyGoods";
+option csharp_namespace="Pb";   //给C#提供的选项
+option go_package = "./";
+message thinBackInfo{
+	int32 shopGoodsId=1;//商品id
+	int32 thinkBackId=2;//物品背包id
+	int32 scenesBackId=3;//场景背包id
+}
+message CBuyGoods{
+	repeated int32 goodsList=1;//物品背包列表
+}
+message SBuyGoods{
+	string msg=1;//返回信息
+	bool result=2;//ture表示购买成功,false表示购买失败
+	repeated thinBackInfo info=3;//返回购买成功的列表
+}

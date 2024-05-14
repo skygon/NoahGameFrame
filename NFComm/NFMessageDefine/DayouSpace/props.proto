@@ -1,0 +1,25 @@
+syntax = "proto3";
+package props;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Props";//道具
+message CGetProps{
+	int32 uid=1;
+}
+message SGetProps{
+	int32 propsID=1; //道具id
+	string propsName=2;//道具名字
+	int32 goodsId=3;
+
+}
+message CConsumeProps{//消耗时客户端请求
+	int32 propsID=1;
+	string propsName=2;
+	repeated int32 uidList=3;
+	int32 goodsID=4;
+}
+message SConsumeProps{//消耗时服务端发送
+	int32 propsID=1;
+	repeated int32 uidList=2;
+	int32 duration=3;//可配置,业务端没有此选项
+	string propsName=4;
+}

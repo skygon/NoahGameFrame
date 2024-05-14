@@ -1,0 +1,79 @@
+syntax = "proto3";
+package businessCard;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "BusinessCard";
+option go_package = "./;pb";
+
+message CCardInfo { //名片详情
+	int32 uid = 1;
+}
+message SCardInfo { //名片详情
+	int32   uid             = 1;
+	int32 	followCount     = 2;//关注数量
+	int32 	fansCount       = 3;//粉丝数量
+	bool 	isFollow        = 4;//是否已关注这个人
+	string 	nick            = 5;//昵称
+	string 	headPic         = 6;//头像
+	int32 	visitCount      = 7;//个人空间访问量
+	int32 	houseId         = 8;//当前所在空间
+	int32 	seq             = 9;
+	string 	spaceName       = 10;
+	string  identifierId    = 11;//腾讯im id
+	string  phone           = 12; //手机号
+	bool    isIn            = 13; //是否是in用户
+	int32   registeredDays  = 14;//已注册天数
+	int32   visitNumber     = 15;//卡片访问数
+	string  offlineStatus   = 16;//离线状态
+	string  inUid           = 17;
+	string  sign            = 18;//签名
+	int32   avatarKey       = 19; //用户装扮的avatar key
+	int32   houseType       = 20; //当前所在空间类型
+}
+
+message CRename{ //修改昵称
+	string nickName = 1;
+}
+message SRename{
+	int32 isRenameTrue = 1;//1修改成功 2昵称已存在
+	string nickName = 2;
+	int32 uid = 3;
+}
+
+// 是否显示名片页迁移提示按钮
+message SCardTransferBtn{
+	int32 isShow=1; // 1 显示 2 不显示
+}
+
+// 点击名片页迁移提示按钮
+message SCardTransfer{
+	int32 status=1; // 1 成功 2 失败
+}
+
+// 商务名片修改
+message CBusinessCardSave{
+	string orgName = 1; // 组织名称
+	string title = 2; // 个人头衔
+	string email = 3; //邮箱地址
+	string nameOfParticipants = 4; //参会名字
+}
+message SBusinessCardSave{
+	int32 state = 1;//1修改成功 2修改失败
+	string msg = 2;
+	BBusinessCardInfo info = 3;
+}
+
+message BBusinessCardInfo{
+	int32 uid = 1;
+	string orgName = 2; // 组织名称
+	string title = 3; // 个人头衔
+	string email = 4; //邮箱地址
+	string nameOfParticipants = 5; //参会名字
+}
+
+// 获取商务名片列表
+message CBusinessCardList{
+	repeated int32 uids = 1;//用户id列表
+}
+message SBusinessCardList{
+	repeated BBusinessCardInfo list = 1;
+}

@@ -1,0 +1,100 @@
+syntax = "proto3";
+package liuXiaTask;
+
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "LiuXiaTask";
+option go_package = "./";
+
+message CGetLiuXiaTaskList{
+}
+
+message SGetLiuXiaTaskList{
+  string msg = 1;  //获取失败的原因
+  int32 state = 2; //1获取成功;2获取失败
+  repeated LiuXiaTaskInfo featuredTaskList = 3;  //留下特色任务列表
+  repeated LiuXiaTaskInfo suKuQuanShuTaskList = 4;  //留下四库全书任务列表
+  repeated LiuXiaTaskInfo dailyTaskList = 5;  //留下每日任务列表
+}
+
+message LiuXiaTaskInfo{
+  int32 taskId = 1;
+  string name = 2;
+  string key = 3;
+  string desc = 4;
+  int32 copperCoinNum = 5; //代币数
+  int32 status = 6; //任务状态(0.进行中,1.已完成,2.已领取)
+}
+
+message CLiuXiaCompleteTaskReporting{
+  string key = 1;
+  int32 taskId = 2;
+}
+
+message SLiuXiaCompleteTaskReporting{
+  string key = 1;
+  int32 taskId = 2;
+  int32 state = 3; //1上报成功;2上报失败
+  string msg = 4;  //上报失败的原因
+}
+
+message CLiuXiaClaimRewards{
+  string key = 1; //一键领取不传（或传空）
+  int32 taskId = 2; //一键领取不传（或传0）
+}
+
+message SLiuXiaClaimRewards{
+  string key = 1;
+  int32 taskId = 2;
+  repeated LiuXiaTaskRewardInfo list = 3; //获取的任务奖励
+  int32 state = 4; //1领取成功;2领取失败
+  string msg = 5;  //领取失败的原因
+}
+
+message LiuXiaTaskRewardInfo{
+  string key = 1;
+  int32 taskId = 2;
+  int32 copperCoinNum = 3; //获取的铜币数量
+}
+
+message CCollectionSiKuQuanShu{
+  int32 num = 1; //收集的数量
+  int32 npcId = 2; //npc编号（npc唯一标识id）（拾取的情况为0）
+}
+
+message SCollectionSiKuQuanShu{
+  int32 state = 1; //1操作成功;2操作失败
+  string msg = 2;  //操作失败的原因
+}
+
+message CStatCollectionSiKuQuanShu{
+}
+
+message SStatCollectionSiKuQuanShu{
+  int32 totalUserNum = 1; //总收集人数
+  int32 totalPageNum = 2; //所有人收集的总四库全书页数
+}
+
+message CGetUserSiKuQuanShuPageNum{
+
+}
+
+message SGetUserSiKuQuanShuPageNum{
+  int32 num = 1;
+}
+
+message CGetLiuxiaFreeGift{
+
+}
+
+message SGetLiuxiaFreeGift{
+  int32 state = 1;
+  string msg = 2;
+}
+
+message CGetLiuxiaSwitch{
+
+}
+
+message SGetLiuxiaSwitch{
+  int32 daynight  = 1; // 昼夜 1 黑夜 2 白天
+}

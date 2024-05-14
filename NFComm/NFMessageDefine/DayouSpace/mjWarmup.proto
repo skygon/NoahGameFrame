@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+import "userPosition.proto";
+package mj;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "MJWarmup";
+
+message CMjOfflineAfterimage {
+}
+message BMjAfterimage {
+  userPosition.UPosition position = 1;
+  int32 uid            = 2;
+  int32 avatarKey      = 3;
+  string nick          = 4;
+  string userIcon      = 5; //用户头像
+  string ipCity        = 6; //用户ip对应的城市
+  int32 gender         = 7; //性别 0未知1男2女
+  string title         = 8; //佩戴称号
+  string certification = 9; //用户身份认证
+}
+message SMjOfflineAfterimage {
+  repeated BMjAfterimage afterimages = 1;
+}
+
+//留言每周话题
+message CMjLeaveMessageTopic {
+}
+message SMjLeaveMessageTopic {
+  string topic = 1;
+}
+
+//创建留言
+message CMjCreateLeaveMessage {
+  int32 type     = 1; //1文字 2音频
+  string content = 2; //留言内容
+}
+message SMjCreateLeaveMessage {
+  int32 code = 1; //0失败 1成功
+}
+
+//点赞留言
+message CMjLikeLeaveMessage {
+  int32 id   = 1; //留言id
+  int32 like = 2; //1点赞 0取消点赞
+}
+message SMjLikeLeaveMessage {
+  int32 id   = 1; //留言id
+  int32 code = 2; //0失败 1成功
+  string msg = 3; //失败消息
+}
+
+//删除留言
+message CMjDeleteLeaveMessage {
+  int32 id = 1; //留言id
+}
+message SMjDeleteLeaveMessage {
+  int32 id   = 1; //留言id
+  int32 code = 2; //0失败 1成功
+  string msg = 3; //失败消息
+}
+
+//留言列表
+message CMjLeaveMessageList {
+  int32 type = 1; //1我的 2全部
+}
+message SMjLeaveMessageList {
+  repeated int32 msgIdList = 1;
+  int32 type = 2; //1我的 2全部
+}
+
+//留言内容
+message CMjLeaveMessageDetail {
+  int32 id = 1; //留言id
+}
+message SMjLeaveMessageDetail {
+  int32 id          = 1; //留言id
+  int32 type        = 2; //1文字 2音频
+  string content    = 3; //留言内容
+  int32 checkStatus = 4; //审核状态 0审核通过 1待审核 2审核未通过
+  string replyAudio = 5; //回复音频
+  string replyChs   = 6; //回复中文
+  string replyEng   = 7; //回复英文
+  int32 likeNum     = 8; //留言点赞数
+  int32 uid         = 9; //留言者uid
+  string nick       = 10; //留言者昵称
+  string headPic    = 11; //留言者头像
+  bool likeStatus   = 12; //点赞状态
+}
+
+//留言分享
+message CMjShareLeaveMessage {
+  int32 id = 1; //留言id
+}
+message SMjShareLeaveMessage {
+  string title         = 1; //分享标题
+  string url           = 2; //分享链接
+  string content       = 3;
+  string spaceName     = 4; //空间名字
+  string cover         = 5; //空间封面
+  string wechatContent = 6; //微信分享配置话术
+  string shareTime     = 7; //分享时间
+  int32  visitCount    = 8; //累计在线人数
+}

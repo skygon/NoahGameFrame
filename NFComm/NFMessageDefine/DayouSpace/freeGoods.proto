@@ -1,0 +1,20 @@
+syntax = "proto3";
+import "vector.proto";
+package freeGoods;
+option go_package = "./";
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "FreeGoodsClass";
+
+
+message FreeGoods{
+    int32 GoodsID=1;
+    int32 Num=2;
+}
+
+message CFreeGoodsList{
+    repeated FreeGoods FreeGoodsList=1;
+}
+
+message SFreeGoodsList{
+    repeated FreeGoods FreeGoodsList=1;
+}

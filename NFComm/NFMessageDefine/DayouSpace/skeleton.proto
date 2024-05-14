@@ -1,0 +1,28 @@
+syntax = "proto3";
+package skeleton;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Skeleton";
+
+message SingleBoneInfo{
+		int32  bID=1;
+		float x=2;
+		float y=3;
+		float z=4;
+}
+message FaceBlendshapInfo{
+    int32 bID=1;
+		float v=2;
+}
+message CSkeleton{
+	int64 serverTime=1;
+	repeated SingleBoneInfo skeletonPosList=2;
+	repeated SingleBoneInfo skeletonRotList=3;
+	repeated FaceBlendshapInfo faceBlendshapInfo=4;
+
+}
+message SSkeleton{
+	int64 serverTime=1;
+	repeated SingleBoneInfo skeletonPosList=2;
+	repeated SingleBoneInfo skeletonRotList=3;
+	repeated FaceBlendshapInfo faceBlendshapInfo=4;
+}

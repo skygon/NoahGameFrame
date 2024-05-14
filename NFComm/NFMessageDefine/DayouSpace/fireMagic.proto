@@ -1,0 +1,19 @@
+syntax = "proto3";
+import  "head.proto";
+package fireMagic;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "FireMagic";
+message CFireMagic{
+  int32 toUid = 1;
+  int32 toolID=2;
+  int32 actionID=3;
+}
+message SFireMagic{
+  head.BHead head = 1;
+}
+message SBroadFireMagic{
+  int32 fromUid = 1;
+  int32 toUid = 2;
+  int32 toolID=3;
+  int32 actionID=4;
+}

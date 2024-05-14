@@ -1,0 +1,12 @@
+syntax = "proto3";
+package auth;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Auth";
+message CAuth{
+	string token = 1;
+	int32  uid   = 2;
+	int32  os    = 3; //平台(Android=1,iOS=2,Web=3,PC=4,VR=5)
+}
+message SAuth{
+	int32 uid = 1;
+}

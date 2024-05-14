@@ -1,0 +1,23 @@
+syntax = "proto3";
+package reminder;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Reminder";
+option go_package = "./pb;pb";
+
+//设置提醒
+message COnlineReminder {
+    int32 fUid  = 1;//被关注的人
+	int32 status = 2;//1提醒 2取消提醒
+}
+message SOnlineReminder {
+    int32 code = 1;//1成功 2失败, 3要先关注,0未知错误
+}
+
+//获取被关注的人的提醒设置
+message CReminderInfo{
+    int32 fUid=1;//被关注的人
+}
+message SReminderInfo{
+    int32 code = 1;//1已开启 2未开启
+}
+

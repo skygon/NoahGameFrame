@@ -1,0 +1,81 @@
+syntax = "proto3";
+package gpt;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "NpcCustom";
+option go_package = "./pb;pb";
+
+//复制npc
+message CCopyNpc {
+  int32 goodsId = 1;
+}
+message SCopyNpc {
+  int32 goodsId = 1;
+  int32 isSuccess = 2; //1成功 2失败
+}
+
+//使用药水
+message CChangePrompt {
+  int32 type        = 1; //1性格药水 2记忆药水
+  string npcName    = 2; //使用的npc
+  string text       = 3; //设置的文本
+}
+message SChangePrompt {
+  int32 type = 1;
+  int32 isSuccess = 2; //1成功 2失败
+}
+
+//药水设置文本的历史记录
+message CPromptHistory {
+  int32 type        = 1; //1性格药水 2记忆药水
+  string npcName    = 2; //使用的npc
+}
+message SPromptHistory {
+  BPromptRecord currPrompt       = 1; //当前设置的文本
+  repeated BPromptRecord history = 2; //曾设置的文本（2条）
+}
+message BPromptRecord {
+  int32 recordId   = 1; //记录的id
+  string text      = 2; //设置的文本
+  string timestamp = 3; //设置时间
+}
+
+//药水使用的回档
+message CPromptRollback {
+  int32 recordId = 1;
+}
+message SPromptRollback {
+  int32 isSuccess = 1; //1成功 2失败
+}
+
+//npc对话
+message CNpcCustomChat {
+  string npcName    = 1; //npc名字
+  string voiceModel = 2; //声音模型
+  string reqText    = 3; //请求文本
+  int32 type        = 4; //0不使用GPT 1使用GPT
+}
+message SNpcCustomChat {
+  bytes audio            = 1; //返回音频
+  string reqText         = 2; //请求文本
+  string respText        = 3; //返回文本
+  string action          = 4; //动作
+  int32 type             = 5;
+  int32 samplingRate     = 6; //音频采样率
+}
+
+//npc对话（流式）
+message CNpcCustomChatStream {
+  string npcName    = 1; //npc名字
+  string voiceModel = 2; //声音模型
+  string reqText    = 3; //请求文本
+  int32 type        = 4; //0不使用GPT 1使用GPT
+}
+message SNpcCustomChatStream {
+  bytes audio            = 1; //返回音频
+  string reqText         = 2; //请求文本
+  string respText        = 3; //返回文本
+  string action          = 4; //动作
+  int32 type             = 5; //0不使用GPT  1使用GPT
+  bool isEnd             = 6; //是否结束
+  int32 samplingRate     = 7; //音频采样率
+}

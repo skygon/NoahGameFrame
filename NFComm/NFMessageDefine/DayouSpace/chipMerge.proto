@@ -1,0 +1,30 @@
+syntax = "proto3";
+package chipMerge;
+import "userInfo.proto";
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "ChipMerge";
+message Prize{
+	string name=1;
+	string url=2;
+}
+message SChipMerge{
+	int32 mergeFlag=1;//合成成功或失败,只对3个符合的人
+
+	int32 score=2;
+	string textContent=3;
+	repeated Prize prize=4;
+	int32 constelOne=5;
+	int32 constelTwo=6;
+	int32 level=7;
+}
+message SBroadcastChipMerge{//广播给房间所有人
+	int32 mergeFlag=1;//合成成功或失败,1是失败,2是成功
+	repeated userInfo.SUserInfo infoList = 2;//合成3个人的用户信息
+
+	int32 score=3;
+	string textContent=4;
+	repeated Prize prize=5;
+	int32 constelOne=6;
+	int32 constelTwo=7;
+	int32 level=8;
+}

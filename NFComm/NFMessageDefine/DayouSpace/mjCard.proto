@@ -1,0 +1,139 @@
+syntax = "proto3";
+
+package mj;
+option go_package = "./pb;pb";
+
+enum MjCardType {
+  CardTypePic    = 0; //图文卡
+  CardTypeAction = 1; //动作卡
+  CardTypeTitle  = 2; //头衔卡
+  CardTypeVideo  = 3; //视频卡
+  CardTypeNPC    = 4; //NPC交互卡
+}
+
+enum MjCardState {
+  None = 0;
+  Success = 1;
+  Fail = 2;
+}
+
+enum MjTaskStatus {
+  UnCompleted = 0; // 未完成
+  Completed = 1; // 已完成
+  Received = 2; // 已领取
+}
+
+enum MjTaskRewardType {
+  Nothing = 0;
+  YuanLi = 1; // 元力
+  YuanLiAndCard = 2; // 元力+卡片
+}
+
+// 请求抽卡
+message CMjDrawCard {
+  int32 num = 1;
+}
+
+// 返回抽卡结果
+message SMjDrawCard {
+  int32 state = 1; // 结果 1:成功 2失败
+  string msg = 2; // 错误提示消息
+  repeated BMjDrawCard list = 3;
+}
+
+// 抽卡信息
+message BMjDrawCard {
+  int32 cardId = 1; // 卡片id
+}
+
+// 请求集卡图鉴
+message CMjUserCardCollection {
+  int32 goodsId = 1; // 非必传，合成图鉴用，关联宝物id
+}
+
+// 返回集卡图鉴
+message SMjUserCardCollection {
+  int32 state = 1; // 结果 1:成功 2失败
+  string msg = 2; // 错误提示消息
+  repeated BMjUserCardCollection list = 3;
+}
+
+// 抽卡信息
+message BMjUserCardCollection {
+  int32 cardId = 1; // 卡片id
+  int32 num = 2; // 持有数量
+  int32 rewardStatus = 3; // 奖励状态 0未获取 1已获得
+}
+
+// 请求解锁奖励
+message CMjGetCardReward {
+  int32 cardId = 1; // 非必传，合成图鉴用，关联宝物id
+}
+
+// 返回解锁奖励
+message SMjGetCardReward {
+  int32 state = 1; // 结果 1:成功 2失败
+  string msg = 2; // 错误提示消息
+}
+
+// 请求合成卡片
+message CMjCardSynthesis {
+  int32 goodsId = 1; // 必传，合成图鉴用，关联宝物id
+}
+
+// 返回合成卡片
+message SMjCardSynthesis {
+  int32 state = 1; // 结果 1:成功 2失败
+  string msg = 2; // 错误提示消息
+}
+
+// 请求分解卡片
+message CMjCardDecompose {
+  repeated BMjCardDecompose cards = 1; // 分解的卡片信息
+  int32 check = 2; // 二次确认，传1则确认分解
+}
+
+// 请求分解卡片body
+message BMjCardDecompose {
+  int32 cardId = 1; // 卡片id
+  int32 num = 2; // 卡片数量
+}
+
+
+// 返回分解卡片
+message SMjCardDecompose {
+  int32 state = 1; // 结果 1:成功 2失败
+  string msg = 2; // 错误提示消息
+  int32 num = 3; // 分解元力数额
+}
+
+// 请求任务进度
+message CMjTaskProcess {
+}
+
+// 返回任务进度
+message SMjTaskProcess {
+  repeated BMjTaskProcess list = 3;
+}
+
+// 任务进度
+message BMjTaskProcess {
+  int32 taskId = 1; // 任务id
+  int32 process = 2; // 任务进度
+  int32 status = 3; // 任务状态  0未完成 1已完成未领取 2已领取奖励
+}
+
+// 请求领取任务奖励
+message CMjGetTaskReward {
+  int32 taskId = 1; // 任务id
+}
+
+// 返回领取任务奖励
+message SMjGetTaskReward {
+  int32 state = 1; // 结果 1:成功 2失败
+  string msg = 2; // 错误提示消息
+  int32 taskId = 3; // 任务id
+  int32 rewardType = 4; // 奖励类型 1:元力 2:元力+卡片
+  int32 YuanLiNum = 5; // 奖励数量
+  int32 CardId = 6; // 卡片id
+}

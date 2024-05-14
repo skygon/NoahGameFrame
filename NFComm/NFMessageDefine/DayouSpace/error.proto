@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package error;
+
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Error";
+option go_package = "./pb;pb";
+
+message SError{
+  int32  code=1;
+  int32 errorCode=2;
+  string msg=3;
+}

@@ -1,0 +1,26 @@
+syntax = "proto3";
+package gameStudio;
+
+option csharp_namespace = "Pb";
+option go_package = "./";
+
+// 巨人服务端相关
+
+message BGameStudioInstance{
+  string gameConfig = 1; // 自定义配置
+  int32 userNum = 2; // 当前用户数
+  int32 maxUserNum = 3; // 最大可容纳用户数
+  bool isFree = 4; // true 空闲可用 false 不可用
+}
+
+// 获取可用服务列表
+message CGameStudioInstanceList{
+  string name = 1;
+  int32 version = 2;
+}
+
+message SGameStudioInstanceList{
+  repeated BGameStudioInstance lists = 1;//实例列表
+  int32    status = 2; // 1 查询成功 2 系统错误
+}
+

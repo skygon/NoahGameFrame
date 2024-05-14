@@ -1,0 +1,18 @@
+syntax = "proto3";
+package gpt;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Gpt";
+option go_package = "./pb;pb";
+
+message CGptChat {
+  string gptModel   = 1; //gpt模型
+  string text       = 2; //请求文本
+  string voiceModel = 3; //声音模型
+  int32 chatType    = 4; //模式 0直接返回请求文本语音
+}
+
+message SGptChat {
+  bytes audio     = 1; //返回音频
+  string reqText  = 2; //请求文本
+  string respText = 3; //返回文本
+}

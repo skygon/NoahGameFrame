@@ -1,0 +1,11 @@
+syntax = "proto3";
+package systemDY;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "SystemNotice";
+
+message SSystemNotice {
+	string content = 1;
+	int32 type     = 2; //1系统通知 2中奖礼物通知
+	int32 noticeId = 3;//公告ID，去重
+    int32 endTime  = 4; //到期时间
+}

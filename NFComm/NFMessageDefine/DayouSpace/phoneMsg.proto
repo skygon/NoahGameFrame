@@ -1,0 +1,55 @@
+syntax = "proto3";
+package phoneMsg;
+option go_package = "./;pb";
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "PhoneMsg";
+// 修改用户信息获取验证码
+message CSaveUserInfoGetVerifyCode {
+  string phone  = 1; // 手机号
+}
+message SSaveUserInfoGetVerifyCode {
+  int32 status  = 1; // 1 成功 2 失败
+}
+
+// 验证修改用户信息验证码
+message CVerifySaveUserInfoVerifyCode {
+  string phone  = 1; // 手机号
+  string verifyCode  = 2; // 验证码
+}
+message SVerifySaveUserInfoVerifyCode {
+  int32 status  = 1; // 1 成功 2 失败
+  string msg  = 2; // 提示信息
+  string statusCode = 3; // 状态码
+}
+
+// 短信验证码换绑手机号
+message CSavePhoneByVerifyCode {
+  string phone  = 1; // 手机号
+  string verifyCode  = 2; // 验证码
+  string statusCode  = 3; // 状态码
+  string areaCode  = 4; // 手机区域码
+}
+message SSavePhoneByVerifyCode {
+  int32 status  = 1; // 1 成功 2 无效验证码/手机号已存在 3 状态码已失效（已超时）
+  string msg  = 2; // 提示信息
+}
+
+// 短信验证码注销账号
+message CCancelUserByVerifyCode {
+  string phone  = 1; // 手机号
+  string verifyCode  = 2; // 验证码
+}
+message SCancelUserByVerifyCode {
+  int32 status  = 1; // 1 成功 2 失败
+  string msg  = 2; // 提示信息
+}
+
+// 短信验证码解绑微信
+message CRemoveWechatByVerifyCode {
+  string phone  = 1; // 手机号
+  string verifyCode  = 2; // 验证码
+}
+message SRemoveWechatByVerifyCode {
+  int32 status  = 1; // 1 成功 2 失败
+  string msg  = 2; // 提示信息
+}

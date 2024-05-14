@@ -1,0 +1,39 @@
+syntax = "proto3";
+package house;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "House";//背包
+message houseMsg {//
+  int32 houseId     = 1;
+  int32 locationId  = 2;
+}
+message CAddPiece {
+	houseMsg houseInfo = 1;
+}
+message SAddPiece {
+	int32 type  = 1;
+	int32 id    = 2;
+}
+message CGetNftPieceFromHouse {
+	int32 houseId = 1;
+}
+message SGetNftPieceFromHouse{
+	repeated int32 locations = 1;
+}
+
+message CHouseDetail {
+	int32 houseId = 1;
+}
+message SHouseDetail {
+	int32 nftId             = 1;
+	string meshAlias        = 2;//空间别名
+	string title            = 3;
+	string image            = 4;
+	int32 hostUid           = 5;
+	int32 houseId           = 6;
+	int32 likes             = 7;
+	int32 pv                = 8;
+	bool selfHasHouse       = 9;
+	string hostAvatar       = 10;
+	string hostNick         = 11;
+	int32 scene             = 12;//空间场景id
+}

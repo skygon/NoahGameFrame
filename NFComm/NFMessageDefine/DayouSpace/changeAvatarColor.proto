@@ -1,0 +1,45 @@
+syntax = "proto3";
+import "avatar.proto";
+package changeAvatarColor;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "ChangeAvatarColor";
+message SChangeAvatarColor {
+  avatarPackage.BAvatar avatar = 1;
+  int32 uid = 2;
+}
+message CUpdateAvatar {
+  int32 avatarId     = 1;
+  string avatarColor = 2;
+  int32 avatarKey    = 3;
+}
+message SUpdateAvatar {
+  int32 avatarId     = 1;
+  string avatarColor = 2;
+  int32 avatarKey    = 3;
+  int32 uid          = 4;
+}
+message CAvatarList {
+  int32 resource=1;
+}
+message SAvatarList {
+  repeated avatarPackage.BAvatar avatarList = 1;
+}
+
+message CUpdateYuanshenAvatar {
+  int32 avatarKey    = 1;
+}
+message SUpdateYuanshenAvatar {
+  int32 avatarKey    = 1;
+  int32 uid = 2;
+}
+
+message CNewUserSelectAvatar {
+  int32 avatarId     = 1;
+  int32 avatarKey    = 2;
+  int32 goodId       = 3;
+}
+
+message SNewUserSelectAvatar {
+  int32 state       = 1;   //1选择avatar成功;2选择avatar失败
+  string msg        = 2;   //失败原因
+}

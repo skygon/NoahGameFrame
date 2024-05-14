@@ -1,0 +1,24 @@
+syntax = "proto3";
+import "position.proto";
+import "vector.proto";
+package skillSyn;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "SkillSyn";
+message CSkillSyn {//技能同步(特效)
+  int32 actionId = 1;
+  vector.PVector3 posList = 2;
+  int32 sendToId = 3;  //接收人id
+}
+
+message SSkillSyn {//动效回执
+  int32 code = 1;//返回技能释放状态
+  int32 actionId = 2;//技能id
+}
+
+//全服广播礼物
+message SBroadGift {
+  int32 avatarKey             = 1;
+  string nick                 = 2;
+  int32 actionId              = 3;
+  position.BPosition position = 4;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+package countdown;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Countdown";
+message SCountdown{
+	int64 startTime=1;//开始时间
+	int64 endTime=2;//结束时间
+	int32 countdownType=3;//计数类型
+	string countdownDescribe=4;//计数描述
+	int32 intervalTime=5;//间隔时间
+}

@@ -1,0 +1,93 @@
+syntax = "proto3";
+package activity;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Activity";
+option go_package = "./";
+
+
+//获取热度数据
+message CSpaceHotList {
+  repeated QuerySpaceHotInfo list = 1;
+}
+
+message SSpaceHotList {
+  repeated SpaceHotInfo list = 1;
+  string msg = 2;
+}
+
+message CActivityPartList {
+  int32 curPage = 1; // 当前页
+  int32 pageLimit = 2; // 每页条数
+  int32 listType = 3; //1 获取推荐列表; 2获取全部列表（派对空间列表）
+}
+
+message SActivityPartList{
+  repeated ActivityPartInfo list = 1;
+  string msg = 2;
+  int32 curPage = 3; // 当前页
+  int32 activityPartSpaceNum = 4; //活动页派对空间总数
+  int32 pageLimit = 5; // 每页条数
+  int32 listType = 6; //1 获取推荐列表; 2获取全部列表（派对空间列表）
+}
+
+message CSomeoneCopySpaceList{
+  int32  houseId = 1;
+  int32  houseType = 2;
+  int32 curPage = 3; // 当前页
+  int32 pageLimit = 4; // 每页条数
+}
+
+message SSomeoneCopySpaceList{
+  repeated ActivityCopySpaceInfo list = 1;
+  string msg = 2;
+  int32 curPage = 3; // 当前页
+  int32 someoneCopySpace = 4; //活动页某空间的有人副本空间总数
+  int32 pageLimit = 5; // 每页条数
+  int32  houseId = 6;
+  int32  houseType = 7;
+}
+
+message ActivityPartInfo {
+  int32  houseId = 1;
+  int32  houseType = 2;
+  int32  isCopy = 3; //是否可以创建副本：0 不允许 , 1 允许
+  string houseName = 4;
+  string houseSmartCover = 5; //空间小封面图
+  string houseBigCover = 6; //空间大封面图
+  string houseDesc = 7; //空间介绍
+  string actorNick = 8; //表演者名称
+  string actorLabel = 9; //表演者标签
+  string startTime = 10; //开始时间
+  string endTime = 11; //结束时间
+  string startDuration = 12; //开始时间段
+  string endDuration = 13; //结束时间段
+  string creatorNick = 14; //创作者名称
+  string creatorAvatar = 15; //创作者头像
+  int32  houseHot = 16; //空间热度
+  string houseCoverVideo = 17;// 大封面视频
+  int32 scene = 18; //场景id
+  int32 isExistTreasureBox = 19;//是否存在宝箱 0 不存在; 1存在
+}
+
+// 查询空间热度
+message QuerySpaceHotInfo{
+  int32  houseId = 1;
+  int32  houseType = 2;
+}
+
+message SpaceHotInfo{
+  int32  houseId = 1;
+  int32  houseType = 2;
+  int32  hotNum = 3; //空间热度（当前在线人数（20230420 更改为历史访问pv））
+}
+
+message ActivityCopySpaceInfo {
+  int32  houseId = 1;
+  int32  houseType = 2; //空间类型：1公共空间，2个人空间，3副本空间
+  int32  isOpen = 3; // 0 公开 1 不公开
+  int32  currentOnline = 4; //当前在线人数（20230420 更改为历史访问pv）
+  int32  uid = 5;
+  string userIcon = 6; // 用户头像
+  string userNick = 7; // 用户昵称
+  string spaceName = 8; // 空间名称
+}

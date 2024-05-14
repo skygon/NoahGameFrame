@@ -1,0 +1,45 @@
+syntax = "proto3";
+package hiphop;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "HiphopWarmUp";
+option go_package = "./pb;pb";
+
+//候场空间相关信息
+message CHiphopWarmUp {
+}
+message BPoster {
+  int32  goodsId = 1; //对应的信物id
+  string pic     = 2; //图片
+}
+message SHiphopWarmUp {
+  repeated BPoster posterList  = 1;//空间内海报
+  int64            startTime   = 2;//开场时间
+  bool             isFirst     = 3;//是否第一次进入
+  int32            currGoodsId = 4;//当前使用的信物
+}
+
+//拥有的明星信物列表
+message CHiphopListStarToken {
+}
+message SHiphopListStarToken {
+  repeated int32 ownedGoodsId = 1;
+}
+
+//获取明星信物
+message CHiphopGetStarToken {
+  int32 goodsId = 1;
+}
+message SHiphopGetStarToken {
+  int32 goodsId = 1;
+  int32 res     = 2;//0已拥有，1成功获取
+}
+
+//使用明星信物
+message CHiphopUseStarToken {
+  int32 goodsId = 1;
+}
+message SHiphopUseStarToken {
+  int32 goodsId = 1;
+  int32 res     = 2;//0失败，1成功
+  int32 uid     = 3;
+}

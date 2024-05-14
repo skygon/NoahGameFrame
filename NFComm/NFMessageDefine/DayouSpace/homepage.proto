@@ -1,0 +1,110 @@
+syntax = "proto3";                //Proto协议
+package pb;                     //当前包名
+
+import  "vector.proto";
+option csharp_namespace = "Pb";   //给C#提供的选项
+option go_package = "./";
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "Homepage";
+// app首页配置列表
+message CHomepageConfigList {
+  repeated string locationKeys = 1;
+}
+
+// app首页配置列表
+message SHomepageConfigList {
+  repeated SHomepageConfig configList = 1;
+}
+
+// app首页配置
+message SHomepageConfig {
+  int32 location = 1; // 1：广场传送门 2：广场banner1 3：广场banner2 4：广场banner3 5：广场banner4 6：广场banner5
+  string title = 2; // 标题
+  int32 weight = 3; // 权重
+  string media = 4; // 展示素材
+  int32 mediaType = 5; // 1 图片 2 视频
+  string performer = 6; // 表演者
+  int32 linkType = 7; // 链接类型：0 无 1 站内空间 2 站内schema 3 站内h5 4 站外链接
+  string link = 8;
+  int32 validStartTime = 9; //有效期开始时间
+  int32 validEndTime = 10; //有效期结束时间
+  int32 status = 12; // 0 禁用 1 启用
+  repeated BNotice noticeList = 13; // 公告
+  int32 houseType = 14; //空间类型：1公共空间，2个人空间，3副本空间
+  string locationKey = 15; //位置key
+}
+
+// 新app首页配置列表
+message CNewHomepageConfigList {
+  repeated string locationKeys = 1;
+}
+
+// 新app首页配置列表
+message SNewHomepageConfigList {
+  repeated SNewHomepageConfig configList = 1;
+}
+
+
+// 新app首页配置
+message SNewHomepageConfig {
+  string key = 1;
+  string configValue = 2; // json配置
+  int32 weight = 3; // 权重
+}
+
+message BNotice {
+  string content = 1; // 公告内容
+  int32 speed = 2; // 速度
+}
+
+// app首页新用户引导
+message SHomepageNewUser {
+  vector.PVector3 positionOne = 1; // 出生位置1
+  vector.PVector3 positionTwo = 2; // 出生位置2
+  vector.PVector3 positionThree = 3; // 出生位置3
+  string positionOneImage = 4; // 出生位置1图片
+  int32 eventOneScope = 5; // 事件1触发范围
+  int32 eventOneId = 6; // 事件1id
+  int32 eventTwoScope = 7; // 事件2触发范围
+  int32 eventTwoId = 8; // 事件2id
+  int32 userProgress = 9; // 用户进度，0初次进入或一步都没完成
+  int32 eventOneRewardState = 10; // 事件1奖励领取状态
+}
+
+// app首页新用户引导完成进度上报
+message CHomepageNewUserProgress {
+  int32 progress = 1; // 进度
+}
+message SHomepageNewUserProgress {
+  int32 state = 1; // 0 成功 1 失败
+}
+
+// app首页新用户引导事件奖励完成
+message CHomepageNewUserEventReward {
+  int32 eventId = 1; // 事件id
+}
+message SHomepageNewUserEventReward {
+  int32 state = 1; // 0 成功 1 失败
+}
+
+
+// 新用户奖励任务配置
+message SNewUserRewardConfig {
+  repeated BNewUserRewardConfig configList = 1; // 配置列表
+}
+message BNewUserRewardConfig {
+  int32 id = 1; // 配置id
+  int32 state = 2; // 用户完成状态 1 已完成 2 未完成
+}
+
+// 新用户奖励任务完成上报
+message CNewUserRewardFinish {
+  int32 id = 1; // 任务id
+  int32 profitUid = 2; // 受益人uid
+}
+message SNewUserRewardFinish {
+  int32 state = 1; // 1 成功并发放奖励 2 失败（无任何奖励发放 or 该任务已发放过奖励 or 该任务尚未完全完成等）
+  int32 id = 2; // 任务id
+  int32 profitUid = 3; // 受益人uid
+  int32 reportUid = 4; // 上报人uid
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+import "vector.proto";
+package samsungStatistics;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "samsungStatistics";
+
+
+message CSamsungStatistics{
+}
+message SSamsungStatistics{
+}

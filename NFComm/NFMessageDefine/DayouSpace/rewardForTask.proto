@@ -1,0 +1,85 @@
+syntax = "proto3";
+package rewardForTask;
+import "treasureBox.proto";
+
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "RewardForTask";
+option go_package = "./";
+
+//获取任务列表
+message CTaskList{
+  string key = 1;
+}
+
+message STaskList{
+  repeated TaskInfo taskDeskList = 1; //任务台列表
+  repeated TaskInfo taskCenterList = 2; //任务中心列表
+  int32 state = 3; //1 成功; 2 失败
+  string msg = 4;  //失败信息
+  int32 refreshPrice = 5; //刷新每日任务所需元力
+  string key = 6;
+  int32 todayMaxYuanli = 7; //每天可获取的最大元力数
+  int32  todayYuanli = 8; //用户今日以获得的元力数
+}
+
+//领取任务
+message CClaimTask{
+  int32 taskId = 1; //任务id
+  string key = 2; //任务key
+}
+
+message SClaimTask{
+  int32 state = 1; //1 成功; 2 失败
+  string msg = 2;  //失败信息
+  int32 taskId = 3; //任务id
+  string key = 4; //任务key
+}
+
+//完成任务上报
+message CCompleteTaskReporting{
+  int32 taskId = 1; //任务id
+  string key = 2; //任务key
+}
+
+message SCompleteTaskReporting{
+  int32 state = 1; //1 成功; 2 失败
+  string msg = 2;  //失败信息
+  int32 taskId = 3; //任务id
+  string key = 4; //任务key
+}
+
+//领取奖励
+message CClaimReward{
+  int32 taskId = 1; //任务id
+  string key = 2; //任务key
+}
+
+message SClaimReward{
+  repeated treasureBox.TreasureBoxRewardContent list = 1; //获取的奖励列表
+  int32 state = 2;                            //1领取成功,2领取失败
+  string msg = 3;                             //失败原因
+  int32 taskId = 4;                           //任务id
+  string key = 5;                             //任务key
+}
+
+//刷新每日任务
+message CRefreshDailyTasks{
+
+}
+
+message SRefreshDailyTasks{
+  repeated TaskInfo list = 1;
+  int32 state = 2; //1 成功; 2 失败
+  string msg = 3;  //失败信息
+  int32 refreshPrice = 4; //刷新每日任务所需元力
+}
+
+
+message TaskInfo{
+  int32 taskId = 1;//任务id
+  repeated treasureBox.TreasureBoxRewardContent list = 2; //任务奖励
+  string taskName = 3; //任务
+  string taskKey = 4;  //任务名字
+  string taskDesc = 5; //任务介绍
+  int32  status = 6;   //1.未领取状态, 2.已领取状态, 3.进行中, 4.已完成（待领取奖励）, 5.已领取
+}

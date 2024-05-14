@@ -1,0 +1,25 @@
+syntax = "proto3";
+import "award.proto";
+import "countdown.proto";
+package matchInfo;
+option java_package = "com.dayou.space.protobuf";
+option java_outer_classname = "MatchInfo";//比赛
+message SMatchStartAndEndNotice{//比赛开始和结束通知,结束时清场
+  countdown.SCountdown countdown=1;
+}
+message CMatchStart{
+  int32 uid=1;
+}
+message SMatchStart{
+	int32 flag=1;//能否参加比赛 1,是可以,2是没组队,3是活动没开始
+	int64 currentTime=2;//当前时间戳
+	int64 activeEndTime=3;//本场活动结束时间
+}
+
+message CMatchEnd{
+	int32 uid=1;
+}
+message SMatchEnd{
+	int32 flag=1;//1参与奖励,2.获取冠军,3.等待队友,4.已过到过终点,5比赛已结束 注意(退出队伍组队时有广播),6.没有起点线
+	repeated award.BAward award=2;
+}
