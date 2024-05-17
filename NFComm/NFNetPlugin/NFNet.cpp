@@ -237,7 +237,7 @@ bool NFNet::Execute()
 }
 
 
-void NFNet::Initialization(const char* ip, const unsigned short nPort, bool bIsDYClient = false)
+void NFNet::Initialization(const char* ip, const unsigned short nPort, bool bIsDYClient)
 {
     mstrIP = ip;
     mnPort = nPort;
@@ -246,7 +246,7 @@ void NFNet::Initialization(const char* ip, const unsigned short nPort, bool bIsD
     InitClientNet();
 }
 
-int NFNet::Initialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount, bool bIsDYServer = false)
+int NFNet::Initialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount, bool bIsDYServer)
 {
     mnMaxConnect = nMaxClient;
     mnPort = nPort;
@@ -930,7 +930,7 @@ int NFNet::EnCode(NFMsgHead& stHeader, const char* strData, const uint32_t unDat
     return stHeader.GetBodyLength() + NFIMsgHead::DY_S_HEAD_LENGTH;
 }
 
-int NFNet::DeCode(const char* strData, const uint32_t unAllLen, NFMsgHead& xHead, uint32_t nHeaderLen = NFMsgHead::NF_Head::NF_HEAD_LENGTH)
+int NFNet::DeCode(const char* strData, const uint32_t unAllLen, NFMsgHead& xHead, uint32_t nHeaderLen)
 {
     uint32_t nRealHeaderLen = 0;
 

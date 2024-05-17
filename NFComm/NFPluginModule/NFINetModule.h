@@ -271,7 +271,7 @@ public:
 
 	/////////////////
 	//as client
-	virtual void Initialization(const char* ip, const unsigned short nPort) = 0;
+	virtual void Initialization(const char* ip, const unsigned short nPort, bool bIsDYClient = false) = 0;
 
 	//as server
 	virtual int Initialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount = 4, bool bIsDYServer = false) = 0;
