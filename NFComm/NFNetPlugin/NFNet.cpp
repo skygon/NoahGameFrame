@@ -575,7 +575,7 @@ bool NFNet::Dismantle(NetObject* pObject)
                 {
 #endif
                 
-                    mRecvCB(pObject->GetRealFD(), xHead.GetMsgID(), pObject->GetBuff() + NFIMsgHead::NF_Head::NF_HEAD_LENGTH, nMsgBodyLength);
+                    mRecvCB(pObject->GetRealFD(), xHead.GetMsgID(), pObject->GetBuff() + nHeaderLen, nMsgBodyLength);
                 
 #if NF_PLATFORM != NF_PLATFORM_WIN
                 }
@@ -592,7 +592,7 @@ bool NFNet::Dismantle(NetObject* pObject)
                 mnReceiveMsgTotal++;
             }
 
-			pObject->RemoveBuff(0, nMsgBodyLength + NFIMsgHead::NF_Head::NF_HEAD_LENGTH);
+			pObject->RemoveBuff(0, nMsgBodyLength + nHeaderLen);
 
             bNeedDismantle = true;
         }
