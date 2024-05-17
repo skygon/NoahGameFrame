@@ -906,12 +906,26 @@ int NFNet::EnCode(const uint16_t umsgID, const char* strData, const uint32_t unD
 
 
     uint32_t nHeaderLen = m_bDYServer ? NFIMsgHead::DY_C_HEAD_LENGTH : NFIMsgHead::NF_HEAD_LENGTH;
-    char* lpHeader = NF_NEW char[nHeaderLen];//TODO: use smarter pointer
-    
-    xHead.EnCode(lpHeader);
+
+    /*
+    * 这里申请两个用于存储head信息的数组，如果使用share pointer来动态管理，则为了
+    * 保证内存不泄露，后续的EnCode函数都需要统一修改，且也不能直接使用append来构造消息。
+    * 简便起见，直接申请两个数组。
+    */
+    char szNFHeader[NFIMsgHead::NF_HEAD_LENGTH] = { 0 };
+    char szDYHeader[NFIMsgHead::DY_C_HEAD_LENGTH] = { 0 };
     
     strOutData.clear();
-    strOutData.append(lpHeader, nHeaderLen);
+    if (m_bDYServer) {
+        xHead.EnCode(szDYHeader);
+        strOutData.append(szDYHeader, nHeaderLen);
+    }
+    else {
+        xHead.EnCode(szNFHeader);
+        strOutData.append(szNFHeader, nHeaderLen);
+    }
+    
+    
     strOutData.append(strData, unDataLen);
 
     return xHead.GetBodyLength() + nHeaderLen;
