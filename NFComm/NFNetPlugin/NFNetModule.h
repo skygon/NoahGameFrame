@@ -62,10 +62,10 @@ public:
 	virtual bool AfterInit();
 
     //as client
-    virtual void Initialization(const char* ip, const unsigned short nPort);
+    virtual void Initialization(const char* ip, const unsigned short nPort, bool bIsDYClient = false);
 
     //as server
-    virtual int Initialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount = 4);
+    virtual int Initialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount = 4, bool bIsDYServer = false);
 
     virtual unsigned int ExpandBufferSize(const unsigned int size = 1024 * 1024 * 20) override;
 

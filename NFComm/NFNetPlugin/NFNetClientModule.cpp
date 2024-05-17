@@ -846,6 +846,8 @@ void NFNetClientModule::ProcessAddNetConnect()
 			xServerData->mxNetModule->ReadyExecute();
 
             xServerData->mxNetModule->Initialization(xServerData->ip.c_str(), xServerData->nPort);
+			//TODO: add go server init
+			//if go ser: xServerData->mxNetModule->Initialization(xServerData->ip.c_str(), xServerData->nPort, true);
             xServerData->mxNetModule->ExpandBufferSize((unsigned int)mnBufferSize);
 
             InitCallBacks(xServerData);

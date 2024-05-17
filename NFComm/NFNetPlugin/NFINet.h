@@ -81,13 +81,33 @@ struct NFIMsgHead
         NF_HEAD_LENGTH = 6,
     };
 
+    enum DY_Client_Head
+    {
+        DY_C_HEAD_LENGTH = 20,
+    };
+
+    enum DY_Server_Head
+    {
+        DY_S_HEAD_LENGTH = 28,
+    };
+
     virtual int EnCode(char* strData) = 0;
 
     virtual int DeCode(const char* strData) = 0;
 
-    virtual uint16_t GetMsgID() const = 0;
+    //dayouspace serer <---> client protocols
+    virtual int DYEnCodeToClient(char* strData) = 0;
 
-    virtual void SetMsgID(uint16_t msgID) = 0;
+    virtual int DYDeCodeFromClient(const char* strData) = 0;
+
+    //dayouspace server <---> server protocols
+    virtual int DYEnCodeToServer(char* strData) = 0;
+
+    virtual int DYDeCodeFromServer(const char* strData) = 0;
+
+    virtual uint16_t GetMsgID(bool bNFMsg = true) const = 0;
+
+    virtual void SetMsgID(uint16_t msgID, bool bNFMsg = true) = 0;
 
     virtual uint32_t GetBodyLength() const = 0;
 
@@ -165,6 +185,20 @@ struct NFIMsgHead
 #endif
     }
 
+    static void NF_DeCodeUint32(const char* data, uint32_t& nOffset, uint32_t& t)
+    {
+        uint32_t nTemp = 0;
+        memcpy(&nTemp, data + nOffset, sizeof(nTemp));
+        t = NF_NTOHL(nTemp);
+        nOffset += sizeof(nTemp);
+    }
+
+    static void NF_EnCodeUint32(char* data, uint32_t& nOffset, uint32_t t)
+    {
+        uint32_t n = NF_HTONL(t);
+        memcpy(data + nOffset, (void*)(&n), sizeof(t));
+        nOffset += sizeof(t);
+    }
 };
 
 class NFMsgHead : public NFIMsgHead
@@ -174,6 +208,23 @@ public:
     {
         munSize = 0;
         mumsgID = 0;
+        m_nDYMsgID = 0;
+        m_nDYUid = 0;
+        m_nHouseId = 0;
+        m_nRoomSeq = 0;
+        m_nHouseType = 0;
+        m_nOSType = 0;
+    }
+
+    NFMsgHead(uint32_t nMsgLen, uint32_t nMsgID, uint32_t nUid, uint32_t nHouseId, uint32_t nRoomSeq, uint32_t nHouseType, uint32_t nOSType)
+    {
+        munSize = nMsgLen;
+        m_nDYMsgID = nMsgID;
+        m_nDYUid = nUid;
+        m_nHouseId = nHouseId;
+        m_nRoomSeq = nRoomSeq;
+        m_nHouseType = nHouseType;
+        m_nOSType = nOSType;
     }
 
     // Message Head[ MsgID(2) | MsgSize(4) ]
@@ -221,14 +272,114 @@ public:
         return nOffset;
     }
 
-    virtual uint16_t GetMsgID() const
+    // Message Header[ bodyLen(4) | crc(4) | packIndex(4) | msgID(4) | srvID(4) ]
+    virtual int DYEnCodeToClient(char* data)
     {
-        return mumsgID;
+        uint32_t nOffset = 0;
+
+        NF_EnCodeUint32(data, nOffset, munSize);
+        NF_EnCodeUint32(data, nOffset, 0); //crc=0
+        NF_EnCodeUint32(data, nOffset, 0); //packIndex=0
+        NF_EnCodeUint32(data, nOffset, m_nDYMsgID);
+        NF_EnCodeUint32(data, nOffset, 0); //serverID=0
+
+        if (nOffset != NFMsgHead::DY_C_HEAD_LENGTH)
+        {
+            assert(0);
+        }
+
+        return nOffset;
     }
 
-    virtual void SetMsgID(uint16_t msgID)
+    // Message Header[ bodyLen(4) | crc(4) | packIndex(4) | msgID(4) | srvID(4) ]
+    virtual int DYDeCodeFromClient(const char* data)
     {
-        mumsgID = msgID;
+        uint32_t nOffset = 0;
+
+        //消息body
+        NF_DeCodeUint32(data, nOffset, munSize);
+
+        //服务端不关注crc 和 packIndex
+        nOffset += sizeof(munSize) * 2;
+
+        //msgID
+        NF_DeCodeUint32(data, nOffset, m_nDYMsgID);
+
+        //skip srvID
+        nOffset += sizeof(munSize);
+
+        if (nOffset != DY_C_HEAD_LENGTH)
+        {
+            assert(0);
+        }
+
+        return nOffset;
+    }
+
+    //dayouspace server <---> server protocols
+    virtual int DYEnCodeToServer(char* data)
+    {
+        uint32_t nOffset = 0;
+        NF_EnCodeUint32(data, nOffset, munSize);
+        NF_EnCodeUint32(data, nOffset, m_nDYMsgID);
+        NF_EnCodeUint32(data, nOffset, m_nDYUid);
+        NF_EnCodeUint32(data, nOffset, m_nHouseId);
+        NF_EnCodeUint32(data, nOffset, m_nHouseType);
+        NF_EnCodeUint32(data, nOffset, m_nRoomSeq);
+        NF_EnCodeUint32(data, nOffset, m_nHouseType);
+        NF_EnCodeUint32(data, nOffset, m_nOSType);
+
+        if (nOffset != DY_S_HEAD_LENGTH)
+        {
+            assert(0);
+        }
+
+        return nOffset;
+    }
+
+    //msg header [bodyLen(4) | msgID(4) | uid(4) | houseId(4) | roomIdx(4) | houseType(4) | os(4)]
+    virtual int DYDeCodeFromServer(const char* data)
+    {
+        uint32_t nOffset = 0;
+        NF_DeCodeUint32(data, nOffset, munSize);
+        NF_DeCodeUint32(data, nOffset, m_nDYMsgID);
+        NF_DeCodeUint32(data, nOffset, m_nDYUid);
+        NF_DeCodeUint32(data, nOffset, m_nHouseId);
+        NF_DeCodeUint32(data, nOffset, m_nRoomSeq);
+        NF_DeCodeUint32(data, nOffset, m_nHouseType);
+        NF_DeCodeUint32(data, nOffset, m_nOSType);
+
+        if (nOffset != DY_S_HEAD_LENGTH)
+        {
+            assert(0);
+        }
+
+        return nOffset;
+    }
+
+
+
+    virtual uint16_t GetMsgID(bool bNFMsg = true) const
+    {
+        if (bNFMsg) {
+            return mumsgID;
+        }
+        else {
+            return (uint16_t)m_nDYMsgID;
+        }
+        
+    }
+
+    virtual void SetMsgID(uint16_t msgID, bool bNFMsg = true)
+    {
+        if (bNFMsg) {
+            mumsgID = msgID;
+        }
+        else
+        {
+            m_nDYMsgID = (uint32_t)msgID;
+        }
+        
     }
 
     virtual uint32_t GetBodyLength() const
@@ -244,6 +395,12 @@ public:
 protected:
     uint32_t munSize;
     uint16_t mumsgID;
+    uint32_t m_nDYMsgID;
+    uint32_t m_nDYUid;
+    uint32_t m_nHouseId;
+    uint32_t m_nRoomSeq;
+    uint32_t m_nHouseType;
+    uint32_t m_nOSType;
 };
 
 class NFINet;
@@ -389,6 +546,17 @@ public:
     {
 		userID = nUserID;
     }
+    
+    //dayouspace
+    void SetDYUserID(const int nUserID)
+    {
+        m_nDYUserID = nUserID;
+    }
+
+    const int GetDYUserID()
+    {
+        return m_nDYUserID;
+    }
 
     const NFGUID& GetClientID()
     {
@@ -432,6 +600,9 @@ private:
     //
     NFSOCK fd;
     bool bNeedRemove;
+
+    // dayouspace
+    int32_t m_nDYUserID;
 };
 
 class NFINet
@@ -444,10 +615,10 @@ public:
     virtual bool Execute() = 0;
 
     //as client
-    virtual void Initialization(const char* ip, const unsigned short nPort) = 0;
+    virtual void Initialization(const char* ip, const unsigned short nPort, bool bIsDYClient = false) = 0;
 
     //as server
-    virtual int Initialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount = 4) = 0;
+    virtual int Initialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount = 4, bool bIsDYServer = false) = 0;
     virtual int UDPInitialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount = 4) = 0;
 
     virtual unsigned int ExpandBufferSize(const unsigned int size) = 0;

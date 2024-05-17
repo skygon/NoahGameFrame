@@ -116,6 +116,7 @@ void NFNet::listener_cb(struct evconnlistener* listener, evutil_socket_t fd, str
         return;
     }
 
+    //限制单个tcp 服务的最大连接数
     if (pNet->mmObject.size() >= pNet->mnMaxConnect)
     {
         
@@ -195,6 +196,7 @@ void NFNet::conn_readcb(struct bufferevent* bev, void* user_data)
 
     if (pNet->mbTCPStream)
     {
+        //for websocket connection
         int len = pObject->GetBuffLen();
         if (len > 0)
         {
@@ -235,19 +237,21 @@ bool NFNet::Execute()
 }
 
 
-void NFNet::Initialization(const char* ip, const unsigned short nPort)
+void NFNet::Initialization(const char* ip, const unsigned short nPort, bool bIsDYClient = false)
 {
     mstrIP = ip;
     mnPort = nPort;
+    m_bDYClient = bIsDYClient;
 
     InitClientNet();
 }
 
-int NFNet::Initialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount)
+int NFNet::Initialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount, bool bIsDYServer = false)
 {
     mnMaxConnect = nMaxClient;
     mnPort = nPort;
     mnCpuCount = nCpuCount;
+    m_bDYServer = bIsDYServer;
 
     return InitServerNet();
 }
@@ -533,10 +537,34 @@ bool NFNet::Dismantle(NetObject* pObject)
     bool bNeedDismantle = false;
 
     int len = pObject->GetBuffLen();
-    if (len > NFIMsgHead::NF_Head::NF_HEAD_LENGTH)
+    int nHeaderLen = 0;
+    if (m_bDYClient) {
+        //作为客户端和Go 服务通信
+        nHeaderLen = NFMsgHead::DY_S_HEAD_LENGTH;
+    }
+    else if (m_bDYServer) {
+        //作为服务端和unity客户端通信
+        nHeaderLen = NFMsgHead::DY_C_HEAD_LENGTH;
+    }
+    else {
+        //NF框架内部进程间通信
+        nHeaderLen = NFMsgHead::NF_HEAD_LENGTH;
+    }
+
+    if (len > nHeaderLen)
     {
         NFMsgHead xHead;
-        int nMsgBodyLength = DeCode(pObject->GetBuff(), len, xHead);
+        int nMsgBodyLength = 0;
+        
+        if (m_bDYClient) {
+            
+        }
+        else if (m_bDYServer) {
+        }
+        else {
+            nMsgBodyLength = DeCode(pObject->GetBuff(), len, xHead, nHeaderLen);
+        }
+        
         if (nMsgBodyLength > 0 && xHead.GetMsgID() > 0)
         {
             if (mRecvCB)
@@ -866,35 +894,72 @@ bool NFNet::SendMsgToAllClientWithOutHead(const int16_t msgID, const char* msg, 
 int NFNet::EnCode(const uint16_t umsgID, const char* strData, const uint32_t unDataLen, std::string& strOutData)
 {
     NFMsgHead xHead;
-    xHead.SetMsgID(umsgID);
+    if (m_bDYServer) {
+        xHead.SetMsgID(umsgID, false);
+    }
+    else
+    {
+        xHead.SetMsgID(umsgID);
+    }
+    
     xHead.SetBodyLength(unDataLen);
 
-    char szHead[NFIMsgHead::NF_Head::NF_HEAD_LENGTH] = { 0 };
-    xHead.EnCode(szHead);
 
+    uint32_t nHeaderLen = m_bDYServer ? NFIMsgHead::DY_C_HEAD_LENGTH : NFIMsgHead::NF_HEAD_LENGTH;
+    char* lpHeader = NF_NEW char[nHeaderLen];//TODO: use smarter pointer
+    
+    xHead.EnCode(lpHeader);
+    
     strOutData.clear();
-    strOutData.append(szHead, NFIMsgHead::NF_Head::NF_HEAD_LENGTH);
+    strOutData.append(lpHeader, nHeaderLen);
     strOutData.append(strData, unDataLen);
 
-    return xHead.GetBodyLength() + NFIMsgHead::NF_Head::NF_HEAD_LENGTH;
+    return xHead.GetBodyLength() + nHeaderLen;
 }
 
-int NFNet::DeCode(const char* strData, const uint32_t unAllLen, NFMsgHead& xHead)
+// 用于往go server发送消息
+int NFNet::EnCode(NFMsgHead& stHeader, const char* strData, const uint32_t unDataLen, std::string& strOutData)
 {
-    
-    if (unAllLen < NFIMsgHead::NF_Head::NF_HEAD_LENGTH)
+    char szHeader[NFIMsgHead::DY_S_HEAD_LENGTH] = { 0 };
+    stHeader.DYEnCodeToServer(szHeader);
+
+    strOutData.clear();
+    strOutData.append(szHeader, NFIMsgHead::DY_S_HEAD_LENGTH);
+    strOutData.append(strData, unDataLen);
+
+    return stHeader.GetBodyLength() + NFIMsgHead::DY_S_HEAD_LENGTH;
+}
+
+int NFNet::DeCode(const char* strData, const uint32_t unAllLen, NFMsgHead& xHead, uint32_t nHeaderLen = NFMsgHead::NF_Head::NF_HEAD_LENGTH)
+{
+    uint32_t nRealHeaderLen = 0;
+
+    if (unAllLen < nHeaderLen)
     {
         
         return -1;
     }
 
-    if (NFIMsgHead::NF_Head::NF_HEAD_LENGTH != xHead.DeCode(strData))
+    if (m_bDYClient) {
+        //decode msg from go server
+        nRealHeaderLen = xHead.DYDeCodeFromServer(strData);
+    }
+    else if (m_bDYServer) {
+        //decode msg from dayou client
+        nRealHeaderLen = xHead.DYDeCodeFromClient(strData);
+    }
+    else {
+        //decode msg from NF framework
+        nRealHeaderLen = xHead.DeCode(strData);
+    }
+
+    if (nHeaderLen != nRealHeaderLen)
     {
         
         return -2;
     }
 
-    if (xHead.GetBodyLength() > (unAllLen - NFIMsgHead::NF_Head::NF_HEAD_LENGTH))
+    if (xHead.GetBodyLength() > (unAllLen - nHeaderLen))
     {
         
         return -3;

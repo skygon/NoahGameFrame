@@ -274,7 +274,7 @@ public:
 	virtual void Initialization(const char* ip, const unsigned short nPort) = 0;
 
 	//as server
-	virtual int Initialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount = 4) = 0;
+	virtual int Initialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount = 4, bool bIsDYServer = false) = 0;
 	virtual unsigned int ExpandBufferSize(const unsigned int size = 1024 * 1024 * 20) = 0;
 
 	virtual void RemoveReceiveCallBack(const int msgID) = 0;

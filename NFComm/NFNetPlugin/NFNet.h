@@ -87,8 +87,8 @@ public:
 public:
     virtual bool Execute() override ;
 
-    virtual void Initialization(const char* ip, const unsigned short nPort) override ;
-    virtual int Initialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount = 4) override ;
+    virtual void Initialization(const char* ip, const unsigned short nPort, bool bIsDYClient = false) override ;
+    virtual int Initialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount = 4, bool bIsDYServer = false) override ;
     virtual int UDPInitialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount);
 	virtual unsigned int ExpandBufferSize(const unsigned int size) override;
 
@@ -137,8 +137,10 @@ private:
     static void udp_cb(intptr_t sock, short int which, void* arg);
 
 protected:
-    int DeCode(const char* strData, const uint32_t ulen, NFMsgHead& xHead);
+    int DeCode(const char* strData, const uint32_t ulen, NFMsgHead& xHead, uint32_t nHeaderLen = NFMsgHead::NF_Head::NF_HEAD_LENGTH);
     int EnCode(const uint16_t umsgID, const char* strData, const uint32_t unDataLen, std::string& strOutData);
+    // 用于往go server发送消息
+    int EnCode(NFMsgHead& stHeader, const char* strData, const uint32_t unDataLen, std::string& strOutData);
 
 private:
     //<fd,object>
@@ -154,6 +156,8 @@ private:
     int mnPort;
     int mnCpuCount;
 	bool mbServer;
+    bool m_bDYServer;
+    bool m_bDYClient;
 
     unsigned int mnBufferSize;
 

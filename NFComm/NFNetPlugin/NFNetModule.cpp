@@ -58,18 +58,18 @@ bool NFNetModule::AfterInit()
 	return true;
 }
 
-void NFNetModule::Initialization(const char* ip, const unsigned short nPort)
+void NFNetModule::Initialization(const char* ip, const unsigned short nPort, bool bIsDYClient = false)
 {
     m_pNet = NF_NEW NFNet(this, &NFNetModule::OnReceiveNetPack, &NFNetModule::OnSocketNetEvent);
     m_pNet->ExpandBufferSize(mnBufferSize);
-    m_pNet->Initialization(ip, nPort);
+    m_pNet->Initialization(ip, nPort, bIsDYClient);
 }
 
-int NFNetModule::Initialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount)
+int NFNetModule::Initialization(const unsigned int nMaxClient, const unsigned short nPort, const int nCpuCount, bool bIsDYServer = false)
 {
     m_pNet = NF_NEW NFNet(this, &NFNetModule::OnReceiveNetPack, &NFNetModule::OnSocketNetEvent);
     m_pNet->ExpandBufferSize(mnBufferSize);
-    return m_pNet->Initialization(nMaxClient, nPort, nCpuCount);
+    return m_pNet->Initialization(nMaxClient, nPort, nCpuCount, bIsDYServer);
 }
 
 unsigned int NFNetModule::ExpandBufferSize(const unsigned int size)

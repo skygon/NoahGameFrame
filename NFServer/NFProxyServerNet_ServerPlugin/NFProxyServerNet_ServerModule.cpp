@@ -85,7 +85,8 @@ bool NFProxyServerNet_ServerModule::AfterInit()
                 //const std::string& name = m_pElementModule->GetPropertyString(strId, NFrame::Server::ID());
                 //const std::string& ip = m_pElementModule->GetPropertyString(strId, NFrame::Server::IP());
 
-                int nRet = m_pNetModule->Initialization(maxConnect, nPort, nCpus);
+                //proxyServer 改成支持dayouspace 客户端协议
+                int nRet = m_pNetModule->Initialization(maxConnect, nPort, nCpus, true);
                 if (nRet < 0)
                 {
                     std::ostringstream strLog;
@@ -747,4 +748,12 @@ int NFProxyServerNet_ServerModule::EnterGameSuccessEvent(const NFGUID xClientID,
     }
 
     return 0;
+}
+
+
+//support dayouspace
+// NF框架中，回调传参len是整个数据包长度
+void NFProxyServerNet_ServerModule::onAuth(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len)
+{
+
 }

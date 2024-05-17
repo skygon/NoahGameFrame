@@ -79,6 +79,10 @@ protected:
     //////////////////////////////////////////////////////////////////////////
 
 	void OnOtherMessage(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
+
+    //support dayouspace
+    void onAuth(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
+
 protected:
 
     NFMapEx<NFGUID, NFSOCK> mxClientIdent;
