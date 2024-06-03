@@ -40,6 +40,42 @@
 #include "NFComm/NFPluginModule/NFIWSModule.h"
 #include "NFComm/NFPluginModule/NFIThreadPoolModule.h"
 #include "NFComm/NFPluginModule/NFIUDPModule.h"
+#include "NFComm/NFMessageDefine/DayouSpace/switchRoom.pb.h"
+#include "NFComm/NFMessageDefine/DayouSpace/auth.pb.h"
+
+struct UserInfoData
+{
+    UserInfoData()
+    {
+        nUid = 0;
+        nGameID = 0;
+        nGoGameID = 0;
+        nHouseID = 0;
+        nHouseType = 0;
+        nHouseSeq = 0;
+        sRoomInfo = "";
+    }
+
+    UserInfoData(int uid, int gameId, std::string& sKey, int id, int type, int seq)
+    {
+        nUid = uid;
+        nGameID = gameId;
+        sRoomInfo = sKey;
+        nHouseID = id;
+        nHouseType = type;
+        nHouseSeq = seq;
+    }
+
+
+    int nUid;
+    int nGameID;
+    int nGoGameID;
+    int nHouseID;
+    int nHouseType;
+    int nHouseSeq;
+    std::string sRoomInfo;
+
+};
 
 class NFProxyServerNet_ServerModule : public NFIProxyServerNet_ServerModule
 {
@@ -56,6 +92,9 @@ public:
     virtual bool AfterInit();
 
     virtual int Transport(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
+    virtual bool TransportToClient(int nUid, const int msgID, const char* msg, const uint32_t len);
+    virtual bool TransportToClient(NFGUID xClientID, const int msgID, const char* msg, const uint32_t len);
+
 
     
     virtual int EnterGameSuccessEvent(const NFGUID xClientID, const NFGUID xPlayerID);
@@ -82,6 +121,11 @@ protected:
 
     //support dayouspace
     void onAuth(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
+    void OnReqSwitchRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
+    void OnReqEnterRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
+    int PickGameServer();
+    int PickGameServer(NF_SERVER_TYPES nType, std::string& sKey);
+    void HandShakeGoServer();
 
 protected:
 
@@ -98,6 +142,11 @@ protected:
 	NFISecurityModule* m_pSecurityModule;
 	NFIProxyServerToWorldModule* m_pProxyToWorldModule;
     NFIThreadPoolModule* m_pThreadPoolModule;
+
+private:
+    NFMapEx<NFSOCK, UserInfoData> m_userInfoMap;
+    NFMapEx<int, NFSOCK> m_uidToSocketMap;
+    NFMapEx<std::string, int> m_gameServerInfoMap;
 };
 
 #endif

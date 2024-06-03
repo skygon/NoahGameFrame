@@ -556,15 +556,8 @@ bool NFNet::Dismantle(NetObject* pObject)
         NFMsgHead xHead;
         int nMsgBodyLength = 0;
         
-        if (m_bDYClient) {
-            
-        }
-        else if (m_bDYServer) {
-        }
-        else {
-            nMsgBodyLength = DeCode(pObject->GetBuff(), len, xHead, nHeaderLen);
-        }
-        
+        nMsgBodyLength = DeCode(pObject->GetBuff(), len, xHead, nHeaderLen);
+
         if (nMsgBodyLength > 0 && xHead.GetMsgID() > 0)
         {
             if (mRecvCB)
@@ -574,8 +567,15 @@ bool NFNet::Dismantle(NetObject* pObject)
                 try
                 {
 #endif
-                
-                    mRecvCB(pObject->GetRealFD(), xHead.GetMsgID(), pObject->GetBuff() + nHeaderLen, nMsgBodyLength);
+                    if (m_bDYClient)
+                    {
+                        //保留go 服务端返回的header信息到回调函数，用于解析uid house id等关键信息
+                        mRecvCB(pObject->GetRealFD(), xHead.GetMsgID(), pObject->GetBuff(), nMsgBodyLength);
+                    }
+                    else
+                    {
+                        mRecvCB(pObject->GetRealFD(), xHead.GetMsgID(), pObject->GetBuff() + nHeaderLen, nMsgBodyLength);
+                    }
                 
 #if NF_PLATFORM != NF_PLATFORM_WIN
                 }
@@ -854,11 +854,24 @@ bool NFNet::Log(int severity, const char* msg)
     return true;
 }
 
+bool NFNet::SendMsgWithHeadInfo(const int msgID, const char* msg, const size_t len, const NFSOCK sockIndex, NFMsgHead& stHead)
+{
+    std::string strOutData;
+    int nAllLen = EnCode(stHead, msg, len, strOutData);
+
+    if (nAllLen == len + NFIMsgHead::DY_S_HEAD_LENGTH)
+    {
+        return SendMsg(strOutData.c_str(), strOutData.length(), sockIndex);
+    }
+
+    return false;
+}
+
 bool NFNet::SendMsgWithOutHead(const int16_t msgID, const char* msg, const size_t len, const NFSOCK sockIndex /*= 0*/)
 {
     std::string strOutData;
     int nAllLen = EnCode(msgID, msg, len, strOutData);
-    if (nAllLen == len + NFIMsgHead::NF_Head::NF_HEAD_LENGTH)
+    if (nAllLen == len + m_bDYServer ? NFIMsgHead::DY_C_HEAD_LENGTH : NFIMsgHead::NF_HEAD_LENGTH)
     {
         
         return SendMsg(strOutData.c_str(), strOutData.length(), sockIndex);
@@ -871,7 +884,7 @@ bool NFNet::SendMsgWithOutHead(const int16_t msgID, const char* msg, const size_
 {
     std::string strOutData;
     int nAllLen = EnCode(msgID, msg, len, strOutData);
-    if (nAllLen == len + NFIMsgHead::NF_Head::NF_HEAD_LENGTH)
+    if (nAllLen == len + m_bDYServer ? NFIMsgHead::DY_C_HEAD_LENGTH : NFIMsgHead::NF_HEAD_LENGTH)
     {
         return SendMsg(strOutData.c_str(), strOutData.length(), fdList);
     }
@@ -883,7 +896,7 @@ bool NFNet::SendMsgToAllClientWithOutHead(const int16_t msgID, const char* msg, 
 {
     std::string strOutData;
     int nAllLen = EnCode(msgID, msg, len, strOutData);
-    if (nAllLen == len + NFIMsgHead::NF_Head::NF_HEAD_LENGTH)
+    if (nAllLen == len + m_bDYServer ? NFIMsgHead::DY_C_HEAD_LENGTH : NFIMsgHead::NF_HEAD_LENGTH)
     {
         return SendMsgToAllClient(strOutData.c_str(), (uint32_t) strOutData.length());
     }
@@ -891,6 +904,7 @@ bool NFNet::SendMsgToAllClientWithOutHead(const int16_t msgID, const char* msg, 
     return false;
 }
 
+//作为客户端和Go server通信使用另外一个重载函数Encode
 int NFNet::EnCode(const uint16_t umsgID, const char* strData, const uint32_t unDataLen, std::string& strOutData)
 {
     NFMsgHead xHead;
@@ -917,7 +931,7 @@ int NFNet::EnCode(const uint16_t umsgID, const char* strData, const uint32_t unD
     
     strOutData.clear();
     if (m_bDYServer) {
-        xHead.EnCode(szDYHeader);
+        xHead.DYEnCodeToClient(szDYHeader);
         strOutData.append(szDYHeader, nHeaderLen);
     }
     else {

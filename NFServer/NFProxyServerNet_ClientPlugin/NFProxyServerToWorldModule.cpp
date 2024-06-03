@@ -81,6 +81,7 @@ void NFProxyServerToWorldModule::OnServerInfoProcess(const NFSOCK sockIndex, con
         switch (xServerData.eServerType)
         {
             case NF_SERVER_TYPES::NF_ST_GAME:
+            case NF_SERVER_TYPES::DY_GO_SVR:
             {
                 m_pNetClientModule->AddServer(xServerData);
             }

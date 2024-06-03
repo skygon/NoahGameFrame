@@ -14,7 +14,7 @@
     <ProjectGuid>{A9EB492C-819E-4DB7-B870-45F4D8363B57}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>NFKernelPlugin</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">

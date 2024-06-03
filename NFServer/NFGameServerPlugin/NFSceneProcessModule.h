@@ -49,6 +49,21 @@
 #include "NFComm/NFPluginModule/NFICellModule.h"
 #include "NFComm/NFPluginModule/NFIGameServerNet_ServerModule.h"
 
+// Add this header file will cause link 2001 error.
+// Need to find why.
+//#include "NFComm/NFKernelPlugin/NFSceneModule.h"
+
+struct RoomGroupInfo
+{
+    RoomGroupInfo()
+    {
+        //TODO
+    }
+
+    std::map<int, int> mapGroupInfo; // group id <---> user count
+    //TODO cell信息，用于后续根据物理位置归类group和用户
+};
+
 class NFSceneProcessModule
     : public NFISceneProcessModule
 {
@@ -66,10 +81,13 @@ public:
 	virtual bool ReadyExecute();
 
 	virtual bool RequestEnterScene(const NFGUID& self, const int sceneID, const int groupID, const int type, const NFVector3& pos, const NFDataList& argList);
+    virtual bool ProcessUserEnterRoom(int nHouseId, int nRoomSeq, int nUid, NFGUID& xID);
 
 protected:
 	bool LoadSceneResource(const std::string& strSceneIDName);
 	bool CreateSceneBaseGroup(const std::string& strSceneIDName);
+    int PickRoomGroup(std::string sKey);
+    
 
 protected:
 
@@ -92,6 +110,8 @@ private:
 	NFISceneModule* m_pSceneModule;
 	NFICellModule* m_pCellModule;
     NFIGameServerNet_ServerModule* m_pGameServerNet_ServerModule;
+    NFMapEx<std::string, RoomGroupInfo> m_mapSceneRoomInfo; //key : str(houseid_roomseq)  <--> group info
+    NFMapEx<int, NFGUID> m_mapUidGuidInfo; // uid <--> NFGUID
 };
 
 #endif

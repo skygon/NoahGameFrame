@@ -37,6 +37,9 @@
 #include "NFComm/NFPluginModule/NFILogModule.h"
 #include "NFComm/NFPluginModule/NFIClassModule.h"
 #include "NFComm/NFPluginModule/NFINetClientModule.h"
+#include "NFComm/NFMessageDefine/DayouSpace/switchRoom.pb.h"
+#include "NFComm/NFMessageDefine/DayouSpace/auth.pb.h"
+#include "NFComm/NFMessageDefine/DayouSpace/userInfo.pb.h"
 
 
 class NFProxyServerToGameModule : public NFIProxyServerToGameModule
@@ -64,6 +67,9 @@ protected:
     void LogServerInfo(const std::string& strServerInfo);
 
 	void Transport(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
+    void OnAckEnterRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
+    void OnSAuth(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
+    void OnAckSwitchRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
 
 private:
 

@@ -611,6 +611,8 @@ enum EnumCmd
   SMjShareLeaveMessage          = 702; //mj空间留言分享
   SPushMjLeaveMsg               = 703; //mj空间留言推送消息
 
+  SSyncAllObj                 = 999;//对象同步,udp协议,包含avatar动画同步,timeLine同步,子弹类物品同步,特效同步等
+
   PingACK                       = 1001; //云渲染心跳
   CVerify                       = 1002; //云渲染连接
   SVerify                       = 1003; //连接返回
@@ -621,8 +623,10 @@ enum EnumCmd
   SRenderFrame                  = 1008; //云渲染合并帧数据
 
 
-  SSyncAllObj                 = 999;//对象同步,udp协议,包含avatar动画同步,timeLine同步,子弹类物品同步,特效同步等
-  
+  //NOTE: 预留 2000 - 2999 的协议ID 为NF框架内部处理dayouspace消息
+  NF_EnterRoomReq               = 2000;
+  NF_EnterRoomAck               = 2001;
+
   CBulletScreenUserList         = 10001;
   SBulletScreenUserList         = 10002;
   SBulletScreenUserCreate       = 10003;

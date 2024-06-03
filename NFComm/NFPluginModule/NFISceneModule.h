@@ -306,6 +306,7 @@ public:
 	virtual const NFVector2& GetRecordVector2(const int scene, const int group, const std::string& recordName, const int row, const std::string& colTag) = 0;
 	virtual const NFVector3& GetRecordVector3(const int scene, const int group, const std::string& recordName, const int row, const std::string& colTag) = 0;
 
+	virtual bool DirectAddUserToGroup(const int sceneID, const int groupID, const NFGUID& ident, int uid) = 0;
 	////////////////////////////////////////////////////////////////
 protected:
 	//for scene && group

@@ -36,6 +36,7 @@ limitations under the License.
 #include "NFMsgPreGame.pb.h"
 #include "NFMsgShare.pb.h"
 #include "NFProtocolDefine.hpp"
+#include "NFComm/NFMessageDefine/DayouSpace/EnumCmd.pb.h"
 
 #ifdef _MSC_VER
 #pragma warning(default: 4244 4267)

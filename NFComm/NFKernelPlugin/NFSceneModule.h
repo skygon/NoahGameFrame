@@ -80,6 +80,7 @@ public:
 		return true;
 	}
 
+	//NFGUID <--> dayou UID
 	NFMapEx<NFGUID, int> mxPlayerList;
 	NFMapEx<NFGUID, int> mxOtherList;
 	int groupID;
@@ -126,18 +127,19 @@ public:
 		return width;
 	}
 
-	bool AddObjectToGroup(const int groupID, const NFGUID& ident, bool bPlayer)
+	//增加一个默认参数t，用户记录NFGUID到UID的映射关系
+	bool AddObjectToGroup(const int groupID, const NFGUID& ident, bool bPlayer, int t = 0)
 	{
 		NF_SHARE_PTR<NFSceneGroupInfo> pInfo = GetElement(groupID);
 		if (pInfo.get())
 		{
 			if (bPlayer)
 			{
-				return pInfo->mxPlayerList.AddElement(ident, NF_SHARE_PTR<int>(new int(0)));
+				return pInfo->mxPlayerList.AddElement(ident, NF_SHARE_PTR<int>(new int(t)));
 			}
 			else
 			{
-				return pInfo->mxOtherList.AddElement(ident, NF_SHARE_PTR<int>(new int(0)));
+				return pInfo->mxOtherList.AddElement(ident, NF_SHARE_PTR<int>(new int(t)));
 			}
 		}
 
@@ -369,6 +371,9 @@ public:
 	virtual const NFVector2& GetRecordVector2(const int scene, const int group, const std::string& recordName, const int row, const std::string& colTag);
 	virtual const NFVector3& GetRecordVector3(const int scene, const int group, const std::string& recordName, const int row, const std::string& colTag);
 
+	//直接增加用户到scene对应的group中
+	virtual bool DirectAddUserToGroup(const int sceneID, const int groupID, const NFGUID& ident, int uid);
+
     ////////////////////////////////////////////////////////////////
 protected:
 	//for scene && group
@@ -400,6 +405,8 @@ protected:
 	virtual bool AddSceneGroupDestroyedCallBack(const SCENE_EVENT_FUNCTOR_PTR& cb);
 protected:
 	bool SwitchScene(const NFGUID& self, const int nTargetSceneID, const int nTargetGroupID, const int type, const NFVector3 v, const float fOrient, const NFDataList& arg);
+
+	
 
 protected:
 	//for scene && group

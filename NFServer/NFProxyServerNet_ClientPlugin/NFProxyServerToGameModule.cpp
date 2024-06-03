@@ -55,6 +55,8 @@ bool NFProxyServerToGameModule::AfterInit()
 {
 	m_pNetClientModule->AddReceiveCallBack(NF_SERVER_TYPES::NF_ST_GAME, NFMsg::ACK_ENTER_GAME, this, &NFProxyServerToGameModule::OnAckEnterGame);
 	m_pNetClientModule->AddReceiveCallBack(NF_SERVER_TYPES::NF_ST_GAME, this, &NFProxyServerToGameModule::Transport);
+    m_pNetClientModule->AddReceiveCallBack(NF_SERVER_TYPES::DY_GO_SVR, enumGame::EnumCmd::SAuth, this, &NFProxyServerToGameModule::OnAckEnterGame);
+
 
 	m_pNetClientModule->AddEventCallBack(NF_SERVER_TYPES::NF_ST_GAME, this, &NFProxyServerToGameModule::OnSocketGSEvent);
 	m_pNetClientModule->ExpandBufferSize();
@@ -149,4 +151,61 @@ void NFProxyServerToGameModule::LogServerInfo(const std::string& strServerInfo)
 void NFProxyServerToGameModule::Transport(const NFSOCK sockIndex, const int msgID, const char * msg, const uint32_t len)
 {
 	m_pProxyServerNet_ServerModule->Transport(sockIndex, msgID, msg, len);
+}
+
+// from game server
+void NFProxyServerToGameModule::OnAckEnterRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len)
+{
+    //response to dayou client
+    NFGUID clientID;
+    switchRoom::EnterRoomResp xData;
+
+    if (!NFINetModule::ReceivePB(msgID, msg, len, xData, clientID))
+    {
+        return;
+    }
+
+    // to client TODO: transport 不同的消息header
+    std::string sendMsg;
+    xData.SerializeToString(&sendMsg);
+    m_pProxyServerNet_ServerModule->TransportToClient(clientID, msgID, sendMsg.c_str(), sendMsg.length());
+}
+
+
+// from go server
+void NFProxyServerToGameModule::OnSAuth(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len)
+{
+    auth::SAuth xData;
+    
+    //连接go server的net instance，没有去除header，因为header中含有关键业务信息
+    if (!NFINetModule::ReceiveDYPB(msgID, msg + NFMsgHead::DY_S_HEAD_LENGTH, len, xData))
+    {
+        return;
+    }
+
+    //check SAuth response
+    if (xData.uid() != 1)
+    {
+        m_pLogModule->LogError("GO server return SAuth uid: " + xData.uid(), __FILE__, __LINE__);
+    }
+}
+
+//from go server
+//msg:包含了header的全部内容
+//len:消息体长度
+//TODO: 拆分到单独的NFProxyServerToDayouSpaceModule
+void NFProxyServerToGameModule::OnAckSwitchRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len)
+{
+    switchRoom::SSwitchRoom xData;
+    /*if (!NFINetModule::ReceiveDYPB(msgID, msg, len, xData))
+    {
+        return;
+    }*/
+    //TODO: 增加同场用户的数据处理
+    NFMsgHead xHead;
+    xHead.DYDeCodeFromServer(msg);
+
+    // to client TODO: transport 不同的消息header
+    m_pProxyServerNet_ServerModule->TransportToClient(xHead.GetDYUid(), msgID, msg + NFMsgHead::DY_S_HEAD_LENGTH, len);
+
 }

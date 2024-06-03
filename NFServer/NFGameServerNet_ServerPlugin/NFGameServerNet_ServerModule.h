@@ -42,8 +42,9 @@
 #include "NFComm/NFPluginModule/NFIScheduleModule.h"
 #include "NFComm/NFPluginModule/NFIThreadPoolModule.h"
 #include "NFComm/NFPluginModule/NFISyncPosModule.h"
+#include "NFComm/NFMessageDefine/DayouSpace/switchRoom.pb.h"
 ////////////////////////////////////////////////////////////////////////////
-
+#include "NFServer/NFGameServerPlugin/NFSceneProcessModule.h";
 
 
 class NFGameServerNet_ServerModule
@@ -95,6 +96,9 @@ protected:
 
     ///////////WORLD_START///////////////////////////////////////////////////////////////
     void OnTransWorld(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
+
+    void OnReqEnterRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
+    void OnReqSwitchRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
 
 private:
     

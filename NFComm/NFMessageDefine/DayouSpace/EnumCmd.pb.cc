@@ -24,7 +24,7 @@ static constexpr ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema* schemas = n
 static constexpr ::PROTOBUF_NAMESPACE_ID::Message* const* file_default_instances = nullptr;
 
 const char descriptor_table_protodef_EnumCmd_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\rEnumCmd.proto\022\010enumGame*\203n\n\007EnumCmd\022\n\n"
+  "\n\rEnumCmd.proto\022\010enumGame*\257n\n\007EnumCmd\022\n\n"
   "\006SError\020\000\022\t\n\005CAuth\020\n\022\t\n\005SAuth\020\013\022\016\n\nCHear"
   "tBeat\020\020\022\016\n\nSHeartBeat\020\021\022\r\n\tCUserInfo\020\037\022\r"
   "\n\tSUserInfo\020 \022\024\n\020CGetUserInfoList\020!\022\024\n\020S"
@@ -369,15 +369,16 @@ const char descriptor_table_protodef_EnumCmd_2eproto[] PROTOBUF_SECTION_VARIABLE
   "\272\005\022\025\n\020CMjGetTaskReward\020\273\005\022\025\n\020SMjGetTaskR"
   "eward\020\274\005\022\031\n\024CMjShareLeaveMessage\020\275\005\022\031\n\024S"
   "MjShareLeaveMessage\020\276\005\022\024\n\017SPushMjLeaveMs"
-  "g\020\277\005\022\014\n\007PingACK\020\351\007\022\014\n\007CVerify\020\352\007\022\014\n\007SVer"
-  "ify\020\353\007\022\026\n\021SRenderSwitchRoom\020\354\007\022\024\n\017SRende"
-  "rExitRoom\020\355\007\022\021\n\014CRenderScale\020\356\007\022\021\n\014SRend"
-  "erScale\020\357\007\022\021\n\014SRenderFrame\020\360\007\022\020\n\013SSyncAl"
-  "lObj\020\347\007\022\032\n\025CBulletScreenUserList\020\221N\022\032\n\025S"
-  "BulletScreenUserList\020\222N\022\034\n\027SBulletScreen"
-  "UserCreate\020\223N\022\034\n\027SBulletScreenUserDelete"
-  "\020\224N\022\032\n\025SBulletScreenUserTalk\020\225NB\032\n\030com.d"
-  "ayou.space.protobufb\006proto3"
+  "g\020\277\005\022\020\n\013SSyncAllObj\020\347\007\022\014\n\007PingACK\020\351\007\022\014\n\007"
+  "CVerify\020\352\007\022\014\n\007SVerify\020\353\007\022\026\n\021SRenderSwitc"
+  "hRoom\020\354\007\022\024\n\017SRenderExitRoom\020\355\007\022\021\n\014CRende"
+  "rScale\020\356\007\022\021\n\014SRenderScale\020\357\007\022\021\n\014SRenderF"
+  "rame\020\360\007\022\024\n\017NF_EnterRoomReq\020\320\017\022\024\n\017NF_Ente"
+  "rRoomAck\020\321\017\022\032\n\025CBulletScreenUserList\020\221N\022"
+  "\032\n\025SBulletScreenUserList\020\222N\022\034\n\027SBulletSc"
+  "reenUserCreate\020\223N\022\034\n\027SBulletScreenUserDe"
+  "lete\020\224N\022\032\n\025SBulletScreenUserTalk\020\225NB\032\n\030c"
+  "om.dayou.space.protobufb\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_EnumCmd_2eproto_deps[1] = {
 };
@@ -386,7 +387,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_Enu
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_EnumCmd_2eproto_once;
 static bool descriptor_table_EnumCmd_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_EnumCmd_2eproto = {
-  &descriptor_table_EnumCmd_2eproto_initialized, descriptor_table_protodef_EnumCmd_2eproto, "EnumCmd.proto", 14147,
+  &descriptor_table_EnumCmd_2eproto_initialized, descriptor_table_protodef_EnumCmd_2eproto, "EnumCmd.proto", 14191,
   &descriptor_table_EnumCmd_2eproto_once, descriptor_table_EnumCmd_2eproto_sccs, descriptor_table_EnumCmd_2eproto_deps, 0, 0,
   schemas, file_default_instances, TableStruct_EnumCmd_2eproto::offsets,
   file_level_metadata_EnumCmd_2eproto, 0, file_level_enum_descriptors_EnumCmd_2eproto, file_level_service_descriptors_EnumCmd_2eproto,
@@ -1017,6 +1018,8 @@ bool EnumCmd_IsValid(int value) {
     case 1006:
     case 1007:
     case 1008:
+    case 2000:
+    case 2001:
     case 10001:
     case 10002:
     case 10003:

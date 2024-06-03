@@ -26,12 +26,13 @@
 #include "NFProxyServerNet_ServerModule.h"
 #include "NFProxyServerNet_WSModule.h"
 #include "NFProxyServerNet_ServerPlugin.h"
-
+//#include "NFProxyServerNet_GRPCModule.h"
 //
 //
 #ifdef NF_DYNAMIC_PLUGIN
+-
+NF_EXPORT void DllStartPlugin(NFIPluginManager * pm)
 
-NF_EXPORT void DllStartPlugin(NFIPluginManager* pm)
 {
 
     CREATE_PLUGIN(pm, NFProxyServerNet_ServerPlugin)
@@ -60,11 +61,12 @@ void NFProxyServerNet_ServerPlugin::Install()
 {
     REGISTER_MODULE(pPluginManager, NFIProxyServerNet_ServerModule, NFProxyServerNet_ServerModule)
     REGISTER_MODULE(pPluginManager, NFIProxyServerNet_WSModule, NFProxyServerNet_WSModule)
-
+    //REGISTER_MODULE(pPluginManager, NFIProxyServerNet_GRPCModule, NFProxyServerNet_GRPCModule)
 }
 
 void NFProxyServerNet_ServerPlugin::Uninstall()
 {
     UNREGISTER_MODULE(pPluginManager, NFIProxyServerNet_WSModule, NFProxyServerNet_WSModule)
     UNREGISTER_MODULE(pPluginManager, NFIProxyServerNet_ServerModule, NFProxyServerNet_ServerModule)
+    //UNREGISTER_MODULE(pPluginManager, NFIProxyServerNet_GRPCModule, NFProxyServerNet_GRPCModule)
 }

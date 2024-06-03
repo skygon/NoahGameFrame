@@ -59,6 +59,8 @@ public:
 
 		mnBufferSize = 0;
         mbTCPStream = false;
+        m_bDYServer = false;
+        m_bDYClient = false;
     }
 
     template<typename BaseType>
@@ -80,6 +82,8 @@ public:
 
 		mnBufferSize = 0;
         mbTCPStream = tcpStream;
+        m_bDYServer = false;
+        m_bDYClient = false;
     }
     
     virtual ~NFNet() {};
@@ -95,6 +99,8 @@ public:
     virtual bool Final() override ;
 
     virtual bool SendMsg(const char* msg, const size_t len, const NFSOCK sockIndex) override ;
+
+    virtual bool SendMsgWithHeadInfo(const int msgID, const char* msg, const size_t len, const NFSOCK sockIndex, NFMsgHead& stHead);
 
     virtual bool SendMsgWithOutHead(const int16_t msgID, const char* msg, const size_t len, const NFSOCK sockIndex) override ;
 

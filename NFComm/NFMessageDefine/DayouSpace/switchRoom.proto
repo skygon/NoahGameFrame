@@ -22,3 +22,23 @@ message SSwitchRoom{
 message CExitRoom {
   userPosition.UPosition position = 1;
 }
+
+message CommonResp {
+	int32 code     = 1;
+	string message = 2;
+}
+
+message EnterRoomReq {
+	int32 uid             = 1;
+	int32 house_type      = 2;
+	int32 house_id        = 3;
+	int32 seq             = 4;
+	int32 version_id      = 5;
+	bool  is_special_user = 6;
+}
+
+message EnterRoomResp {
+	CommonResp common         = 1;
+	string creator_server_ip  = 2; //玩法服务ip
+	int32 creator_server_port = 3; //玩法服务port
+}

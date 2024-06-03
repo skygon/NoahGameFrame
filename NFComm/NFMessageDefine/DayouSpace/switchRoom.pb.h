@@ -49,7 +49,7 @@ struct TableStruct_switchRoom_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[3]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[6]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -63,6 +63,15 @@ extern CExitRoomDefaultTypeInternal _CExitRoom_default_instance_;
 class CSwitchRoom;
 class CSwitchRoomDefaultTypeInternal;
 extern CSwitchRoomDefaultTypeInternal _CSwitchRoom_default_instance_;
+class CommonResp;
+class CommonRespDefaultTypeInternal;
+extern CommonRespDefaultTypeInternal _CommonResp_default_instance_;
+class EnterRoomReq;
+class EnterRoomReqDefaultTypeInternal;
+extern EnterRoomReqDefaultTypeInternal _EnterRoomReq_default_instance_;
+class EnterRoomResp;
+class EnterRoomRespDefaultTypeInternal;
+extern EnterRoomRespDefaultTypeInternal _EnterRoomResp_default_instance_;
 class SSwitchRoom;
 class SSwitchRoomDefaultTypeInternal;
 extern SSwitchRoomDefaultTypeInternal _SSwitchRoom_default_instance_;
@@ -70,6 +79,9 @@ extern SSwitchRoomDefaultTypeInternal _SSwitchRoom_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
 template<> ::switchRoom::CExitRoom* Arena::CreateMaybeMessage<::switchRoom::CExitRoom>(Arena*);
 template<> ::switchRoom::CSwitchRoom* Arena::CreateMaybeMessage<::switchRoom::CSwitchRoom>(Arena*);
+template<> ::switchRoom::CommonResp* Arena::CreateMaybeMessage<::switchRoom::CommonResp>(Arena*);
+template<> ::switchRoom::EnterRoomReq* Arena::CreateMaybeMessage<::switchRoom::EnterRoomReq>(Arena*);
+template<> ::switchRoom::EnterRoomResp* Arena::CreateMaybeMessage<::switchRoom::EnterRoomResp>(Arena*);
 template<> ::switchRoom::SSwitchRoom* Arena::CreateMaybeMessage<::switchRoom::SSwitchRoom>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace switchRoom {
@@ -560,6 +572,498 @@ class CExitRoom :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_switchRoom_2eproto;
 };
+// -------------------------------------------------------------------
+
+class CommonResp :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:switchRoom.CommonResp) */ {
+ public:
+  CommonResp();
+  virtual ~CommonResp();
+
+  CommonResp(const CommonResp& from);
+  CommonResp(CommonResp&& from) noexcept
+    : CommonResp() {
+    *this = ::std::move(from);
+  }
+
+  inline CommonResp& operator=(const CommonResp& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CommonResp& operator=(CommonResp&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const CommonResp& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const CommonResp* internal_default_instance() {
+    return reinterpret_cast<const CommonResp*>(
+               &_CommonResp_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    3;
+
+  friend void swap(CommonResp& a, CommonResp& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(CommonResp* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline CommonResp* New() const final {
+    return CreateMaybeMessage<CommonResp>(nullptr);
+  }
+
+  CommonResp* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<CommonResp>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const CommonResp& from);
+  void MergeFrom(const CommonResp& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(CommonResp* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "switchRoom.CommonResp";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_switchRoom_2eproto);
+    return ::descriptor_table_switchRoom_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kMessageFieldNumber = 2,
+    kCodeFieldNumber = 1,
+  };
+  // string message = 2;
+  void clear_message();
+  const std::string& message() const;
+  void set_message(const std::string& value);
+  void set_message(std::string&& value);
+  void set_message(const char* value);
+  void set_message(const char* value, size_t size);
+  std::string* mutable_message();
+  std::string* release_message();
+  void set_allocated_message(std::string* message);
+  private:
+  const std::string& _internal_message() const;
+  void _internal_set_message(const std::string& value);
+  std::string* _internal_mutable_message();
+  public:
+
+  // int32 code = 1;
+  void clear_code();
+  ::PROTOBUF_NAMESPACE_ID::int32 code() const;
+  void set_code(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_code() const;
+  void _internal_set_code(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:switchRoom.CommonResp)
+ private:
+  class _Internal;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr message_;
+  ::PROTOBUF_NAMESPACE_ID::int32 code_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_switchRoom_2eproto;
+};
+// -------------------------------------------------------------------
+
+class EnterRoomReq :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:switchRoom.EnterRoomReq) */ {
+ public:
+  EnterRoomReq();
+  virtual ~EnterRoomReq();
+
+  EnterRoomReq(const EnterRoomReq& from);
+  EnterRoomReq(EnterRoomReq&& from) noexcept
+    : EnterRoomReq() {
+    *this = ::std::move(from);
+  }
+
+  inline EnterRoomReq& operator=(const EnterRoomReq& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline EnterRoomReq& operator=(EnterRoomReq&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const EnterRoomReq& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const EnterRoomReq* internal_default_instance() {
+    return reinterpret_cast<const EnterRoomReq*>(
+               &_EnterRoomReq_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    4;
+
+  friend void swap(EnterRoomReq& a, EnterRoomReq& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(EnterRoomReq* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline EnterRoomReq* New() const final {
+    return CreateMaybeMessage<EnterRoomReq>(nullptr);
+  }
+
+  EnterRoomReq* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<EnterRoomReq>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const EnterRoomReq& from);
+  void MergeFrom(const EnterRoomReq& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(EnterRoomReq* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "switchRoom.EnterRoomReq";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_switchRoom_2eproto);
+    return ::descriptor_table_switchRoom_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kUidFieldNumber = 1,
+    kHouseTypeFieldNumber = 2,
+    kHouseIdFieldNumber = 3,
+    kSeqFieldNumber = 4,
+    kVersionIdFieldNumber = 5,
+    kIsSpecialUserFieldNumber = 6,
+  };
+  // int32 uid = 1;
+  void clear_uid();
+  ::PROTOBUF_NAMESPACE_ID::int32 uid() const;
+  void set_uid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_uid() const;
+  void _internal_set_uid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 house_type = 2;
+  void clear_house_type();
+  ::PROTOBUF_NAMESPACE_ID::int32 house_type() const;
+  void set_house_type(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_house_type() const;
+  void _internal_set_house_type(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 house_id = 3;
+  void clear_house_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 house_id() const;
+  void set_house_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_house_id() const;
+  void _internal_set_house_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 seq = 4;
+  void clear_seq();
+  ::PROTOBUF_NAMESPACE_ID::int32 seq() const;
+  void set_seq(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_seq() const;
+  void _internal_set_seq(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 version_id = 5;
+  void clear_version_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 version_id() const;
+  void set_version_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_version_id() const;
+  void _internal_set_version_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // bool is_special_user = 6;
+  void clear_is_special_user();
+  bool is_special_user() const;
+  void set_is_special_user(bool value);
+  private:
+  bool _internal_is_special_user() const;
+  void _internal_set_is_special_user(bool value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:switchRoom.EnterRoomReq)
+ private:
+  class _Internal;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::PROTOBUF_NAMESPACE_ID::int32 uid_;
+  ::PROTOBUF_NAMESPACE_ID::int32 house_type_;
+  ::PROTOBUF_NAMESPACE_ID::int32 house_id_;
+  ::PROTOBUF_NAMESPACE_ID::int32 seq_;
+  ::PROTOBUF_NAMESPACE_ID::int32 version_id_;
+  bool is_special_user_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_switchRoom_2eproto;
+};
+// -------------------------------------------------------------------
+
+class EnterRoomResp :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:switchRoom.EnterRoomResp) */ {
+ public:
+  EnterRoomResp();
+  virtual ~EnterRoomResp();
+
+  EnterRoomResp(const EnterRoomResp& from);
+  EnterRoomResp(EnterRoomResp&& from) noexcept
+    : EnterRoomResp() {
+    *this = ::std::move(from);
+  }
+
+  inline EnterRoomResp& operator=(const EnterRoomResp& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline EnterRoomResp& operator=(EnterRoomResp&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const EnterRoomResp& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const EnterRoomResp* internal_default_instance() {
+    return reinterpret_cast<const EnterRoomResp*>(
+               &_EnterRoomResp_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  friend void swap(EnterRoomResp& a, EnterRoomResp& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(EnterRoomResp* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline EnterRoomResp* New() const final {
+    return CreateMaybeMessage<EnterRoomResp>(nullptr);
+  }
+
+  EnterRoomResp* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<EnterRoomResp>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const EnterRoomResp& from);
+  void MergeFrom(const EnterRoomResp& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(EnterRoomResp* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "switchRoom.EnterRoomResp";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_switchRoom_2eproto);
+    return ::descriptor_table_switchRoom_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kCreatorServerIpFieldNumber = 2,
+    kCommonFieldNumber = 1,
+    kCreatorServerPortFieldNumber = 3,
+  };
+  // string creator_server_ip = 2;
+  void clear_creator_server_ip();
+  const std::string& creator_server_ip() const;
+  void set_creator_server_ip(const std::string& value);
+  void set_creator_server_ip(std::string&& value);
+  void set_creator_server_ip(const char* value);
+  void set_creator_server_ip(const char* value, size_t size);
+  std::string* mutable_creator_server_ip();
+  std::string* release_creator_server_ip();
+  void set_allocated_creator_server_ip(std::string* creator_server_ip);
+  private:
+  const std::string& _internal_creator_server_ip() const;
+  void _internal_set_creator_server_ip(const std::string& value);
+  std::string* _internal_mutable_creator_server_ip();
+  public:
+
+  // .switchRoom.CommonResp common = 1;
+  bool has_common() const;
+  private:
+  bool _internal_has_common() const;
+  public:
+  void clear_common();
+  const ::switchRoom::CommonResp& common() const;
+  ::switchRoom::CommonResp* release_common();
+  ::switchRoom::CommonResp* mutable_common();
+  void set_allocated_common(::switchRoom::CommonResp* common);
+  private:
+  const ::switchRoom::CommonResp& _internal_common() const;
+  ::switchRoom::CommonResp* _internal_mutable_common();
+  public:
+
+  // int32 creator_server_port = 3;
+  void clear_creator_server_port();
+  ::PROTOBUF_NAMESPACE_ID::int32 creator_server_port() const;
+  void set_creator_server_port(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_creator_server_port() const;
+  void _internal_set_creator_server_port(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:switchRoom.EnterRoomResp)
+ private:
+  class _Internal;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr creator_server_ip_;
+  ::switchRoom::CommonResp* common_;
+  ::PROTOBUF_NAMESPACE_ID::int32 creator_server_port_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_switchRoom_2eproto;
+};
 // ===================================================================
 
 
@@ -929,9 +1433,367 @@ inline void CExitRoom::set_allocated_position(::userPosition::UPosition* positio
   // @@protoc_insertion_point(field_set_allocated:switchRoom.CExitRoom.position)
 }
 
+// -------------------------------------------------------------------
+
+// CommonResp
+
+// int32 code = 1;
+inline void CommonResp::clear_code() {
+  code_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 CommonResp::_internal_code() const {
+  return code_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 CommonResp::code() const {
+  // @@protoc_insertion_point(field_get:switchRoom.CommonResp.code)
+  return _internal_code();
+}
+inline void CommonResp::_internal_set_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  code_ = value;
+}
+inline void CommonResp::set_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_code(value);
+  // @@protoc_insertion_point(field_set:switchRoom.CommonResp.code)
+}
+
+// string message = 2;
+inline void CommonResp::clear_message() {
+  message_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& CommonResp::message() const {
+  // @@protoc_insertion_point(field_get:switchRoom.CommonResp.message)
+  return _internal_message();
+}
+inline void CommonResp::set_message(const std::string& value) {
+  _internal_set_message(value);
+  // @@protoc_insertion_point(field_set:switchRoom.CommonResp.message)
+}
+inline std::string* CommonResp::mutable_message() {
+  // @@protoc_insertion_point(field_mutable:switchRoom.CommonResp.message)
+  return _internal_mutable_message();
+}
+inline const std::string& CommonResp::_internal_message() const {
+  return message_.GetNoArena();
+}
+inline void CommonResp::_internal_set_message(const std::string& value) {
+  
+  message_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void CommonResp::set_message(std::string&& value) {
+  
+  message_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:switchRoom.CommonResp.message)
+}
+inline void CommonResp::set_message(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  message_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:switchRoom.CommonResp.message)
+}
+inline void CommonResp::set_message(const char* value, size_t size) {
+  
+  message_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:switchRoom.CommonResp.message)
+}
+inline std::string* CommonResp::_internal_mutable_message() {
+  
+  return message_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* CommonResp::release_message() {
+  // @@protoc_insertion_point(field_release:switchRoom.CommonResp.message)
+  
+  return message_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void CommonResp::set_allocated_message(std::string* message) {
+  if (message != nullptr) {
+    
+  } else {
+    
+  }
+  message_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), message);
+  // @@protoc_insertion_point(field_set_allocated:switchRoom.CommonResp.message)
+}
+
+// -------------------------------------------------------------------
+
+// EnterRoomReq
+
+// int32 uid = 1;
+inline void EnterRoomReq::clear_uid() {
+  uid_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 EnterRoomReq::_internal_uid() const {
+  return uid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 EnterRoomReq::uid() const {
+  // @@protoc_insertion_point(field_get:switchRoom.EnterRoomReq.uid)
+  return _internal_uid();
+}
+inline void EnterRoomReq::_internal_set_uid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  uid_ = value;
+}
+inline void EnterRoomReq::set_uid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_uid(value);
+  // @@protoc_insertion_point(field_set:switchRoom.EnterRoomReq.uid)
+}
+
+// int32 house_type = 2;
+inline void EnterRoomReq::clear_house_type() {
+  house_type_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 EnterRoomReq::_internal_house_type() const {
+  return house_type_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 EnterRoomReq::house_type() const {
+  // @@protoc_insertion_point(field_get:switchRoom.EnterRoomReq.house_type)
+  return _internal_house_type();
+}
+inline void EnterRoomReq::_internal_set_house_type(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  house_type_ = value;
+}
+inline void EnterRoomReq::set_house_type(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_house_type(value);
+  // @@protoc_insertion_point(field_set:switchRoom.EnterRoomReq.house_type)
+}
+
+// int32 house_id = 3;
+inline void EnterRoomReq::clear_house_id() {
+  house_id_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 EnterRoomReq::_internal_house_id() const {
+  return house_id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 EnterRoomReq::house_id() const {
+  // @@protoc_insertion_point(field_get:switchRoom.EnterRoomReq.house_id)
+  return _internal_house_id();
+}
+inline void EnterRoomReq::_internal_set_house_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  house_id_ = value;
+}
+inline void EnterRoomReq::set_house_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_house_id(value);
+  // @@protoc_insertion_point(field_set:switchRoom.EnterRoomReq.house_id)
+}
+
+// int32 seq = 4;
+inline void EnterRoomReq::clear_seq() {
+  seq_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 EnterRoomReq::_internal_seq() const {
+  return seq_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 EnterRoomReq::seq() const {
+  // @@protoc_insertion_point(field_get:switchRoom.EnterRoomReq.seq)
+  return _internal_seq();
+}
+inline void EnterRoomReq::_internal_set_seq(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  seq_ = value;
+}
+inline void EnterRoomReq::set_seq(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_seq(value);
+  // @@protoc_insertion_point(field_set:switchRoom.EnterRoomReq.seq)
+}
+
+// int32 version_id = 5;
+inline void EnterRoomReq::clear_version_id() {
+  version_id_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 EnterRoomReq::_internal_version_id() const {
+  return version_id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 EnterRoomReq::version_id() const {
+  // @@protoc_insertion_point(field_get:switchRoom.EnterRoomReq.version_id)
+  return _internal_version_id();
+}
+inline void EnterRoomReq::_internal_set_version_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  version_id_ = value;
+}
+inline void EnterRoomReq::set_version_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_version_id(value);
+  // @@protoc_insertion_point(field_set:switchRoom.EnterRoomReq.version_id)
+}
+
+// bool is_special_user = 6;
+inline void EnterRoomReq::clear_is_special_user() {
+  is_special_user_ = false;
+}
+inline bool EnterRoomReq::_internal_is_special_user() const {
+  return is_special_user_;
+}
+inline bool EnterRoomReq::is_special_user() const {
+  // @@protoc_insertion_point(field_get:switchRoom.EnterRoomReq.is_special_user)
+  return _internal_is_special_user();
+}
+inline void EnterRoomReq::_internal_set_is_special_user(bool value) {
+  
+  is_special_user_ = value;
+}
+inline void EnterRoomReq::set_is_special_user(bool value) {
+  _internal_set_is_special_user(value);
+  // @@protoc_insertion_point(field_set:switchRoom.EnterRoomReq.is_special_user)
+}
+
+// -------------------------------------------------------------------
+
+// EnterRoomResp
+
+// .switchRoom.CommonResp common = 1;
+inline bool EnterRoomResp::_internal_has_common() const {
+  return this != internal_default_instance() && common_ != nullptr;
+}
+inline bool EnterRoomResp::has_common() const {
+  return _internal_has_common();
+}
+inline void EnterRoomResp::clear_common() {
+  if (GetArenaNoVirtual() == nullptr && common_ != nullptr) {
+    delete common_;
+  }
+  common_ = nullptr;
+}
+inline const ::switchRoom::CommonResp& EnterRoomResp::_internal_common() const {
+  const ::switchRoom::CommonResp* p = common_;
+  return p != nullptr ? *p : *reinterpret_cast<const ::switchRoom::CommonResp*>(
+      &::switchRoom::_CommonResp_default_instance_);
+}
+inline const ::switchRoom::CommonResp& EnterRoomResp::common() const {
+  // @@protoc_insertion_point(field_get:switchRoom.EnterRoomResp.common)
+  return _internal_common();
+}
+inline ::switchRoom::CommonResp* EnterRoomResp::release_common() {
+  // @@protoc_insertion_point(field_release:switchRoom.EnterRoomResp.common)
+  
+  ::switchRoom::CommonResp* temp = common_;
+  common_ = nullptr;
+  return temp;
+}
+inline ::switchRoom::CommonResp* EnterRoomResp::_internal_mutable_common() {
+  
+  if (common_ == nullptr) {
+    auto* p = CreateMaybeMessage<::switchRoom::CommonResp>(GetArenaNoVirtual());
+    common_ = p;
+  }
+  return common_;
+}
+inline ::switchRoom::CommonResp* EnterRoomResp::mutable_common() {
+  // @@protoc_insertion_point(field_mutable:switchRoom.EnterRoomResp.common)
+  return _internal_mutable_common();
+}
+inline void EnterRoomResp::set_allocated_common(::switchRoom::CommonResp* common) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == nullptr) {
+    delete common_;
+  }
+  if (common) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena = nullptr;
+    if (message_arena != submessage_arena) {
+      common = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, common, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  common_ = common;
+  // @@protoc_insertion_point(field_set_allocated:switchRoom.EnterRoomResp.common)
+}
+
+// string creator_server_ip = 2;
+inline void EnterRoomResp::clear_creator_server_ip() {
+  creator_server_ip_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& EnterRoomResp::creator_server_ip() const {
+  // @@protoc_insertion_point(field_get:switchRoom.EnterRoomResp.creator_server_ip)
+  return _internal_creator_server_ip();
+}
+inline void EnterRoomResp::set_creator_server_ip(const std::string& value) {
+  _internal_set_creator_server_ip(value);
+  // @@protoc_insertion_point(field_set:switchRoom.EnterRoomResp.creator_server_ip)
+}
+inline std::string* EnterRoomResp::mutable_creator_server_ip() {
+  // @@protoc_insertion_point(field_mutable:switchRoom.EnterRoomResp.creator_server_ip)
+  return _internal_mutable_creator_server_ip();
+}
+inline const std::string& EnterRoomResp::_internal_creator_server_ip() const {
+  return creator_server_ip_.GetNoArena();
+}
+inline void EnterRoomResp::_internal_set_creator_server_ip(const std::string& value) {
+  
+  creator_server_ip_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void EnterRoomResp::set_creator_server_ip(std::string&& value) {
+  
+  creator_server_ip_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:switchRoom.EnterRoomResp.creator_server_ip)
+}
+inline void EnterRoomResp::set_creator_server_ip(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  creator_server_ip_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:switchRoom.EnterRoomResp.creator_server_ip)
+}
+inline void EnterRoomResp::set_creator_server_ip(const char* value, size_t size) {
+  
+  creator_server_ip_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:switchRoom.EnterRoomResp.creator_server_ip)
+}
+inline std::string* EnterRoomResp::_internal_mutable_creator_server_ip() {
+  
+  return creator_server_ip_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* EnterRoomResp::release_creator_server_ip() {
+  // @@protoc_insertion_point(field_release:switchRoom.EnterRoomResp.creator_server_ip)
+  
+  return creator_server_ip_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void EnterRoomResp::set_allocated_creator_server_ip(std::string* creator_server_ip) {
+  if (creator_server_ip != nullptr) {
+    
+  } else {
+    
+  }
+  creator_server_ip_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), creator_server_ip);
+  // @@protoc_insertion_point(field_set_allocated:switchRoom.EnterRoomResp.creator_server_ip)
+}
+
+// int32 creator_server_port = 3;
+inline void EnterRoomResp::clear_creator_server_port() {
+  creator_server_port_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 EnterRoomResp::_internal_creator_server_port() const {
+  return creator_server_port_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 EnterRoomResp::creator_server_port() const {
+  // @@protoc_insertion_point(field_get:switchRoom.EnterRoomResp.creator_server_port)
+  return _internal_creator_server_port();
+}
+inline void EnterRoomResp::_internal_set_creator_server_port(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  creator_server_port_ = value;
+}
+inline void EnterRoomResp::set_creator_server_port(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_creator_server_port(value);
+  // @@protoc_insertion_point(field_set:switchRoom.EnterRoomResp.creator_server_port)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

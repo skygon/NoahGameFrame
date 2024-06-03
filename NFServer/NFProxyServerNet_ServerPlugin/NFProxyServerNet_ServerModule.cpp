@@ -57,6 +57,11 @@ bool NFProxyServerNet_ServerModule::AfterInit()
 	m_pNetModule->AddReceiveCallBack(NFMsg::REQ_DELETE_ROLE, this, &NFProxyServerNet_ServerModule::OnReqDelRoleProcess);
 	m_pNetModule->AddReceiveCallBack(NFMsg::REQ_ENTER_GAME, this, &NFProxyServerNet_ServerModule::OnReqEnterGameServer);
 	m_pNetModule->AddReceiveCallBack(this, &NFProxyServerNet_ServerModule::OnOtherMessage);
+
+    //support dayouspace protocols
+    m_pNetModule->AddReceiveCallBack(enumGame::EnumCmd::CSwitchRoom, this, &NFProxyServerNet_ServerModule::OnReqSwitchRoom);
+    m_pNetModule->AddReceiveCallBack(enumGame::EnumCmd::CAuth, this, &NFProxyServerNet_ServerModule::onAuth);
+    m_pNetModule->AddReceiveCallBack(enumGame::EnumCmd::NF_EnterRoomReq, this, &NFProxyServerNet_ServerModule::OnReqEnterRoom);
     
 	m_pNetModule->AddEventCallBack(this, &NFProxyServerNet_ServerModule::OnSocketClientEvent);
 	m_pNetModule->ExpandBufferSize(1024*1024*2);
@@ -87,6 +92,7 @@ bool NFProxyServerNet_ServerModule::AfterInit()
 
                 //proxyServer 改成支持dayouspace 客户端协议
                 int nRet = m_pNetModule->Initialization(maxConnect, nPort, nCpus, true);
+                //int nRet = m_pNetModule->Initialization(maxConnect, nPort, nCpus);
                 if (nRet < 0)
                 {
                     std::ostringstream strLog;
@@ -105,6 +111,9 @@ bool NFProxyServerNet_ServerModule::AfterInit()
                     NFASSERT(nRet, "Cannot init UDP server net", __FILE__, __FUNCTION__);
                     exit(0);
                 }
+
+                // 发送握手协议到go server
+                this->HandShakeGoServer();
             }
         }
     }
@@ -121,6 +130,8 @@ bool NFProxyServerNet_ServerModule::Execute()
 {
 	return true;
 }
+
+
 
 void NFProxyServerNet_ServerModule::OnOtherMessage(const NFSOCK sockIndex, const int msgID, const char * msg, const uint32_t len)
 {
@@ -320,6 +331,46 @@ void NFProxyServerNet_ServerModule::OnClientDisconnect(const NFSOCK nAddress)
         mxClientIdent.RemoveElement(pNetObject->GetClientID());
     }
 }
+int NFProxyServerNet_ServerModule::PickGameServer()
+{
+    /*
+    * nWorkload 值表示gameserver的当前在线人数。由game server上报给world server，world server同步到proxy server；
+    */
+    int nWorkload = 1000;
+    int nGameID = 0;
+    NFMapEx<int, ConnectData>& xServerList = m_pNetClientModule->GetServerList();
+    ConnectData* pGameData = xServerList.FirstNude();
+    while (pGameData)
+    {
+        if (ConnectDataState::NORMAL == pGameData->eState
+            && NF_SERVER_TYPES::NF_ST_GAME == pGameData->eServerType)
+        {
+            if (pGameData->nWorkLoad < nWorkload)
+            {
+                nWorkload = pGameData->nWorkLoad;
+                nGameID = pGameData->nGameID;
+            }
+        }
+
+        pGameData = xServerList.NextNude();
+    }
+
+    return nGameID;
+}
+
+
+//根据房间副本信息选择服务，确保同一个房间副本的用户在同一个服务进程
+int NFProxyServerNet_ServerModule::PickGameServer(NF_SERVER_TYPES nType, std::string& sKey)
+{
+    NF_SHARE_PTR<ConnectData> pData = m_pNetClientModule->GetServerByType(nType, sKey);
+    if (!pData)
+    {
+        return -1;
+    }
+
+    return pData->nGameID;
+}
+
 
 void NFProxyServerNet_ServerModule::OnSelectServerProcess(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len)
 {
@@ -360,25 +411,7 @@ void NFProxyServerNet_ServerModule::OnSelectServerProcess(const NFSOCK sockIndex
         //}
     }
 
-    //actually, if you want the game server working with a good performance then we need to find the game server with lowest workload
-	int nWorkload = 999999;
-	int nGameID = 0;
-    NFMapEx<int, ConnectData>& xServerList = m_pNetClientModule->GetServerList();
-    ConnectData* pGameData = xServerList.FirstNude();
-    while (pGameData)
-    {
-        if (ConnectDataState::NORMAL == pGameData->eState
-            && NF_SERVER_TYPES::NF_ST_GAME == pGameData->eServerType)
-        {
-			if (pGameData->nWorkLoad < nWorkload)
-			{
-				nWorkload = pGameData->nWorkLoad;
-				nGameID = pGameData->nGameID;
-			}
-        }
-
-        pGameData = xServerList.NextNude();
-    }
+    int nGameID = PickGameServer();
 
 	if (nGameID > 0)
 	{
@@ -450,6 +483,33 @@ void NFProxyServerNet_ServerModule::OnReqServerListProcess(const NFSOCK sockInde
 		m_pNetModule->SendMsgPB(NFMsg::EGameMsgID::ACK_WORLD_LIST, xData, sockIndex);
     }
 }
+
+bool NFProxyServerNet_ServerModule::TransportToClient(int nUid, const int msgID, const char* msg, const uint32_t len)
+{
+    NF_SHARE_PTR<NFSOCK> pFd = m_uidToSocketMap.GetElement(nUid);
+    if (!pFd)
+    {
+        return false;
+    }
+
+    //wrap to unity protocol
+    m_pNetModule->SendMsgWithOutHead(msgID, msg, *pFd);
+    return true;
+}
+
+bool NFProxyServerNet_ServerModule::TransportToClient(NFGUID xClientID, const int msgID, const char* msg, const uint32_t len)
+{
+    NF_SHARE_PTR<NFSOCK> pFd = mxClientIdent.GetElement(xClientID);
+    if (!pFd)
+    {
+        return false;
+    }
+
+    //wrap to unity protocol
+    m_pNetModule->SendMsgWithOutHead(msgID, msg, *pFd);
+    return true;
+}
+
 
 int NFProxyServerNet_ServerModule::Transport(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len)
 {
@@ -752,8 +812,152 @@ int NFProxyServerNet_ServerModule::EnterGameSuccessEvent(const NFGUID xClientID,
 
 
 //support dayouspace
+// body len | msg id |uid | house id |  house index | house type | OS | + data
+void NFProxyServerNet_ServerModule::HandShakeGoServer()
+{
+    auth::CAuth xData;
+    xData.set_token(std::string("E3d757B58K088Ecc")); //TODO: read from config file.
+    xData.set_uid(0);
+    xData.set_os(0);
+
+
+    std::string sendMsg;
+    xData.SerializeToString(&sendMsg);
+    int nMsgLen = sendMsg.length();
+
+    NFMsgHead xHead = NFMsgHead(nMsgLen, enumGame::EnumCmd::CAuth, 0, 0, 0, 0, 0);
+    //NFMapEx<int, ConnectData> serverMap = m_pNetClientModule->GetServerList();
+    //send handshake to all connected go servers.
+    m_pNetClientModule->SendToServerTypeWithHead(DY_GO_SVR, enumGame::EnumCmd::CAuth, sendMsg, xHead);
+
+}
+
 // NF框架中，回调传参len是整个数据包长度
 void NFProxyServerNet_ServerModule::onAuth(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len)
 {
+    
+}
 
+//用户进入场景前调用
+//当前调用场景为从grpc service过来的请求，需要在clientNetModule中将结果返回给grpc service，然后再转发给client
+void NFProxyServerNet_ServerModule::OnReqEnterRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len)
+{
+    NetObject* pNetObject = m_pNetModule->GetNet()->GetNetObject(sockIndex);
+    if (!pNetObject)
+    {
+        return;
+    }
+
+    //receive pb, different format
+    NFGUID nPlayerID;//no value
+    switchRoom::EnterRoomReq xData;
+
+    if (!m_pNetModule->ReceiveDYPB(msgID, msg, len, xData))
+    {
+        return;
+    }
+
+    
+    //如果存在房间index和game serve的映射则直接使用
+    int nGameID = 0;
+    std::string sKey = std::to_string(xData.house_id()) + "_" + std::to_string(xData.house_type()) + "_" + std::to_string(xData.seq());
+    if (m_gameServerInfoMap.ExistElement(sKey))
+    {
+        nGameID = *(m_gameServerInfoMap.GetElement(sKey));
+    }
+    else
+    {
+        //否则根据game server的负载，房间分配在负载最小的game server上
+        nGameID = PickGameServer(DY_GO_SVR, sKey);
+        if (nGameID < 0)
+        {
+            return;
+        }
+        m_gameServerInfoMap.AddElement(sKey, NF_SHARE_PTR<int>(NF_NEW int(nGameID)));
+    }
+
+    pNetObject->SetGameID(nGameID);
+    
+    
+
+    //保存用户信息
+    NF_SHARE_PTR<UserInfoData> pData = NF_SHARE_PTR<UserInfoData>(NF_NEW UserInfoData(xData.uid(), nGameID, sKey, xData.house_id(), xData.house_type(), xData.seq()));
+    if (m_userInfoMap.ExistElement(sockIndex))
+    {
+        m_userInfoMap.RemoveElement(sockIndex);
+    }
+    m_userInfoMap.AddElement(sockIndex, pData);
+
+    //uid to socket fd map
+    //记录uid到socket的映射，方便后续快速根据uid获取socket
+    if (m_uidToSocketMap.ExistElement(xData.uid()))
+    {
+        m_uidToSocketMap.RemoveElement(xData.uid());
+    }
+    NF_SHARE_PTR<NFSOCK> pSock = NF_SHARE_PTR<NFSOCK>(NF_NEW NFSOCK(sockIndex));
+    m_uidToSocketMap.AddElement(xData.uid(), pSock);
+
+
+    //转发到game server(proxy 和 game server的通信依旧使用NF框架原始协议，方便通过BaseMsg的playid(clientid)保持socketfd链路)
+    //wrap to BaseMsg
+    NFMsg::MsgBase xMsg;
+    if (!xData.SerializeToString(xMsg.mutable_msg_data()))
+    {
+        return;
+    }
+
+    //clientid (设备ID)
+    xMsg.mutable_player_id()->CopyFrom(NFINetModule::NFToPB(pNetObject->GetClientID()));
+    std::string sendMsg;
+    if (!xMsg.SerializeToString(&sendMsg))
+    {
+        return;
+    }
+    m_pNetClientModule->SendByServerIDWithOutHead(pNetObject->GetGameID(), msgID, sendMsg);
+}
+
+
+
+
+//用户进入场景后会调用该接口
+void NFProxyServerNet_ServerModule::OnReqSwitchRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len)
+{
+    NetObject* pNetObject = m_pNetModule->GetNet()->GetNetObject(sockIndex);
+    if (!pNetObject)
+    {
+        return;
+    }
+
+    //receive pb, different format
+    NFGUID nPlayerID;//no value
+    switchRoom::CSwitchRoom xData;
+
+    if (!m_pNetModule->ReceiveDYPB(msgID, msg, len, xData))
+    {
+        return;
+    }
+    
+    //转发给go server
+    //TODO: 需要记录当前用户信息发往了哪个go server（类似uid 和 game server的对应）
+    if (!(m_userInfoMap.ExistElement(sockIndex)))
+    {
+        return;
+    }
+
+    NF_SHARE_PTR<UserInfoData> pData = m_userInfoMap.GetElement(sockIndex);
+
+    //根据roominfo 的hash来选择go server，确保同一个房间副本的用户在同一个go 服务进程
+    int nGameID = PickGameServer(DY_GO_SVR, pData->sRoomInfo);
+    if (nGameID < 0)
+    {
+        return;
+    }
+
+    std::string sendMsg;
+    xData.SerializeToString(&sendMsg);
+    int nMsgLen = sendMsg.length();
+
+    NFMsgHead xHead = NFMsgHead(nMsgLen, enumGame::EnumCmd::CSwitchRoom, pData->nUid, pData->nHouseID, pData->nHouseSeq, pData->nHouseType, 0);
+
+    m_pNetClientModule->SendToServerIDWithHead(nGameID, enumGame::EnumCmd::CSwitchRoom, sendMsg, xHead);
 }

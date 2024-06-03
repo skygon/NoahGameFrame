@@ -92,6 +92,7 @@ bool NFSyncPosModule::Execute()
 					groupInfo->mPlayerPosition.clear();
 					playerPosSync.set_sequence(groupInfo->sequence++);
 
+					//发往ProxyServer, proxyserver可以使用UDP转发到各个客户端
 					m_pGameServerNet_ServerModule->SendGroupMsgPBToGate(NFMsg::ACK_MOVE, playerPosSync, sceneInfo->sceneID, groupInfo->groupID);
 
 				}

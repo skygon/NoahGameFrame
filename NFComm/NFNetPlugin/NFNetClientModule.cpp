@@ -261,6 +261,53 @@ void NFNetClientModule::SendToAllServerWithOutHead(const uint16_t msgID, const s
 	}
 }
 
+void NFNetClientModule::SendToServerTypeWithHead(const NF_SERVER_TYPES eType, const uint16_t msgID, const std::string& strData, NFMsgHead& stHead)
+{
+	NF_SHARE_PTR<ConnectData> pServer = mxServerMap.First();
+	while (pServer)
+	{
+		NF_SHARE_PTR<NFINetModule> pNetModule = pServer->mxNetModule;
+		if (pNetModule && eType == pServer->eServerType)
+		{
+			if (!pNetModule->SendMsgWithHeadInfo(msgID, strData, 0, stHead))
+			{
+				std::ostringstream stream;
+				stream << " SendMsgWithOutHead failed " << pServer->nGameID;
+				stream << " msg id " << msgID;
+				m_pLogModule->LogError(stream, __FUNCTION__, __LINE__);
+			}
+		}
+
+		pServer = mxServerMap.Next();
+	}
+}
+
+void NFNetClientModule::SendToServerIDWithHead(const int nServerId, const uint16_t msgID, const std::string& strData, NFMsgHead& stHead)
+{
+	NF_SHARE_PTR<ConnectData> pServer = mxServerMap.GetElement(nServerId);
+	if (pServer)
+	{
+		NF_SHARE_PTR<NFINetModule> pNetModule = pServer->mxNetModule;
+		if (pNetModule.get())
+		{
+			if (!pNetModule->SendMsgWithHeadInfo(msgID, strData, 0, stHead))
+			{
+				std::ostringstream stream;
+				stream << " SendMsgWithOutHead failed " << pServer->nGameID;
+				stream << " msg id " << msgID;
+				m_pLogModule->LogError(stream, __FUNCTION__, __LINE__);
+			}
+		}
+	}
+	else
+	{
+		std::ostringstream stream;
+		stream << " can't find the server " << nServerId;
+		stream << " msg id " << msgID;
+		m_pLogModule->LogError(stream, __FUNCTION__, __LINE__);
+	}
+}
+
 void NFNetClientModule::SendToAllServer(const uint16_t msgID, const std::string& strData)
 {
     NF_SHARE_PTR<ConnectData> pServer = mxServerMap.First();
@@ -499,6 +546,7 @@ void NFNetClientModule::SendBySuitWithOutHead(const NF_SERVER_TYPES eType, const
 	}
 }
 
+
 void NFNetClientModule::SendBySuit(const NF_SERVER_TYPES eType, const int nHashKey, const uint16_t msgID, const std::string& strData)
 {
 	NF_SHARE_PTR<NFConsistentHashMapEx<int, ConnectData>> xConnectDataMap = mxServerTypeMap.GetElement(eType);
@@ -707,7 +755,16 @@ void NFNetClientModule::ProcessExecute()
 				pServerData->mxNetModule->AfterInit();
 				pServerData->mxNetModule->ReadyExecute();
 
-                pServerData->mxNetModule->Initialization(pServerData->ip.c_str(), pServerData->nPort);
+                //pServerData->mxNetModule->Initialization(pServerData->ip.c_str(), pServerData->nPort);
+				// 需要在 NFProxyServerToWorldModule::OnServerInfoProcess 处增加对Go server的处理
+				if (pServerData->eServerType == DY_GO_SVR)
+				{
+					pServerData->mxNetModule->Initialization(pServerData->ip.c_str(), pServerData->nPort, true);
+				}
+				else
+				{
+					pServerData->mxNetModule->Initialization(pServerData->ip.c_str(), pServerData->nPort);
+				}
 
                 InitCallBacks(pServerData);
             }
@@ -845,9 +902,18 @@ void NFNetClientModule::ProcessAddNetConnect()
 			xServerData->mxNetModule->AfterInit();
 			xServerData->mxNetModule->ReadyExecute();
 
-            xServerData->mxNetModule->Initialization(xServerData->ip.c_str(), xServerData->nPort);
-			//TODO: add go server init
-			//if go ser: xServerData->mxNetModule->Initialization(xServerData->ip.c_str(), xServerData->nPort, true);
+			// 需要在 NFProxyServerToWorldModule::OnServerInfoProcess 处增加对Go server的处理
+			if (xServerData->eServerType == DY_GO_SVR)
+			{
+				//TODO: 初始化时增加和go svr的handshake
+				xServerData->mxNetModule->Initialization(xServerData->ip.c_str(), xServerData->nPort, true);
+				// send handshake
+			}
+			else
+			{
+				xServerData->mxNetModule->Initialization(xServerData->ip.c_str(), xServerData->nPort);
+			}
+
             xServerData->mxNetModule->ExpandBufferSize((unsigned int)mnBufferSize);
 
             InitCallBacks(xServerData);
@@ -861,4 +927,17 @@ void NFNetClientModule::ProcessAddNetConnect()
     }
 
     mxTempNetList.clear();
+}
+
+NF_SHARE_PTR<ConnectData> NFNetClientModule::GetServerByType(const NF_SERVER_TYPES eType, std::string& sHashKey)
+{
+	uint32_t nCRC32 = NFrame::CRC32(sHashKey);
+	NF_SHARE_PTR<NFConsistentHashMapEx<int, ConnectData>> xConnectDataMap = mxServerTypeMap.GetElement(eType);
+	if (xConnectDataMap)
+	{
+		NF_SHARE_PTR<ConnectData> pConnectData = xConnectDataMap->GetElementBySuit(nCRC32);
+		return pConnectData;
+	}
+
+	return nullptr;
 }

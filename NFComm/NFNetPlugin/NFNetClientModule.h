@@ -73,8 +73,9 @@ public:
 
 	virtual void SendToAllServer(const uint16_t msgID, const std::string& strData);
 	virtual void SendToAllServer(const uint16_t msgID, const std::string& strData, const NFGUID id);
-
-	virtual void SendToAllServerWithOutHead(const NF_SERVER_TYPES eType, const uint16_t msgID, const std::string& strData);
+    virtual void SendToServerTypeWithHead(const NF_SERVER_TYPES eType, const uint16_t msgID, const std::string& strData, NFMsgHead& stHead);
+    virtual void SendToServerIDWithHead(const int nServerId, const uint16_t msgID, const std::string& strData, NFMsgHead& stHead);
+    virtual void SendToAllServerWithOutHead(const NF_SERVER_TYPES eType, const uint16_t msgID, const std::string& strData);
 
 	virtual void SendToAllServer(const NF_SERVER_TYPES eType, const uint16_t msgID, const std::string& strData);
 	virtual void SendToAllServer(const NF_SERVER_TYPES eType, const uint16_t msgID, const std::string& strData, const NFGUID id);
@@ -103,7 +104,7 @@ public:
 
 	virtual void SendSuitByPB(const NF_SERVER_TYPES eType, const int nHashKey32, const uint16_t msgID, const google::protobuf::Message& xData);
 	virtual void SendSuitByPB(const NF_SERVER_TYPES eType, const int nHashKey32, const uint16_t msgID, const google::protobuf::Message& xData, const NFGUID id);
-
+    virtual NF_SHARE_PTR<ConnectData> GetServerByType(const NF_SERVER_TYPES eType, std::string& nHashKey32);
     ////////////////////////////////////////////////////////////////////////////////
 
     virtual NFMapEx<int, ConnectData>& GetServerList();

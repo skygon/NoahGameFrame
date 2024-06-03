@@ -71,6 +71,10 @@ bool NFGameServerNet_ServerModule::AfterInit()
 
 	m_pNetModule->AddEventCallBack(this, &NFGameServerNet_ServerModule::OnSocketPSEvent);
 
+	//dayouspace releated protocols
+	m_pNetModule->AddReceiveCallBack(enumGame::EnumCmd::NF_EnterRoomReq, this, &NFGameServerNet_ServerModule::OnReqEnterRoom);
+	m_pNetModule->AddReceiveCallBack(enumGame::EnumCmd::CSwitchRoom, this, &NFGameServerNet_ServerModule::OnReqSwitchRoom);
+
 
 	/////////////////////////////////////////////////////////////////////////
 
@@ -529,4 +533,84 @@ void NFGameServerNet_ServerModule::OnTransWorld(const NFSOCK sockIndex, const in
 	}
 
 	m_pNetClientModule->SendBySuitWithOutHead(NF_SERVER_TYPES::NF_ST_WORLD, nHasKey, msgID, std::string(msg, len));
+}
+
+
+
+
+//support dayouspace protocols
+void NFGameServerNet_ServerModule::OnReqEnterRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len)
+{
+	NetObject* pNetObject = m_pNetModule->GetNet()->GetNetObject(sockIndex);
+	if (!pNetObject)
+	{
+		return;
+	}
+
+	//receive pb, different format
+	NFGUID clientID;
+	switchRoom::EnterRoomReq xData;
+
+	if (!m_pNetModule->ReceivePB(msgID, msg, len, xData, clientID))
+	{
+		return;
+	}
+
+	//如果不存在对应的room seq，则根据houseID和room idx创建房间数据空间
+	//因为是actor模型，且同一个room seq的都会分配到同一个game server，因此这里处理全局数据时是线程安全的
+	//由NFSceneModule来处理
+	NFGUID roleID;
+	bool ret = m_pSceneProcessModule->ProcessUserEnterRoom(xData.house_id(), xData.seq(), xData.uid(), roleID);
+
+	// add gate info
+	NF_SHARE_PTR<NFIGameServerNet_ServerModule::GateServerInfo> pGateServerinfo = GetGateServerInfoBySockIndex(sockIndex);
+	if (nullptr == pGateServerinfo)
+	{
+		return;
+	}
+
+	int gateID = -1;
+	if (pGateServerinfo->xServerData.pData)
+	{
+		gateID = pGateServerinfo->xServerData.pData->server_id();
+	}
+
+	if (gateID < 0)
+	{
+		return;
+	}
+
+	if (this->GetPlayerGateInfo(roleID) == nullptr)
+	{
+		if (this->AddPlayerGateInfo(roleID, clientID, gateID))
+		{
+			return;
+		}
+	}
+	
+
+	//send back to proxy server (client)
+	switchRoom::EnterRoomResp xResp;
+	xResp.mutable_common()->set_code(0);
+	xResp.mutable_common()->set_message("success");
+	
+	NFMsg::MsgBase xMsg;
+	if (!xResp.SerializeToString(xMsg.mutable_msg_data()))
+	{
+		return;
+	}
+	xMsg.mutable_player_id()->CopyFrom(NFINetModule::NFToPB(clientID));
+	std::string sendMsg;
+	if (!xMsg.SerializeToString(&sendMsg))
+	{
+		return;
+	}
+
+	this->SendMsgPBToGate(enumGame::EnumCmd::NF_EnterRoomAck, xMsg, roleID);
+}
+
+
+void NFGameServerNet_ServerModule::OnReqSwitchRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len)
+{
+
 }

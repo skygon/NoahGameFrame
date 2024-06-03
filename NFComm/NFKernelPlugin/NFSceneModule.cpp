@@ -1109,6 +1109,26 @@ bool NFSceneModule::AddGroupRecordCommCallBack(const RECORD_EVENT_FUNCTOR_PTR & 
 	return true;
 }
 
+bool NFSceneModule::DirectAddUserToGroup(const int sceneID, const int groupID, const NFGUID& ident, int uid)
+{
+	NF_SHARE_PTR<NFSceneInfo> pSceneInfo = this->GetElement(sceneID);
+	if (!pSceneInfo)
+	{
+		m_pLogModule->LogError("no scene exists " + std::to_string(sceneID), __FUNCTION__, __LINE__);
+		return false;
+	}
+
+	if (!pSceneInfo->GetElement(groupID))
+	{
+		m_pLogModule->LogError("no such group " + std::to_string(groupID), __FUNCTION__, __LINE__);
+		return false;
+	}
+
+	pSceneInfo->AddObjectToGroup(groupID, ident, true, uid);
+	return true;
+
+}
+
 bool NFSceneModule::SwitchScene(const NFGUID& self, const int nTargetSceneID, const int nTargetGroupID, const int type, const NFVector3 v, const float fOrient, const NFDataList& arg)
 {
 	NF_SHARE_PTR<NFIObject> pObject = m_pKernelModule->GetObject(self);

@@ -324,8 +324,8 @@ public:
         NF_EnCodeUint32(data, nOffset, m_nDYMsgID);
         NF_EnCodeUint32(data, nOffset, m_nDYUid);
         NF_EnCodeUint32(data, nOffset, m_nHouseId);
-        NF_EnCodeUint32(data, nOffset, m_nHouseType);
         NF_EnCodeUint32(data, nOffset, m_nRoomSeq);
+        NF_EnCodeUint32(data, nOffset, m_nHouseType);
         NF_EnCodeUint32(data, nOffset, m_nHouseType);
         NF_EnCodeUint32(data, nOffset, m_nOSType);
 
@@ -390,6 +390,11 @@ public:
     virtual void SetBodyLength(uint32_t length)
     {
         munSize = length;
+    }
+
+    uint32_t GetDYUid()
+    {
+        return m_nDYUid;
     }
 
 protected:
@@ -624,6 +629,8 @@ public:
     virtual unsigned int ExpandBufferSize(const unsigned int size) = 0;
 
     virtual bool Final() = 0;
+
+    virtual bool SendMsgWithHeadInfo(const int msgID, const char* msg, const size_t len, const NFSOCK sockIndex, NFMsgHead& stHead) = 0;
 
     //send a message with out msg-head[auto add msg-head in this function]
     virtual bool SendMsgWithOutHead(const int16_t msgID, const char* msg, const size_t len, const NFSOCK sockIndex = 0) = 0;

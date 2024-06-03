@@ -74,7 +74,7 @@ void NFGameServerPlugin::Install()
 void NFGameServerPlugin::Uninstall()
 {
 	UNREGISTER_MODULE(pPluginManager, NFICreateRoleModule, NFCreateRoleModule)
-	UNREGISTER_MODULE(pPluginManager, NFISyncPosModule, NFSyncModule)
+	UNREGISTER_MODULE(pPluginManager, NFISyncPosModule, NFSyncPosModule)
 	UNREGISTER_MODULE(pPluginManager, NFINPCRefreshModule, NFNPCRefreshModule)
 	UNREGISTER_MODULE(pPluginManager, NFIPropertyConfigModule, NFPropertyConfigModule)
     UNREGISTER_MODULE(pPluginManager, NFIPropertyModule, NFPropertyModule)

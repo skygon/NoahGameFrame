@@ -140,6 +140,21 @@ bool NFNetModule::Execute()
 	return true;
 }
 
+// for proxy server(clientNet) to dayou go server
+bool NFNetModule::SendMsgWithHeadInfo(const int msgID, const std::string& msg, const NFSOCK sockIndex, NFMsgHead& stHead)
+{
+    bool bRet = m_pNet->SendMsgWithHeadInfo(msgID, msg.c_str(), (uint32_t)msg.length(), sockIndex, stHead);
+    if (!bRet)
+    {
+        std::ostringstream stream;
+        stream << " SendMsgWithHeadInfo failed fd " << sockIndex;
+        stream << " msg id " << msgID;
+        m_pLogModule->LogError(stream, __FUNCTION__, __LINE__);
+    }
+
+    return bRet;
+}
+
 bool NFNetModule::SendMsgWithOutHead(const int msgID, const std::string& msg, const NFSOCK sockIndex)
 {
     bool bRet = m_pNet->SendMsgWithOutHead(msgID, msg.c_str(), (uint32_t) msg.length(), sockIndex);

@@ -79,7 +79,7 @@ public:
 
     virtual bool Execute();
 
-
+    virtual bool SendMsgWithHeadInfo(const int msgID, const std::string& msg, const NFSOCK sockIndex, NFMsgHead& stHead);
     virtual bool SendMsgWithOutHead(const int msgID, const std::string& msg, const NFSOCK sockIndex);
     virtual bool SendMsgToAllClientWithOutHead(const int msgID, const std::string& msg);
 

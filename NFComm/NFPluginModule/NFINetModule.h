@@ -52,7 +52,8 @@ enum NF_SERVER_TYPES
     NF_ST_GAME          = 6,    //
 	NF_ST_WORLD			= 7,    //
 	NF_ST_DB			= 8,    //
-	NF_ST_MAX			= 9,    //
+	DY_GO_SVR           = 9,    // dayou go Âß¼­·þ
+	NF_ST_MAX			= 10,    //
 
 };
 
@@ -269,6 +270,25 @@ public:
 		return true;
 	}
 
+
+	//PB decode from DayouSpace unity client
+	static bool ReceiveDYPB(const int msgID, const char* msg, const uint32_t len, google::protobuf::Message& xData)
+	{
+		if (!xData.ParseFromString(msg))
+		{
+			char szData[MAX_PATH] = { 0 };
+			NFSPRINTF(szData, MAX_PATH, "Parse Message Failed from MsgData to ProtocolData, MessageID: %d\n", msgID);
+#ifdef DEBUG
+			std::cout << "--------------------" << szData << __FUNCTION__ << " " << __LINE__ << std::endl;
+#endif // DEBUG
+
+			return false;
+		}
+
+		return true;
+	}
+
+
 	/////////////////
 	//as client
 	virtual void Initialization(const char* ip, const unsigned short nPort, bool bIsDYClient = false) = 0;
@@ -287,6 +307,7 @@ public:
 
 	virtual bool Execute() = 0;
 
+	virtual bool SendMsgWithHeadInfo(const int msgID, const std::string& msg, const NFSOCK sockIndex, NFMsgHead& stHead) = 0;
 
 	virtual bool SendMsgWithOutHead(const int msgID, const std::string& msg, const NFSOCK sockIndex) = 0;
 

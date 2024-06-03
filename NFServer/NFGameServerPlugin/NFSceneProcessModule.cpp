@@ -317,7 +317,9 @@ bool NFSceneProcessModule::CreateSceneBaseGroup(const std::string & strSceneIDNa
 	const int nMaxGroup = m_pElementModule->GetPropertyInt32(std::to_string(sceneID), NFrame::Scene::MaxGroup());
 	if (eSceneType == NFMsg::ESceneType::NORMAL_SCENE)
 	{
-		// skygon: 初始化时创建10个group
+		// skygon: 初始化时创建10个group。 在scene和group之间再抽象一层room的概念，每个room对应10个group
+		// 每个group 20人。group 数据结构中增加NFGUID和UID的映射
+		// NFSCENEMODULE中增加roomseq和roomData的map
 		// TODO: 通过配置修改
 		for (int i = 0; i < 10; ++i)
 		{
@@ -335,4 +337,72 @@ bool NFSceneProcessModule::CreateSceneBaseGroup(const std::string & strSceneIDNa
 		return true;
 	}
 	return false;
+}
+
+int NFSceneProcessModule::PickRoomGroup(std::string sKey)
+{
+	int nGroupMaxUser = 20; //TODO: 通过配置文件设置
+	NF_SHARE_PTR<RoomGroupInfo> pRoomInfo = m_mapSceneRoomInfo.GetElement(sKey);
+	//选择任意一个未满的group，等用户开始同步位置后，根据物理位置调整同步频率
+	auto it = pRoomInfo->mapGroupInfo.begin();
+	while (it != pRoomInfo->mapGroupInfo.end())
+	{
+		if (it->second < nGroupMaxUser)
+		{
+			return it->first;
+		}
+	}
+
+	return -1;
+
+}
+
+bool NFSceneProcessModule::ProcessUserEnterRoom(int nHouseId, int nRoomSeq, int nUid, NFGUID& xID)
+{
+	int groupID = 0;
+	std::string sKey = std::to_string(nHouseId) + "_" + std::to_string(nRoomSeq);
+
+	if (m_mapSceneRoomInfo.ExistElement(sKey))
+	{
+		// check put user to which group 
+		auto groupMap = m_mapSceneRoomInfo.GetElement(sKey);
+		groupID = PickRoomGroup(sKey);
+		if (groupID < 0)
+		{
+			// 新增一个group
+			groupID = m_pKernelModule->RequestGroupScene(nHouseId); // 需要在xml配置文件中设置好对应的houseid，也即sceneId
+			groupMap->mapGroupInfo.insert(pair<int, int>(groupID, 1));//add group info and set user count = 1
+		}
+		//update group user count
+		groupMap->mapGroupInfo[groupID] += 1;
+	}
+	else
+	{
+		// create a new room
+		groupID = m_pKernelModule->RequestGroupScene(nHouseId); // 需要在xml配置文件中设置好对应的houseid，也即sceneId
+		m_mapSceneRoomInfo.AddElement(sKey, NF_SHARE_PTR<RoomGroupInfo>(NF_NEW RoomGroupInfo()));
+		auto groupMap = m_mapSceneRoomInfo.GetElement(sKey);
+		groupMap->mapGroupInfo.insert(pair<int, int>(groupID, 1));//add group info and set user count = 1
+	}
+
+	// create role(NFGUID) if not exists.
+	if (m_mapUidGuidInfo.ExistElement(nUid))
+	{
+		xID = *(m_mapUidGuidInfo.GetElement(nUid));
+	}
+	else
+	{
+		// dayou使用UID作为用户唯一标识，因此NFGUID可以仅仅作为一个运行时的动态用户标识，不做持久化存储
+		xID = m_pKernelModule->CreateGUID();
+		m_mapUidGuidInfo.AddElement(nUid, NF_SHARE_PTR<NFGUID> (NF_NEW NFGUID(xID)));
+	}
+	
+	/*
+	* add to one group(DBNet::OnLoadRoleDataProcess)
+	* NFGUID <--> dayou UID
+	* NFMapEx<NFGUID, int> mxPlayerList;
+	*/
+	m_pSceneModule->DirectAddUserToGroup(nHouseId, groupID, xID, nUid);
+
+	return true;
 }

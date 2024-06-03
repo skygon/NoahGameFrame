@@ -14,7 +14,7 @@
     <ProjectGuid>{9F22EC18-4A57-4607-B281-EFE494765787}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>NFItemPlugin</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
