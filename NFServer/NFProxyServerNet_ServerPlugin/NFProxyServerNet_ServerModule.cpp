@@ -67,7 +67,7 @@ bool NFProxyServerNet_ServerModule::AfterInit()
 	m_pNetModule->ExpandBufferSize(1024*1024*2);
 
     // register callback fn for udp test. Will delete later.
-    m_pUDPModule->AddReceiveCallBack(this, &NFProxyServerNet_ServerModule::OnOtherMessage);
+    m_pUDPModule->AddReceiveCallBack(NFMsg::REQ_CONNECT_KEY, this, &NFProxyServerNet_ServerModule::TestOnConnectKeyProcess);
     m_pUDPModule->ExpandBufferSize(1024 * 1024 * 2);
 
     NF_SHARE_PTR<NFIClass> xLogicClass = m_pClassModule->GetElement(NFrame::Server::ThisName());
@@ -231,6 +231,23 @@ void NFProxyServerNet_ServerModule::OnConnectKeyProcessWS(const NFSOCK sockIndex
         //if verify failed then close this connect
 		m_pWsModule->GetNet()->CloseNetObject(sockIndex);
     }
+}
+
+// For udp test
+void NFProxyServerNet_ServerModule::TestOnConnectKeyProcess(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len)
+{
+    NFGUID nPlayerID;
+    NFMsg::ReqAccountLogin xMsg;
+    if (!m_pUDPModule->ReceivePB(msgID, msg, len, xMsg, nPlayerID))
+    {
+        return;
+    }
+
+    NFMsg::AckEventResult xSendMsg;
+    xSendMsg.set_event_code(NFMsg::VERIFY_KEY_SUCCESS);
+
+    m_pUDPModule->SendMsgPB(NFMsg::EGameMsgID::ACK_CONNECT_KEY, xSendMsg, sockIndex);
+
 }
 
 void NFProxyServerNet_ServerModule::OnConnectKeyProcess(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len)

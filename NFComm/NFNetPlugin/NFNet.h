@@ -111,6 +111,7 @@ public:
 
     virtual bool CloseNetObject(const NFSOCK sockIndex) override ;
     virtual bool AddNetObject(const NFSOCK sockIndex, NetObject* pObject) override ;
+    virtual void AddNetObjectNoCheck(const NFSOCK sockIndex, NetObject* pObject) override;
     virtual NetObject* GetNetObject(const NFSOCK sockIndex) override ;
 
     virtual bool IsServer() override ;
@@ -141,6 +142,7 @@ private:
     static void event_fatal_cb(int err);
     static void udp_readcb(struct bufferevent* bev, void* user_data);
     static void udp_cb(intptr_t sock, short int which, void* arg);
+    static void udp_cb_recv(NFSOCK fd, short int which, void* arg);
 
 protected:
     int DeCode(const char* strData, const uint32_t ulen, NFMsgHead& xHead, uint32_t nHeaderLen = NFMsgHead::NF_Head::NF_HEAD_LENGTH);

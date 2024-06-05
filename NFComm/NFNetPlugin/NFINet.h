@@ -439,6 +439,11 @@ public:
     virtual ~NetObject()
     {
     }
+
+    sockaddr_in GetClientAddr()
+    {
+        return sin;
+    }
 	
     int AddBuff(const char* str, size_t len)
     {
@@ -649,6 +654,7 @@ public:
     virtual NetObject* GetNetObject(const NFSOCK sockIndex) = 0;
 
     virtual bool AddNetObject(const NFSOCK sockIndex, NetObject* pObject) = 0;
+    virtual void AddNetObjectNoCheck(const NFSOCK sockIndex, NetObject* pObject) = 0;
 
     virtual bool IsServer() = 0;
 

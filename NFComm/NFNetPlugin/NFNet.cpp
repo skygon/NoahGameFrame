@@ -53,6 +53,7 @@ TO
 
 //1048576 = 1024 * 1024
 #define NF_BUFFER_MAX_READ	1048576
+#define BUF_SIZE            14500
 
 void NFNet::event_fatal_cb(int err)
 {
@@ -265,6 +266,9 @@ void NFNet::udp_readcb(struct bufferevent* bev, void* user_data)
     {
         return;
     }
+    NFSOCK nFd = pObject->GetRealFD();
+
+    //ULONG ip = pObject->GetClientAddr();
 
     NFNet* pNet = (NFNet*)pObject->GetNet();
     if (!pNet)
@@ -327,19 +331,6 @@ void NFNet::udp_cb(NFSOCK fd, short int which, void* arg)
     NetObject* pObject = new NetObject(pNet, fd, empty_addr, bev);
     pObject->GetNet()->AddNetObject(fd, pObject);
 
-//#if NF_PLATFORM != NF_PLATFORM_WIN
-//    int optval = 1;
-//    int result = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(optval));
-//    //setsockopt(fd, IPPROTO_TCP, TCP_CORK, &optval, sizeof(optval));
-//    if (result < 0)
-//    {
-//        std::cout << "setsockopt TCP_NODELAY ERROR !!!" << std::endl;
-//    }
-//
-//    int nRecvBufLen = NF_BUFFER_MAX_READ;
-//    setsockopt(fd, SOL_SOCKET, SO_RCVBUF, (const char*)&nRecvBufLen, sizeof(int));
-//#endif
-
     bufferevent_setcb(bev, udp_readcb, conn_writecb, conn_eventcb, (void*)pObject);
 
     bufferevent_enable(bev, EV_READ | EV_WRITE | EV_CLOSED | EV_TIMEOUT | EV_PERSIST);
@@ -350,6 +341,65 @@ void NFNet::udp_cb(NFSOCK fd, short int which, void* arg)
 
     bufferevent_set_max_single_read(bev, NF_BUFFER_MAX_READ);
     bufferevent_set_max_single_write(bev, NF_BUFFER_MAX_READ);
+
+}
+
+void NFNet::udp_cb_recv(NFSOCK fd, short int which, void* arg)
+{
+    NFNet* pNet = (NFNet*)arg;
+    if (pNet->mmObject.size() >= pNet->mnMaxConnect)
+    {
+
+        return;
+    }
+
+    struct event_base* mxBase = pNet->mxBase;
+    struct bufferevent* bev = bufferevent_socket_new(mxBase, fd, BEV_OPT_CLOSE_ON_FREE);
+    if (!bev)
+    {
+        fprintf(stderr, "Error constructing bufferevent!");
+        return;
+    }
+
+    /* Recv the data, store the address of the sender in server_sin */
+    struct sockaddr_in client_addr;
+    int size = sizeof(client_addr);
+    char buf[BUF_SIZE];
+    memset(buf, 0, BUF_SIZE);
+
+    //udp 事件回调既有数据可读，因此这里不会阻塞
+    int nRecvSize = recvfrom(fd, buf, sizeof(buf) - 1, 0, (struct sockaddr*)&client_addr, &size);
+    if (nRecvSize == -1)
+    {
+        std::ostringstream stream;
+        stream << "---- udp recv error ---" << std::endl;
+        return;
+        //event_loopbreak();
+    }
+
+    NetObject* pObject = new NetObject(pNet, fd, client_addr, bev);
+    //pObject->GetNet()->AddNetObject(fd, pObject);
+    //UDP 不存在连接，fd复用时需要覆盖以保持客户端新的地址和端口
+    pObject->GetNet()->AddNetObjectNoCheck(fd, pObject);
+    pObject->AddBuff(buf, nRecvSize);
+
+    if (pNet->mbTCPStream)
+    {
+        //should not enter here.
+    }
+    else
+    {
+        while (1)
+        {
+            if (!pNet->Dismantle(pObject))
+            {
+                break;
+            }
+        }
+    }
+
+    //bufferevent_setcb(bev, udp_readcb, conn_writecb, conn_eventcb, (void*)pObject);
+    //conn_eventcb(bev, BEV_EVENT_CONNECTED, (void*)pObject);
 
 }
 
@@ -400,7 +450,7 @@ int NFNet::UDPInitialization(const unsigned int nMaxClient, const unsigned short
     }
 
     //event_set(ev, sock_fd, EV_READ | EV_PERSIST, &udp_cb, p);
-    udp_event = event_new(mxBase, sock_fd, EV_READ | EV_PERSIST, &udp_cb, this);
+    udp_event = event_new(mxBase, sock_fd, EV_READ | EV_PERSIST, &udp_cb_recv, this);
     if (event_add(udp_event, NULL) == -1)
     {
         printf("event_add() failed\n");
@@ -619,6 +669,11 @@ bool NFNet::AddNetObject(const NFSOCK sockIndex, NetObject* pObject)
 {
     //lock
     return mmObject.insert(std::map<NFSOCK, NetObject*>::value_type(sockIndex, pObject)).second;
+}
+
+void NFNet::AddNetObjectNoCheck(const NFSOCK sockIndex, NetObject* pObject)
+{
+    mmObject[sockIndex] = pObject;
 }
 
 int NFNet::InitClientNet()

@@ -108,6 +108,8 @@ protected:
 
     void OnConnectKeyProcessWS(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
     void OnConnectKeyProcess(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
+    //For UDP test
+    void TestOnConnectKeyProcess(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
     void OnReqServerListProcess(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
     void OnSelectServerProcess(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
     void OnReqRoleListProcess(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);

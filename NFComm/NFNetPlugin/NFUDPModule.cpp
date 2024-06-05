@@ -91,65 +91,6 @@ int NFUDPModule::Initialization(const unsigned int nMaxClient, const unsigned sh
 	m_pNet->ExpandBufferSize(mnBufferSize);
 	m_pNet->UDPInitialization(nMaxClient, nPort, nCpuCount);
 	return 0;
-
-	// need to delete later.
-
-	///* Init. event */
-	//mxBase = event_init();
-	//if (mxBase == NULL)
-	//{
-	//	printf("event_init() failed\n");
-	//	return -1;
-	//}
-
-	///* Bind socket */
-	///*if (bind_socket(mxBase, &udp_event, nPort, this) != 0)
-	//{
-	//	printf("bind_socket() failed\n");
-	//	return -1;
-	//}*/
-	//int                 sock_fd;
-	//char                flag = 1;
-	//struct sockaddr_in  sin;
-	//sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
-	//if (sock_fd < 0)
-	//{
-	//	perror("socket()");
-	//	return -1;
-	//}
-
-	//if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int)) < 0)
-	//{
-	//	perror("setsockopt()");
-	//	return 1;
-	//}
-
-	//memset(&sin, 0, sizeof(sin));
-	//sin.sin_family = AF_INET;
-	//sin.sin_addr.s_addr = INADDR_ANY;
-	//sin.sin_port = htons(nPort);
-
-	//if (::bind(sock_fd, (struct sockaddr*)&sin, sizeof(sin)) < 0)
-	//{
-	//	perror("bind()");
-	//	return -1;
-	//}
-	//else
-	//{
-	//	printf("bind() success - [%u]\n", nPort);
-	//}
-
-	////event_set(ev, sock_fd, EV_READ | EV_PERSIST, &udp_cb, p);
-	//udp_event = event_new(mxBase, sock_fd, EV_READ | EV_PERSIST, &udp_cb, this);
-	//if (event_add(udp_event, NULL) == -1)
-	//{
-	//	printf("event_add() failed\n");
-	//}
-
-	////event_base_dispatch(mxBase);
-	////event_base_loop(mxBase, EVLOOP_NONBLOCK);
-
-	//return 0;
 }
 
 unsigned int NFUDPModule::ExpandBufferSize(const unsigned int size)
@@ -173,6 +114,17 @@ void NFUDPModule::RemoveReceiveCallBack(const int msgID)
 
 bool NFUDPModule::AddReceiveCallBack(const int msgID, const NET_RECEIVE_FUNCTOR_PTR &cb)
 {
+	if (mxReceiveCallBack.find(msgID) == mxReceiveCallBack.end())
+	{
+		std::list<NET_RECEIVE_FUNCTOR_PTR> xList;
+		xList.push_back(cb);
+		mxReceiveCallBack.insert(std::map<int, std::list<NET_RECEIVE_FUNCTOR_PTR>>::value_type(msgID, xList));
+		return true;
+	}
+
+	std::map<int, std::list<NET_RECEIVE_FUNCTOR_PTR>>::iterator it = mxReceiveCallBack.find(msgID);
+	it->second.push_back(cb);
+
 	return true;
 }
 
@@ -209,7 +161,16 @@ bool NFUDPModule::Execute()
 
 bool NFUDPModule::SendMsgWithOutHead(const int msgID, const std::string &msg, const NFSOCK sockIndex)
 {
-	return true;
+	bool bRet = m_pNet->SendMsgWithOutHead(msgID, msg.c_str(), (uint32_t)msg.length(), sockIndex);
+	if (!bRet)
+	{
+		std::ostringstream stream;
+		stream << " SendMsgWithOutHead failed fd " << sockIndex;
+		stream << " msg id " << msgID;
+		m_pLogModule->LogError(stream, __FUNCTION__, __LINE__);
+	}
+
+	return bRet;
 }
 
 bool NFUDPModule::SendMsgToAllClientWithOutHead(const int msgID, const std::string &msg)
@@ -219,6 +180,45 @@ bool NFUDPModule::SendMsgToAllClientWithOutHead(const int msgID, const std::stri
 
 bool NFUDPModule::SendMsgPB(const uint16_t msgID, const google::protobuf::Message &xData, const NFSOCK sockIndex)
 {
+	NFMsg::MsgBase xMsg;
+	if (!xData.SerializeToString(xMsg.mutable_msg_data()))
+	{
+		std::ostringstream stream;
+		stream << " SendMsgPB Message to  " << sockIndex;
+		stream << " Failed For Serialize of MsgData, MessageID " << msgID;
+		m_pLogModule->LogError(stream, __FUNCTION__, __LINE__);
+
+		return false;
+	}
+
+	NFMsg::Ident* pPlayerID = xMsg.mutable_player_id();
+	*pPlayerID = NFToPB(NFGUID());
+
+	std::string msg;
+	if (!xMsg.SerializeToString(&msg))
+	{
+		std::ostringstream stream;
+		stream << " SendMsgPB Message to  " << sockIndex;
+		stream << " Failed For Serialize of MsgBase, MessageID " << msgID;
+		m_pLogModule->LogError(stream, __FUNCTION__, __LINE__);
+
+		return false;
+	}
+
+	//SendMsgWithOutHead(msgID, msg, sockIndex);
+	NetObject* pObject = m_pNet->GetNetObject(sockIndex);
+	struct sockaddr_in client_addr = pObject->GetClientAddr();
+	//socklen_t size = sizeof(client_addr);
+	int size = sizeof(client_addr);
+
+
+	int nMsgLen = msg.length();
+	int nSendSize = sendto(sockIndex, msg.c_str(), nMsgLen, 0, (struct sockaddr*)&client_addr, size);
+	if (nSendSize == -1)
+	{
+		return false;
+	}
+
 	return true;
 }
 

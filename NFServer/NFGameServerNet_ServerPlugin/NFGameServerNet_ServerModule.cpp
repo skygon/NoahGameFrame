@@ -561,6 +561,11 @@ void NFGameServerNet_ServerModule::OnReqEnterRoom(const NFSOCK sockIndex, const 
 	//由NFSceneModule来处理
 	NFGUID roleID;
 	bool ret = m_pSceneProcessModule->ProcessUserEnterRoom(xData.house_id(), xData.seq(), xData.uid(), roleID);
+	if (!ret)
+	{
+		m_pLogModule->LogError(clientID, "player is exist, cannot enter game", __FUNCTION__, __LINE__);
+		return;
+	}
 
 	// add gate info
 	NF_SHARE_PTR<NFIGameServerNet_ServerModule::GateServerInfo> pGateServerinfo = GetGateServerInfoBySockIndex(sockIndex);
