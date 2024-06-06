@@ -357,10 +357,15 @@ int NFSceneProcessModule::PickRoomGroup(std::string sKey)
 
 }
 
-bool NFSceneProcessModule::ProcessUserEnterRoom(int nHouseId, int nRoomSeq, int nUid, NFGUID& xID)
+NF_SHARE_PTR<NFGUID> NFSceneProcessModule::GetGUIDByUid(int nUid)
+{
+	return m_mapUidGuidInfo.GetElement(nUid);
+}
+
+bool NFSceneProcessModule::ProcessUserEnterRoom(int nHouseId, int nHouseType, int nRoomSeq, int nUid, NFGUID& xID)
 {
 	int groupID = 0;
-	std::string sKey = std::to_string(nHouseId) + "_" + std::to_string(nRoomSeq);
+	std::string sKey = std::to_string(nHouseId) + "_" + std::to_string(nHouseType) + "_" + std::to_string(nRoomSeq);
 
 	if (m_mapSceneRoomInfo.ExistElement(sKey))
 	{

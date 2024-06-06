@@ -74,6 +74,7 @@ bool NFGameServerNet_ServerModule::AfterInit()
 	//dayouspace releated protocols
 	m_pNetModule->AddReceiveCallBack(enumGame::EnumCmd::NF_EnterRoomReq, this, &NFGameServerNet_ServerModule::OnReqEnterRoom);
 	m_pNetModule->AddReceiveCallBack(enumGame::EnumCmd::CSwitchRoom, this, &NFGameServerNet_ServerModule::OnReqSwitchRoom);
+	m_pNetModule->AddReceiveCallBack(enumGame::EnumCmd::CUserPosition, this, &NFGameServerNet_ServerModule::OnUserPositionUpdate);
 
 
 	/////////////////////////////////////////////////////////////////////////
@@ -560,7 +561,7 @@ void NFGameServerNet_ServerModule::OnReqEnterRoom(const NFSOCK sockIndex, const 
 	//因为是actor模型，且同一个room seq的都会分配到同一个game server，因此这里处理全局数据时是线程安全的
 	//由NFSceneModule来处理
 	NFGUID roleID;
-	bool ret = m_pSceneProcessModule->ProcessUserEnterRoom(xData.house_id(), xData.seq(), xData.uid(), roleID);
+	bool ret = m_pSceneProcessModule->ProcessUserEnterRoom(xData.house_id(), xData.house_type(), xData.seq(), xData.uid(), roleID);
 	if (!ret)
 	{
 		m_pLogModule->LogError(clientID, "player is exist, cannot enter game", __FUNCTION__, __LINE__);
@@ -617,5 +618,40 @@ void NFGameServerNet_ServerModule::OnReqEnterRoom(const NFSOCK sockIndex, const 
 
 void NFGameServerNet_ServerModule::OnReqSwitchRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len)
 {
+
+}
+
+
+void NFGameServerNet_ServerModule::OnUserPositionUpdate(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len)
+{
+	NFGUID clientID;
+	userPosition::CUserPosition xData;
+
+	if (!m_pNetModule->ReceivePB(msgID, msg, len, xData, clientID))
+	{
+		return;
+	}
+
+	NF_SHARE_PTR<NFGUID> pData = m_pSceneProcessModule->GetGUIDByUid(xData.uid());
+	if (!pData)
+	{
+		return;
+	}
+
+	NFGUID xMover = *pData;
+
+	const int sceneID = m_pKernelModule->GetPropertyInt32(xMover, NFrame::Player::SceneID());
+	const int groupID = m_pKernelModule->GetPropertyInt32(xMover, NFrame::Player::GroupID());
+
+	PosSyncUnit posSyncUnit;
+
+	posSyncUnit.mover = xMover;
+	posSyncUnit.pos = NFVector3(xData.position().x(), xData.position().y(), xData.position().z());
+	posSyncUnit.orientation = NFVector3(xData.position().px(), xData.position().py(), xData.position().pz());
+	posSyncUnit.status = 0;
+	posSyncUnit.type = NFMsg::PosSyncUnit::EMT_WALK; //walk == 0
+
+	m_pSyncPosModule->RequireMove(NFGUID(sceneID, groupID), posSyncUnit);
+	m_pKernelModule->SetPropertyVector3(xMover, NFrame::IObject::Position(), posSyncUnit.pos);
 
 }

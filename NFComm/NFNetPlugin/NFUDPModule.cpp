@@ -161,7 +161,7 @@ bool NFUDPModule::Execute()
 
 bool NFUDPModule::SendMsgWithOutHead(const int msgID, const std::string &msg, const NFSOCK sockIndex)
 {
-	bool bRet = m_pNet->SendMsgWithOutHead(msgID, msg.c_str(), (uint32_t)msg.length(), sockIndex);
+	bool bRet = m_pNet->SendUDPMsgWithOutHead(msgID, msg.c_str(), msg.length(), sockIndex);
 	if (!bRet)
 	{
 		std::ostringstream stream;
@@ -230,6 +230,19 @@ bool NFUDPModule::SendMsgPB(const uint16_t msgID, const google::protobuf::Messag
 
 bool NFUDPModule::SendMsg(const uint16_t msgID, const std::string &xData, const NFSOCK sockIndex)
 {
+	NetObject* pObject = m_pNet->GetNetObject(sockIndex);
+	struct sockaddr_in client_addr = pObject->GetClientAddr();
+	//socklen_t size = sizeof(client_addr);
+	int size = sizeof(client_addr);
+
+
+	int nMsgLen = xData.length();
+	int nSendSize = sendto(sockIndex, xData.c_str(), nMsgLen, 0, (struct sockaddr*)&client_addr, size);
+	if (nSendSize == -1)
+	{
+		return false;
+	}
+
 	return true;
 }
 

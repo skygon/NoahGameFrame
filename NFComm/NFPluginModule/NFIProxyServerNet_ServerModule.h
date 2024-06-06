@@ -40,6 +40,7 @@ public:
     virtual int EnterGameSuccessEvent(const NFGUID xClientID, const NFGUID xPlayerID) = 0;
     virtual bool TransportToClient(int nUid, const int msgID, const char* msg, const uint32_t len) = 0;
     virtual bool TransportToClient(NFGUID xClientID, const int msgID, const char* msg, const uint32_t len) = 0;
+    virtual bool TransportUDP(NFGUID xClientID, const int msgID, std::string& strData) = 0;
 };
 
 #endif

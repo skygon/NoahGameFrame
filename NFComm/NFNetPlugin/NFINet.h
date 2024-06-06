@@ -636,6 +636,7 @@ public:
     virtual bool Final() = 0;
 
     virtual bool SendMsgWithHeadInfo(const int msgID, const char* msg, const size_t len, const NFSOCK sockIndex, NFMsgHead& stHead) = 0;
+    virtual bool SendUDPMsgWithOutHead(const int16_t msgID, const char* msg, const size_t len, const NFSOCK sockIndex) = 0;
 
     //send a message with out msg-head[auto add msg-head in this function]
     virtual bool SendMsgWithOutHead(const int16_t msgID, const char* msg, const size_t len, const NFSOCK sockIndex = 0) = 0;

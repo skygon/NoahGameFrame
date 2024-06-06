@@ -70,6 +70,7 @@ protected:
     void OnAckEnterRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
     void OnSAuth(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
     void OnAckSwitchRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
+    void OnAckUserPosition(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
 
 private:
 

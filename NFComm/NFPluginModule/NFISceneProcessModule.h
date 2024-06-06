@@ -34,8 +34,9 @@ class NFISceneProcessModule
     : public NFIModule
 {
 public:
-    virtual bool ProcessUserEnterRoom(int nHouseId, int nRoomSeq, int nUid, NFGUID& xID) = 0;
+    virtual bool ProcessUserEnterRoom(int nHouseId, int nHouseType, int nRoomSeq, int nUid, NFGUID& xID) = 0;
 	virtual bool RequestEnterScene(const NFGUID& self, const int sceneID, const int nGrupID, const int type, const NFVector3& pos, const NFDataList& argList) = 0;
+    virtual NF_SHARE_PTR<NFGUID> GetGUIDByUid(int nUid) = 0;
 };
 
 #endif

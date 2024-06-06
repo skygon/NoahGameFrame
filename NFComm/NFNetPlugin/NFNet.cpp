@@ -408,6 +408,7 @@ int NFNet::UDPInitialization(const unsigned int nMaxClient, const unsigned short
     mnMaxConnect = nMaxClient;
     mnPort = nPort;
     mnCpuCount = nCpuCount;
+    m_bDYServer = true; //当前使用场景仅有和大有客户端的通信，直接设置为true
 
     /* Init. event */
     mxBase = event_init();
@@ -909,6 +910,7 @@ bool NFNet::Log(int severity, const char* msg)
     return true;
 }
 
+
 bool NFNet::SendMsgWithHeadInfo(const int msgID, const char* msg, const size_t len, const NFSOCK sockIndex, NFMsgHead& stHead)
 {
     std::string strOutData;
@@ -921,6 +923,28 @@ bool NFNet::SendMsgWithHeadInfo(const int msgID, const char* msg, const size_t l
 
     return false;
 }
+
+bool NFNet::SendUDPMsgWithOutHead(const int16_t msgID, const char* msg, const size_t len, const NFSOCK sockIndex)
+{
+    NetObject* pObject = this->GetNetObject(sockIndex);
+    struct sockaddr_in client_addr = pObject->GetClientAddr();
+    int size = sizeof(client_addr);
+
+    std::string strOutData;
+    int nAllLen = EnCode(msgID, msg, len, strOutData);
+    if (nAllLen == len + m_bDYServer ? NFIMsgHead::DY_C_HEAD_LENGTH : NFIMsgHead::NF_HEAD_LENGTH)
+    {
+        int nSendSize = sendto(sockIndex, msg, len, 0, (struct sockaddr*)&client_addr, size);
+        if (nSendSize == -1)
+        {
+            return false;
+        }
+
+    }
+
+    return true;
+}
+
 
 bool NFNet::SendMsgWithOutHead(const int16_t msgID, const char* msg, const size_t len, const NFSOCK sockIndex /*= 0*/)
 {

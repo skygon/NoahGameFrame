@@ -93,7 +93,7 @@ bool NFSyncPosModule::Execute()
 					playerPosSync.set_sequence(groupInfo->sequence++);
 
 					//发往ProxyServer, proxyserver可以使用UDP转发到各个客户端
-					m_pGameServerNet_ServerModule->SendGroupMsgPBToGate(NFMsg::ACK_MOVE, playerPosSync, sceneInfo->sceneID, groupInfo->groupID);
+					m_pGameServerNet_ServerModule->SendGroupMsgPBToGate(enumGame::SUserPosition, playerPosSync, sceneInfo->sceneID, groupInfo->groupID);
 
 				}
 
@@ -134,7 +134,7 @@ bool NFSyncPosModule::Execute()
 					for (const auto& var_j : lm_allPlayerPosSync)
 					{
 						if (var_i.first != var_j.first) {
-							m_pGameServerNet_ServerModule->SendGroupMsgPBToGate(NFMsg::ACK_MOVE, var_i.second, sceneInfo->sceneID, var_j.first);
+							m_pGameServerNet_ServerModule->SendGroupMsgPBToGate(enumGame::SUserPosition, var_i.second, sceneInfo->sceneID, var_j.first);
 						}
 					}
 				}

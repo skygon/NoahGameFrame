@@ -102,6 +102,8 @@ public:
 
     virtual bool SendMsgWithHeadInfo(const int msgID, const char* msg, const size_t len, const NFSOCK sockIndex, NFMsgHead& stHead);
 
+    virtual bool SendUDPMsgWithOutHead(const int16_t msgID, const char* msg, const size_t len, const NFSOCK sockIndex);
+
     virtual bool SendMsgWithOutHead(const int16_t msgID, const char* msg, const size_t len, const NFSOCK sockIndex) override ;
 
 	bool SendMsgToAllClient(const char* msg, const size_t len) override;

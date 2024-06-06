@@ -45,6 +45,8 @@
 #include "NFComm/NFMessageDefine/DayouSpace/switchRoom.pb.h"
 ////////////////////////////////////////////////////////////////////////////
 #include "NFServer/NFGameServerPlugin/NFSceneProcessModule.h";
+#include "NFComm/NFMessageDefine/DayouSpace/userPosition.pb.h"
+#include "NFComm/NFMessageDefine/DayouSpace/position.pb.h"
 
 
 class NFGameServerNet_ServerModule
@@ -99,6 +101,7 @@ protected:
 
     void OnReqEnterRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
     void OnReqSwitchRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
+    void OnUserPositionUpdate(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
 
 private:
     

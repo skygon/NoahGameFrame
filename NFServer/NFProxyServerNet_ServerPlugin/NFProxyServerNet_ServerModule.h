@@ -42,6 +42,7 @@
 #include "NFComm/NFPluginModule/NFIUDPModule.h"
 #include "NFComm/NFMessageDefine/DayouSpace/switchRoom.pb.h"
 #include "NFComm/NFMessageDefine/DayouSpace/auth.pb.h"
+#include "NFComm/NFMessageDefine/DayouSpace/userPosition.pb.h"
 
 struct UserInfoData
 {
@@ -94,6 +95,7 @@ public:
     virtual int Transport(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
     virtual bool TransportToClient(int nUid, const int msgID, const char* msg, const uint32_t len);
     virtual bool TransportToClient(NFGUID xClientID, const int msgID, const char* msg, const uint32_t len);
+    virtual bool TransportUDP(NFGUID xClientID, const int msgID, std::string& strData);
 
 
     
@@ -125,6 +127,7 @@ protected:
     void onAuth(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
     void OnReqSwitchRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
     void OnReqEnterRoom(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
+    void OnUserPostionUpdate(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len);
     int PickGameServer();
     int PickGameServer(NF_SERVER_TYPES nType, std::string& sKey);
     void HandShakeGoServer();
@@ -149,6 +152,8 @@ private:
     NFMapEx<NFSOCK, UserInfoData> m_userInfoMap;
     NFMapEx<int, NFSOCK> m_uidToSocketMap;
     NFMapEx<std::string, int> m_gameServerInfoMap;
+    std::map<NFGUID, NFSOCK> m_clientToUDPSocketMap;
+    std::map<int, NFGUID> m_uidToGUIDMap;
 };
 
 #endif

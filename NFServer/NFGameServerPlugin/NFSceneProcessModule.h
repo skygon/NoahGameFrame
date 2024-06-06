@@ -81,7 +81,8 @@ public:
 	virtual bool ReadyExecute();
 
 	virtual bool RequestEnterScene(const NFGUID& self, const int sceneID, const int groupID, const int type, const NFVector3& pos, const NFDataList& argList);
-    virtual bool ProcessUserEnterRoom(int nHouseId, int nRoomSeq, int nUid, NFGUID& xID);
+    virtual bool ProcessUserEnterRoom(int nHouseId, int nHouseType, int nRoomSeq, int nUid, NFGUID& xID);
+    virtual NF_SHARE_PTR<NFGUID> GetGUIDByUid(int nUid);
 
 protected:
 	bool LoadSceneResource(const std::string& strSceneIDName);

@@ -68,6 +68,7 @@ bool NFProxyServerNet_ServerModule::AfterInit()
 
     // register callback fn for udp test. Will delete later.
     m_pUDPModule->AddReceiveCallBack(NFMsg::REQ_CONNECT_KEY, this, &NFProxyServerNet_ServerModule::TestOnConnectKeyProcess);
+    m_pUDPModule->AddReceiveCallBack(enumGame::EnumCmd::CUserPosition, this, &NFProxyServerNet_ServerModule::OnUserPostionUpdate);
     m_pUDPModule->ExpandBufferSize(1024 * 1024 * 2);
 
     NF_SHARE_PTR<NFIClass> xLogicClass = m_pClassModule->GetElement(NFrame::Server::ThisName());
@@ -527,6 +528,19 @@ bool NFProxyServerNet_ServerModule::TransportToClient(NFGUID xClientID, const in
     return true;
 }
 
+bool NFProxyServerNet_ServerModule::TransportUDP(NFGUID xClientID, const int msgID, std::string& strData)
+{
+    auto pos = m_clientToUDPSocketMap.find(xClientID);
+    if (pos == m_clientToUDPSocketMap.end())
+    {
+        return false;
+    }
+
+    NFSOCK pFd = pos->second;
+
+    bool ret = m_pUDPModule->SendMsgWithOutHead(msgID, strData, pFd);
+    return ret;
+}
 
 int NFProxyServerNet_ServerModule::Transport(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len)
 {
@@ -866,7 +880,6 @@ void NFProxyServerNet_ServerModule::OnReqEnterRoom(const NFSOCK sockIndex, const
     }
 
     //receive pb, different format
-    NFGUID nPlayerID;//no value
     switchRoom::EnterRoomReq xData;
 
     if (!m_pNetModule->ReceiveDYPB(msgID, msg, len, xData))
@@ -875,7 +888,7 @@ void NFProxyServerNet_ServerModule::OnReqEnterRoom(const NFSOCK sockIndex, const
     }
 
     
-    //如果存在房间index和game serve的映射则直接使用
+    //如果存在房间index和game server的映射则直接使用
     int nGameID = 0;
     std::string sKey = std::to_string(xData.house_id()) + "_" + std::to_string(xData.house_type()) + "_" + std::to_string(xData.seq());
     if (m_gameServerInfoMap.ExistElement(sKey))
@@ -913,6 +926,9 @@ void NFProxyServerNet_ServerModule::OnReqEnterRoom(const NFSOCK sockIndex, const
     }
     NF_SHARE_PTR<NFSOCK> pSock = NF_SHARE_PTR<NFSOCK>(NF_NEW NFSOCK(sockIndex));
     m_uidToSocketMap.AddElement(xData.uid(), pSock);
+
+    //uid 到 clientID
+    m_uidToGUIDMap[xData.uid()] = pNetObject->GetClientID();
 
 
     //转发到game server(proxy 和 game server的通信依旧使用NF框架原始协议，方便通过BaseMsg的playid(clientid)保持socketfd链路)
@@ -976,5 +992,56 @@ void NFProxyServerNet_ServerModule::OnReqSwitchRoom(const NFSOCK sockIndex, cons
 
     NFMsgHead xHead = NFMsgHead(nMsgLen, enumGame::EnumCmd::CSwitchRoom, pData->nUid, pData->nHouseID, pData->nHouseSeq, pData->nHouseType, 0);
 
+    //转发到Go server
     m_pNetClientModule->SendToServerIDWithHead(nGameID, enumGame::EnumCmd::CSwitchRoom, sendMsg, xHead);
+}
+
+//客户端用户通过UDP上报位置信息报文
+void NFProxyServerNet_ServerModule::OnUserPostionUpdate(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len)
+{
+    NetObject* pNetObject = m_pUDPModule->GetNet()->GetNetObject(sockIndex);
+    if (!pNetObject)
+    {
+        return;
+    }
+
+    userPosition::CUserPosition xData;
+
+    if (!m_pNetModule->ReceiveDYPB(msgID, msg, len, xData))
+    {
+        return;
+    }
+
+    //从game server返回的数据使用clientID作为用户标识。这里可以借用已有的clientID
+
+    //send to game server
+    int nGameID = pNetObject->GetGameID();
+    NFMsg::MsgBase xMsg;
+    if (!xData.SerializeToString(xMsg.mutable_msg_data()))
+    {
+        return;
+    }
+
+    //clientid (设备ID)
+    //UDP的NET object中并没有存放clientID，需要根据UID从已经缓存的数据中获取
+    auto pos = m_uidToGUIDMap.find(xData.uid());
+    if (pos == m_uidToGUIDMap.end())
+    {
+        return;
+    }
+
+
+    xMsg.mutable_player_id()->CopyFrom(NFINetModule::NFToPB(pos->second));
+
+    //需要记录UDP的客户端socket fd和clientID的映射关系
+    //从性能角度考虑，不使用已有的mxClientIdent，这个封装过的map对插入和覆盖的操作性能较差
+    m_clientToUDPSocketMap[pos->second] = sockIndex;
+
+    std::string sendMsg;
+    if (!xMsg.SerializeToString(&sendMsg))
+    {
+        return;
+    }
+    m_pNetClientModule->SendByServerIDWithOutHead(pNetObject->GetGameID(), msgID, sendMsg);
+
 }

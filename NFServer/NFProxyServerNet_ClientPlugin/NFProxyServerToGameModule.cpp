@@ -56,7 +56,7 @@ bool NFProxyServerToGameModule::AfterInit()
 	m_pNetClientModule->AddReceiveCallBack(NF_SERVER_TYPES::NF_ST_GAME, NFMsg::ACK_ENTER_GAME, this, &NFProxyServerToGameModule::OnAckEnterGame);
 	m_pNetClientModule->AddReceiveCallBack(NF_SERVER_TYPES::NF_ST_GAME, this, &NFProxyServerToGameModule::Transport);
     m_pNetClientModule->AddReceiveCallBack(NF_SERVER_TYPES::DY_GO_SVR, enumGame::EnumCmd::SAuth, this, &NFProxyServerToGameModule::OnAckEnterGame);
-
+    m_pNetClientModule->AddReceiveCallBack(NF_SERVER_TYPES::NF_ST_GAME, enumGame::SUserPosition, this, &NFProxyServerToGameModule::OnAckUserPosition);
 
 	m_pNetClientModule->AddEventCallBack(NF_SERVER_TYPES::NF_ST_GAME, this, &NFProxyServerToGameModule::OnSocketGSEvent);
 	m_pNetClientModule->ExpandBufferSize();
@@ -205,7 +205,25 @@ void NFProxyServerToGameModule::OnAckSwitchRoom(const NFSOCK sockIndex, const in
     NFMsgHead xHead;
     xHead.DYDeCodeFromServer(msg);
 
-    // to client TODO: transport 不同的消息header
+    // to client transport 不同的消息header
     m_pProxyServerNet_ServerModule->TransportToClient(xHead.GetDYUid(), msgID, msg + NFMsgHead::DY_S_HEAD_LENGTH, len);
 
+}
+
+void NFProxyServerToGameModule::OnAckUserPosition(const NFSOCK sockIndex, const int msgID, const char* msg, const uint32_t len)
+{
+    userPosition::SUserPosition xData;
+
+    NFGUID clientID;
+    if (!NFINetModule::ReceivePB(msgID, msg, len, xData, clientID))
+    {
+        return;
+    }
+
+    // to client TODO: transport 不同的消息header
+    std::string sendMsg;
+    xData.SerializeToString(&sendMsg);
+
+    // use proxyserver's UDP to send position msg.
+    m_pProxyServerNet_ServerModule->TransportUDP(clientID, msgID, sendMsg);
 }
